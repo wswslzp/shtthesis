@@ -1,4 +1,6 @@
-# `ucasthesis` 国科大学位论文 LaTeX 模板 [最新样式]
+# ShangHaiTech university THESIS (sht-thesis)
+
+`sht-thesis` 项目派生于 [`mohuangrui/ucasthesis`](https://github.com/mohuangrui/ucasthesis)，是根据《上海科技大学研究生学位论文撰写规范（初稿）》编写的、适用于上海科技大学学位论文写作的**非官方** LaTeX 模板。
 
 ## 模板下载
 
