@@ -9,6 +9,16 @@
 2. 添加 .gitignore 文件；
 3. 修改 README.md 以包含新的项目名称及相关说明；
 4. 将两个项目的改动统一放置在 CHANGELOG.md 文件中；
+5. 将 `Img/ucas_logo.pdf` 替换为 `Img/shanghaitech_logo.pdf`
+6. 增加字体设置 ctex-fontset-noto.def，将主要字体替换为：
+   - 思源宋体
+   - 思源黑体
+   - 方正楷体_GBK（中文斜体）
+   - 方正新楷体（中文粗斜体）
+   - 方正仿宋_GBK（中文等宽体）
+   - 方正刻本仿宋简体（中文粗等宽体）
+
+   其中，思源系列字体（Google 发行版为 Noto 系列）开源免费，所用方正字体对个人非商用免费，可前往[方正字库官网](https://www.foundertype.com/)申请下载使用。
 
 ## 以下修改来自 `ucathesis` (commit `faad94b` 及之前) 
 
