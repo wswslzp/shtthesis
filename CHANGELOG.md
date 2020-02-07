@@ -3,6 +3,10 @@
 `sht-thesis` 项目派生于 `ucasthesis`，一个在 GPLv3 License 下分发的项目。根据该许可证
 条款，`sht-thesis` 项目列出基于 `ucasthesis` (commit `faad94b` 之后) 的所有修改条目：
 
+## 2020-02-07
+
+1. 修改 Style/ucasthesis.cfg 以符合上科大学位论文封面、声明页要求；
+
 ## 2020-02-06
 
 1. 显式地在项目根目录添加包含 GPLv3 完整内容的 License 文件；

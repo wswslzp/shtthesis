@@ -11,13 +11,13 @@
         \setCJKmainfont
           [
                UprightFont = *~Light ,
-                  BoldFont = *~Medium ,
+                  BoldFont = *~Bold ,
                 ItalicFont = 方正楷体_GBK ,
             BoldItalicFont = 方正新楷体_GBK
           ] { Noto~Serif~CJK~SC }
         \setCJKsansfont 
           [
-            BoldFont = *~Medium
+            BoldFont = *~Bold
           ] { Noto~Sans~CJK~SC }
         \setCJKmonofont
           [
@@ -26,7 +26,7 @@
         \setCJKfamilyfont { zhsong }
           [
                UprightFont = *~Light ,
-                  BoldFont = *~Medium
+                  BoldFont = *~Bold
           ] { Noto~Serif~CJK~SC }
         \setCJKfamilyfont { zhhei }  { Noto~Sans~CJK~SC }
         \setCJKfamilyfont { zhpf }   { Noto~Sans~CJK~SC }
