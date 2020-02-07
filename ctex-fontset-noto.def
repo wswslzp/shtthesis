@@ -31,7 +31,7 @@
         \setCJKfamilyfont { zhhei }  { Noto~Sans~CJK~SC }
         \setCJKfamilyfont { zhpf }   { Noto~Sans~CJK~SC }
         \setCJKfamilyfont { zhfs }   { 方正仿宋_GBK }
-\setCJKfamilyfont { zhkai }  { 方正楷体_GBK }
+        \setCJKfamilyfont { zhkai }  { 方正楷体_GBK }
       }
   }
 \NewDocumentCommand \songti   { } { \CJKfamily { zhsong } }

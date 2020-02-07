@@ -6,6 +6,7 @@
 ## 2020-02-07
 
 1. 修改 Style/ucasthesis.cfg 以符合上科大学位论文封面、声明页要求；
+2. 在 Style/artratex.sty 中设置 Courier 为默认等宽字体；
 
 ## 2020-02-06
 
