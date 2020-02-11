@@ -18,3 +18,7 @@ Tmp/
 
 # ignore compiled docuemnt within root
 Thesis.pdf
+
+# ignore font files
+*.TTF
+*.otf
