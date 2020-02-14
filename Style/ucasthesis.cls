@@ -640,6 +640,12 @@
         afterskip = {6pt},
     }
 }
+%- paragraph
+\ctexset {
+    paragraph = {
+        indent = 2\ccwd,
+    }
+}
 %- appendix
 \ctexset {
     appendix = {
@@ -647,6 +653,7 @@
         %number = \rmfamily\Alph{chapter},
     }
 }
+
 %---------------------------------------------------------------------------%
 %->> Configure table of contents
 %---------------------------------------------------------------------------%
