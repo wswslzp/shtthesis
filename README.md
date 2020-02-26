@@ -37,7 +37,7 @@
 
 ## 重要建议
 
-* `sht-thesis` 新增了思源宋体/黑体+方正楷体/仿宋字体配置，以确保跨平台字形一致,以及*正确*的加粗字重。具体请参考[Wiki 页面](https://github.com/CrazyRundong/sht-thesis/wiki#faq)。
+* `sht-thesis` 新增了思源宋体 / 黑体 + Fandol 楷体 / 仿宋字体配置，以确保跨平台字形一致,以及*正确*的加粗字重。具体请参考[Wiki 页面](https://github.com/CrazyRundong/sht-thesis/wiki#faq)。
 * 关于 ucasthesis 编译和设计的问题，请先读[**模板使用说明**](./shanghaitech.pdf)，如发问需遵从[提问流程](https://github.com/mohuangrui/ucasthesis/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)。
 * 使用邮件传播 ucasthesis 时，请先删除 `artratex.bat` 以防范 Dos 脚本的潜在风险。
 * 开题报告请见：[ucasproposal: 中国科学院大学开题报告 LaTeX 模板](https://github.com/mohuangrui/ucasproposal)。
