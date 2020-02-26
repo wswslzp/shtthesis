@@ -19,7 +19,7 @@
 0. **完整安装**一个现代化的 TeX 发行版：
    - Windows 或 Linux：[TeX Live](https://www.tug.org/texlive/)
    - macOS：[MacTeX](https://www.tug.org/mactex/)
-1. 下载所需字体文件（[GitHub Release](https://github.com/CrazyRundong/sht-thesis/releases/download/v0.1.0/sht-fonts-v0.1.0.tar.gz) 或 [OneDrive](https://1drv.ms/u/s!Aucomy63mN0inHGS13-EgyE7GTrL?e=WFvhpL)），将解压后的字体放置在项目根目录的 Fonts 文件夹内；
+1. 下载[所需字体文件](https://github.com/CrazyRundong/sht-thesis/releases/download/v0.1.1/sht-fonts-v0.1.1.tar.gz)，将解压后的字体放置在项目根目录的 Fonts 文件夹内；
 2. 使用 XeTeX 或 LuaTeX 引擎编译项目（**注意**：不支持 pdfTeX）:
    - Windows: 双击 `artratex.bat` 即可完成编译；
    - Linux 或 macOS: 以 XeTeX 引擎为例，使用项目自带的编译脚本：
