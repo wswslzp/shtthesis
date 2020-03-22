@@ -105,6 +105,62 @@
 %-> Add dots before equation number
 %-
 \newcommand{\adddotsbeforeeqnnum}{\def\maketag@@@##1{\hbox{\m@th\normalfont\dots\ ##1}}}%
-%---------------------------------------------------------------------------%
-\endinput
 
+%---------------------------------------------------------------------------%
+% TODO notes
+%---------------------------------------------------------------------------%
+\RequirePackage{xargs}
+\RequirePackage[
+  colorinlistoftodos,
+  prependcaption,
+  textsize = tiny,
+  textwidth = 2.6cm,
+]{todonotes}
+\setlength{\marginparwidth}{2.6cm}
+\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
+\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+\newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
+
+%---------------------------------------------------------------------------%
+% Machine learning ralated stuff
+%---------------------------------------------------------------------------%
+\RequirePackage{slashed}
+\RequirePackage{esdiff}
+\providecommand{\CE}[2]{\mathrm{CE}\left( #1 \| #2 \right)}
+\providecommand{\KL}[2]{D_{\mathrm{KL}}\left( #1 \| #2 \right)}
+\providecommand{\Round}[1]{\left\lfloor #1 \right\rceil}
+\providecommand{\NoDiff}[1]{\slashed{\nabla} #1}
+\providecommand{\FpNet}{f_{\mathcal{W}}}
+\providecommand{\QuantNet}{\hat{f}_{\mathcal{W, Q}}}
+\providecommand{\NormalDist}[1]{\mathcal{N} \left( #1 \right)}
+\providecommand{\EMA}[1]{{ #1 }_{\mathrm{EMA}}}
+\providecommand{\Batch}[1]{{ #1 }_{\mathrm{b}}}
+\providecommand{\Fold}[1]{{ #1 }_{\mathrm{fold}}}
+\providecommand{\Clamp}[1]{\mathrm{clamp}\left( #1 \right)}
+\DeclareMathOperator{\sign}{sign}
+\providecommand{\mAP}[1]{\mathrm{mAP}^{\mathrm{ #1 }}}
+\providecommand{\mAR}[1]{\mathrm{mAR}^{\mathrm{ #1 }}}
+\providecommand{\QP}{\texttt{QuantPack}}
+
+%---------------------------------------------------------------------------%
+% Drawing and table helpers
+%---------------------------------------------------------------------------%
+\def\boxit#1{%
+  \smash{\color{red}\fboxrule=1pt\relax\fboxsep=2pt\relax%
+  \llap{\rlap{\fbox{\vphantom{0}\makebox[#1]{}}}~}}\ignorespaces
+}
+% TF graph node styles, used in main display figure and in appendix 3.
+\tikzstyle{nobox}=[text centered, text=blue!60, font=\sffamily\bfseries]
+\tikzstyle{act}=[thick, rectangle, rounded corners, minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=yellow!20, font=\sffamily\bfseries\boldmath]
+\tikzstyle{add}=[thick, ellipse, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=yellow!20, font=\sffamily\bfseries\boldmath]
+\tikzstyle{conv}=[thick, rectangle, rounded corners, minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=green!20, font=\sffamily\bfseries]
+\tikzstyle{params}=[thick, ellipse, minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=blue!20, font=\sffamily\bfseries\boldmath]
+\tikzstyle{small_params}=[thick, ellipse, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=blue!20, font=\sffamily\bfseries\boldmath]
+\tikzstyle{quant}=[thick, ellipse, minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=red!20, font=\sffamily\bfseries]
+\tikzstyle{ma}=[thick, ellipse, minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=gray!20, font=\sffamily\bfseries\boldmath]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+
+\endinput
