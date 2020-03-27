@@ -7,8 +7,10 @@
   0.2.0 %
   A (unofficial) thesis template for ShanghaiTech University%
 ]
+\hyphenation{sht-thesis}
 \hyphenation{Sht-Thesis}
-\def\shtthesis{ShtThesis}
+\newcommand\shtthesis{\textup{\sffamily shtthesis}\ }
+\newcommand\ShtThesis{\textup{\sffamily ShtThesis}\ }
 \def\version{0.2.0}
 % ==============================================================================
 % Options and Declarations
@@ -147,6 +149,9 @@
   supervisor = {
     default = {导师姓名},
   },
+  supervisor-institution = {
+    name = supervisor@institution,
+  },
   supervisor* = {
     default = {Name of supervisor},
     name    = supervisor@en,
@@ -156,6 +161,9 @@
   },
   associate-supervisor* = {
     name = associate@supervisor@en,
+  },
+  associate-supervisor-institution = {
+    name = associate@supervisor@institution,
   },
   joint-supervisor = {
     name = joint@supervisor,
@@ -171,7 +179,7 @@
     default = {Doctor of Philosophy},
     name    = degree@name@en,
   },
-  department = {
+  institution = {
     default = {上海科技大学信息科学与技术学院},
   },
   discipline = {
@@ -378,17 +386,17 @@
 %   Chinese fonts
 % ------------------------------------------------------------------------------
 \ifthenelse{\equal{\sht@fontset}{windows}}{
-  \xeCJKsetup{EmboldenFactor=2.5}
+  \def\FBFactor{2.5}
   \IfFileExists{C:/bootfont.bin}{
-    \setCJKmainfont[AutoFakeBold,ItalicFont=KaiTi_GB2312]{SimSun}
-    \setCJKfamilyfont{zhkai}[AutoFakeBold]{KaiTi_GB2312}
+    \setCJKmainfont[AutoFakeBold=\FBFactor,ItalicFont=KaiTi_GB2312]{SimSun}
+    \setCJKfamilyfont{zhkai}[AutoFakeBold=\FBFactor]{KaiTi_GB2312}
   }{
-    \setCJKmainfont[AutoFakeBold,ItalicFont=KaiTi]{SimSun}
-    \setCJKfamilyfont{zhkai}[AutoFakeBold]{KaiTi}
+    \setCJKmainfont[AutoFakeBold=\FBFactor,ItalicFont=KaiTi]{SimSun}
+    \setCJKfamilyfont{zhkai}[AutoFakeBold=\FBFactor]{KaiTi}
   }
-  \setCJKsansfont[AutoFakeBold]{SimHei}
-  \setCJKfamilyfont{zhsong}[AutoFakeBold]{SimSun}
-  \setCJKfamilyfont{zhhei}[AutoFakeBold]{SimHei}
+  \setCJKsansfont[AutoFakeBold=\FBFactor]{SimHei}
+  \setCJKfamilyfont{zhsong}[AutoFakeBold=\FBFactor]{SimSun}
+  \setCJKfamilyfont{zhhei}[AutoFakeBold=\FBFactor]{SimHei}
 }{}
 % ------------------------------------------------------------------------------
 %   Math fonts
@@ -546,16 +554,19 @@
 % ==============================================================================
 % Cover Generation
 % ==============================================================================
-\newcommand{\ulunify}[1]{\uline{#1}}% unified name
-\newcommand{\ulenhance}[2][1pt]{% enhanced underline
-    \def\ULthickness{#1}% set thickness
-    \setlength{\ULdepth}{0.3em}% set depth
-    \expandafter\ulunify\expandafter{#2}% linebreak fix
+\def\ulhshift{-4em}
+\newcommand{\ulunify}[1]{\uline{#1}}
+\newcommand{\ulenhance}[2][1pt]{%
+  \def\ULthickness{#1}%
+  \setlength{\ULdepth}{0.3em}%
+  \expandafter\ulunify\expandafter{#2}%
 }
-\newcommand{\ulhshift}{-4em}% horizontal shift on underline
-\newcommand{\ulextend}[2][350pt]{% extend underline length
-    \hbox to #1{\hfill\hspace*{\ulhshift}#2\hfill}}
-\def\sht@schoollogo{\includegraphics[width=10.48cm]{shanghaitech_logo.pdf}}
+\newcommand{\ulextend}[2][350pt]{%
+  \hbox to #1 {\hfill \hspace*{\ulhshift} #2 \hfill}%
+}
+\newcommand\sht@schoollogo{%
+  \includegraphics[width=10.48cm]{shanghaitech_logo.pdf}%
+}
 \renewcommand{\cleardoublepage}[1][plain]{%
   \clearpage%
   \if@twoside%
@@ -573,62 +584,64 @@
   \fi%
 }
 \renewcommand{\maketitle}{%
-  \maketitle@xpdc%
+  \ifthenelse{\equal{\sht@degree}{master}}{
+    \sht@maketitle@master
+  }{
+    \sht@error{Degree type `\sht@degree' is not supported yet}
+  }
 }
 % ------------------------------------------------------------------------------
-%   Master / PhD thesis cover
+%   Master thesis cover
 % ------------------------------------------------------------------------------
-\newcommand{\maketitle@xpdc}{%
+\newcommand{\sht@maketitle@master}{%
   \cleardoublepage
   \thispagestyle{empty}
   \begin{center}
-    \linespread{1.6}
-    \zihao{4}\bfseries
-
+    \linespread{1.6}\zihao{4}\bfseries
     \hfill{}
-    \ifdefempty{\sht@secret@level}{%
-      %
-    }{%
-      密级%
+    \ifdefempty{\sht@secret@level}{}{%
+      密级：%
       \ulenhance{%
         \ulextend[50pt]{%
           \hspace*{-\ulhshift} \zihao{5} \sht@secret@level%
         }%
       }%
     }
-
     \vspace*{\stretch{4}}
 
-    {\sht@schoollogo}
-
+    \sht@schoollogo
     \vspace*{\stretch{2}}
 
-    {\zihao{1}\bfseries\heiti {硕士学位论文}}
-
+    {\zihao{1}\heiti {硕士学位论文}}
     \vspace*{\stretch{3}}
 
-    {\zihao{-3}\bfseries\heiti \ulenhance[1.5pt]{\sht@title}}
-
+    {\zihao{-3}\heiti \ulenhance[1.5pt]{\sht@title}}
     \vspace*{\stretch{3}}
 
     {
+      \songti
       \def\tabcolsep{1pt}
       \def\arraystretch{1.3}
-      \zihao{4}\bfseries\songti
       \begin{tabular}{llc}
-        作者姓名： & \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{\sht@author}}}\\
-        指导教师： & \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{\sht@supervisor}}}\\
-        学位类别： & \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{\sht@degree@name}}}\\
-        一级学科： & \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{\sht@discipline@level@i}}}\\
-        \multicolumn{2}{l}{学校/学院名称：} & \ulenhance[1.2pt]{\ulextend[318pt]{\sht@department}}\\
+        作者姓名：&
+          \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{\sht@author}}} \\
+        指导教师：&
+          \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{\sht@supervisor}}} \\
+        \ifdefempty{\sht@supervisor@institution}{}{ &
+          \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{\sht@supervisor@institution}}} \\
+        }
+        学位类别：&
+          \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{\sht@degree@name}}} \\
+        一级学科：&
+          \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{\sht@discipline@level@i}}} \\
+        \multicolumn{2}{l}{学校/学院名称：} &
+          \ulenhance[1.2pt]{\ulextend[318pt]{\sht@institution}} \\
       \end{tabular}
     }
-
     \vspace*{\stretch{4}}
 
-    {\sht@date}
-
-    \vspace*{\stretch{4}}
+    \sht@date
+    \vspace{\stretch{4}}
   \end{center}
   \clearpage
   \thispagestyle{empty}
