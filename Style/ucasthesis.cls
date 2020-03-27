@@ -132,15 +132,26 @@
 %---------------------------------------------------------------------------%
 %- redefine cleardoublepage to have page style argument
 \renewcommand{\cleardoublepage}[1][plain]{%
-    \clearpage\if@twoside\ifodd\c@page\else%
-    \thispagestyle{#1}%
-    \hbox{}\newpage\if@twocolumn\hbox{}\newpage\fi\fi\fi%
+  \clearpage%
+  \if@twoside%
+    \ifodd%
+      \c@page%
+    \else%
+      \thispagestyle{#1}%
+      \hbox{}%
+      \newpage%
+      \if@twocolumn%
+        \hbox{}%
+        \newpage%
+      \fi%
+    \fi%
+  \fi%
 }
 %- underline
 \ifxetex%
     %\RequirePackage{ulem}% loaded by xeCJKfntef
 \else%
-    \RequirePackage{ulem}%
+    \RequirePackage[normalem]{ulem}%
 \fi
 \newcommand{\ulunify}[1]{\uline{#1}}% unified name
 \newcommand{\ulenhance}[2][1pt]{% enhanced underline
@@ -166,13 +177,22 @@
 \def\ucas@value@ch@udc{}
 \newcommand{\udc}[1]{\def\ucas@value@ch@udc{#1}}
 \def\ucas@value@ch@schoollogo{}
-\newcommand{\schoollogo}[2][]{\def\ucas@value@ch@schoollogo{\ucasifstrbk{#1}{\zihao{-2}\bfseries\sffamily #2}{\includegraphics[#1]{#2}}}}
+\newcommand{\schoollogo}[2][]{%
+  \def\ucas@value@ch@schoollogo{%
+    \ucasifstrbk{#1}{% \ifblank
+      \zihao{-2}\bfseries\sffamily #2%
+    }{%
+      \includegraphics[#1]{#2}%
+    }%
+  }%
+}
 \def\ucas@value@ch@title{}
 \def\ucas@value@ch@titlemark{}
 \renewcommand{\title}[2][\ucas@value@ch@title]{%
-    \def\ucas@value@ch@title{#2}
-    %\def\ucas@value@ch@titlemark{\MakeUppercase{#1}}}
-    \def\ucas@value@ch@titlemark{#1}}
+  \def\ucas@value@ch@title{#2}%
+  %\def\ucas@value@ch@titlemark{\MakeUppercase{#1}}}
+  \def\ucas@value@ch@titlemark{#1}%
+}
 \def\ucas@value@ch@author{}
 \renewcommand{\author}[1]{\def\ucas@value@ch@author{#1}}
 \def\ucas@value@ch@advisor{}

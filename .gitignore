@@ -18,7 +18,8 @@ Tmp
 *.xdv
 
 # ignore compiled docuemnt within root
-Thesis.pdf
+*.pdf
+!shanghaitech.pdf
 
 # ignore font files
 *.TTF
