@@ -1,4 +1,4 @@
-\documentclass{sht-thesis}
+\documentclass{shtthesis}
 
 \providecommand{\Vector}[1]{\symbfit{#1}}% general vectors in bold italic
 \providecommand{\unitVector}[1]{\symbfup{#1}}% unit vectors in bold roman
@@ -7,12 +7,20 @@
 \providecommand{\Tensor}[1]{\symbfsfup{#1}}% tensor in sans-serif bold italic
 \providecommand{\unitTensor}[1]{\symbfsfup{#1}}% identity tensor in sans-serif bold
 
-\title{sht-thesis 使用说明}
-\author{Rundong Li}
+\shtsetup{
+  degree = {master},
+  title = {\shtthesis~使用说明~v\version},
+  author = {李润东},
+  discipline = {计算机软件与理论},
+  discipline-level-1 = {计算机科学与技术},
+  discipline-level-2 = {计算机软件与理论},
+  degree-name = {工学硕士},
+}
 
 \begin{document}
 
 \frontmatter
+\maketitle
 \tableofcontents
 
 \mainmatter
