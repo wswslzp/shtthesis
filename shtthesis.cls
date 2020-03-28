@@ -2,29 +2,33 @@
 % Identification
 % ==============================================================================
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{shtthesis}[%
-  2020/03/23 %
-  0.2.0 %
-  A (unofficial) thesis template for ShanghaiTech University%
-]
+\ProvidesClass{shtthesis}
+[2020/03/28 0.2.0 An Unofficial Thesis Template for ShanghaiTech University]
 \hyphenation{sht-thesis}
 \hyphenation{Sht-Thesis}
-\newcommand\shtthesis{\textup{\sffamily shtthesis}\ }
-\newcommand\ShtThesis{\textup{\sffamily ShtThesis}\ }
-\def\version{0.2.0}
+\RequirePackage{xspace}
+\newcommand\shtthesis{\textup{\sffamily shtthesis}\xspace}
+\newcommand\ShtThesis{\textup{\sffamily ShtThesis}\xspace}
+\newcommand\version{0.2.0\xspace}
 % ==============================================================================
 % Options and Declarations
 % ==============================================================================
-% ------------------------------------------------------------------------------
-%   Define \shtsetup command
-% ------------------------------------------------------------------------------
 \RequirePackage{kvdefinekeys}
 \RequirePackage{kvsetkeys}
 \RequirePackage{kvoptions}
+\RequirePackage{datetime}
+% ------------------------------------------------------------------------------
+%   Define \shtsetup command
+%
+%   Following key-value setup mechanism is adapted from `thuthesis'.
+%   thuthesis (https://github.com/xueruini/thuthesis) is licensed under the
+%   conditions of the LaTeX Project Public License, either version 1.3. 
+% ------------------------------------------------------------------------------
 \SetupKeyvalOptions{
-  family=sht,
-  prefix=sht@,
-  setkeys=\kvsetkeys}
+  family = sht,
+  prefix = {sht@},
+  setkeys = \kvsetkeys,
+}
 \newcommand\sht@error[1]{%
   \ClassError{shtthesis}{#1}{}%
 }
@@ -128,13 +132,13 @@
   },
   title = {
     default = {标题},
+    code    = {
+      \title{\sht@title}
+    },
   },
   title* = {
     default = {Title},
     name    = title@en,
-    code    = {
-      \title{\sht@title}
-    },
   },
   author = {
     default = {姓名},
@@ -149,12 +153,15 @@
   supervisor = {
     default = {导师姓名},
   },
-  supervisor-institution = {
-    name = supervisor@institution,
-  },
   supervisor* = {
     default = {Name of supervisor},
     name    = supervisor@en,
+  },
+  supervisor-institution = {
+    name = supervisor@institution,
+  },
+  supervisor-institution* = {
+    name = supervisor@institution@en,
   },
   associate-supervisor = {
     name = associate@supervisor,
@@ -164,6 +171,9 @@
   },
   associate-supervisor-institution = {
     name = associate@supervisor@institution,
+  },
+  associate-supervisor-institution* = {
+    name = associate@supervisor@institution@en,
   },
   joint-supervisor = {
     name = joint@supervisor,
@@ -176,11 +186,18 @@
     name    = degree@name,
   },
   degree-name* = {
-    default = {Doctor of Philosophy},
+    default = {Doctor~of~Philosophy},
     name    = degree@name@en,
   },
   institution = {
     default = {上海科技大学信息科学与技术学院},
+  },
+  institution* = {
+    default = {%
+      School~of~Information~Science~and~Technology\\%
+      ShanghaiTech~University%
+    },
+    name = institution@en
   },
   discipline = {
     % default = {计算机科学与技术},
@@ -192,6 +209,10 @@
   date = {
     default = {\the\year~年~\the\month~月},
   },
+  date* = {
+    default = {\monthname,~\the\year},
+    name = date@en,
+  },
   clc,
   udc,
   id,
@@ -199,9 +220,17 @@
     default = {一级学科名称},
     name    = discipline@level@i,
   },
+  discipline-level-1* = {
+    default = {Name of Level-one Discipline},
+    name    = discipline@level@i@en,
+  },
   discipline-level-2 = {
     default = {二级学科名称},
     name    = discipline@level@ii,
+  },
+  discipline-level-2* = {
+    default = {Name of Level-two Discipline},
+    name    = discipline@level@ii@en,
   },
   start-date = {
     name    = start@date,
@@ -212,6 +241,11 @@
     default = {\the\year-\two@digits{\month}-\two@digits{\day}},
   },
 }
+% ------------------------------------------------------------------------------
+%   Class options
+% ------------------------------------------------------------------------------
+\DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{ctexbook}}
+\ProcessKeyvalOptions*
 % ------------------------------------------------------------------------------
 %   Load minimum mandatory packages
 % ------------------------------------------------------------------------------
@@ -282,9 +316,9 @@
   \fancyhead[C]{
     \footnotesize
     \ifnumodd{\value{page}}{
-      \leftmark
+      \nouppercase\leftmark
     }{
-      \@title
+      \nouppercase\@title
     }
   }
   \fancyfoot[C]{
@@ -299,9 +333,9 @@
   \fancyhead[C]{
     \footnotesize
     \ifnumodd{\value{page}}{
-      \leftmark
+      \nouppercase\leftmark
     }{
-      \@title
+      \nouppercase\@title
     }
   }
   \fancyfoot[C]{
@@ -355,6 +389,7 @@
 %   Font utilities
 % ------------------------------------------------------------------------------
 \newcommand\sht@fontset{\csname g__ctex_fontset_tl\endcsname}
+\newcommand\currentfontset{\sht@fontset\xspace}
 % ------------------------------------------------------------------------------
 %   English fonts
 % ------------------------------------------------------------------------------
@@ -386,18 +421,40 @@
 %   Chinese fonts
 % ------------------------------------------------------------------------------
 \ifthenelse{\equal{\sht@fontset}{windows}}{
-  \def\FBFactor{2.5}
+  \def\fake@bold@factor{2.5}
   \IfFileExists{C:/bootfont.bin}{
-    \setCJKmainfont[AutoFakeBold=\FBFactor,ItalicFont=KaiTi_GB2312]{SimSun}
-    \setCJKfamilyfont{zhkai}[AutoFakeBold=\FBFactor]{KaiTi_GB2312}
+    \setCJKmainfont[
+      AutoFakeBold=\fake@bold@factor,
+      ItalicFont=KaiTi_GB2312,
+    ]{SimSun}
+    \setCJKfamilyfont{zhkai}[AutoFakeBold=\fake@bold@factor]{KaiTi_GB2312}
   }{
-    \setCJKmainfont[AutoFakeBold=\FBFactor,ItalicFont=KaiTi]{SimSun}
-    \setCJKfamilyfont{zhkai}[AutoFakeBold=\FBFactor]{KaiTi}
+    \setCJKmainfont[
+      AutoFakeBold=\fake@bold@factor,
+      ItalicFont=KaiTi,
+    ]{SimSun}
+    \setCJKfamilyfont{zhkai}[AutoFakeBold=\fake@bold@factor]{KaiTi}
   }
-  \setCJKsansfont[AutoFakeBold=\FBFactor]{SimHei}
-  \setCJKfamilyfont{zhsong}[AutoFakeBold=\FBFactor]{SimSun}
-  \setCJKfamilyfont{zhhei}[AutoFakeBold=\FBFactor]{SimHei}
-}{}
+  \setCJKsansfont[AutoFakeBold=\fake@bold@factor]{SimHei}
+  \setCJKfamilyfont{zhsong}[AutoFakeBold=\fake@bold@factor]{SimSun}
+  \setCJKfamilyfont{zhhei}[AutoFakeBold=\fake@bold@factor]{SimHei}
+}{
+  \ifthenelse{\equal{\sht@fontset}{mac}}{
+    \setCJKmainfont[
+         UprightFont = * Light,
+            BoldFont = * Bold,
+          ItalicFont = Kaiti SC,
+      BoldItalicFont = Kaiti SC Bold,
+    ]{Songti SC}
+    \setCJKsansfont[BoldFont=* Medium]{Heiti SC}
+    \setCJKfamilyfont{zhsong}[
+        UprightFont = * Light,
+           BoldFont = * Bold,
+      ]{Songti SC}
+    \setCJKfamilyfont{zhhei}[BoldFont=* Medium]{Heiti SC}
+    \setCJKfamilyfont{zhkai}[BoldFont=* Bold]{Kaiti SC}
+  }{}
+}
 % ------------------------------------------------------------------------------
 %   Math fonts
 % ------------------------------------------------------------------------------
@@ -569,31 +626,35 @@
 }
 \renewcommand{\cleardoublepage}[1][plain]{%
   \clearpage%
-  \if@twoside%
-    \ifodd%
-      \c@page%
-    \else%
-      \thispagestyle{#1}%
+  \ifodd%
+    \c@page%
+  \else%
+    \thispagestyle{#1}%
+    \hbox{}%
+    \newpage%
+    \if@twocolumn%
       \hbox{}%
       \newpage%
-      \if@twocolumn%
-        \hbox{}%
-        \newpage%
-      \fi%
     \fi%
   \fi%
 }
 \renewcommand{\maketitle}{%
-  \ifthenelse{\equal{\sht@degree}{master}}{
-    \sht@maketitle@master
+  \ifthenelse{\equal{\sht@degree}{doctor}}{
+    \sht@maketitle@graduate{博士}
+    \sht@maketitle@graduate@en{dissertation}
   }{
-    \sht@error{Degree type `\sht@degree' is not supported yet}
+    \ifthenelse{\equal{\sht@degree}{master}}{
+      \sht@maketitle@graduate{硕士}
+      \sht@maketitle@graduate@en{thesis}
+    }{
+      \sht@error{Degree type `\sht@degree' is not supported yet}
+    }
   }
 }
 % ------------------------------------------------------------------------------
-%   Master thesis cover
+%   PhD/Master thesis covers
 % ------------------------------------------------------------------------------
-\newcommand{\sht@maketitle@master}{%
+\newcommand{\sht@maketitle@graduate}[1]{%
   \cleardoublepage
   \thispagestyle{empty}
   \begin{center}
@@ -612,7 +673,7 @@
     \sht@schoollogo
     \vspace*{\stretch{2}}
 
-    {\zihao{1}\heiti {硕士学位论文}}
+    {\zihao{1}\heiti {#1 学位论文}}
     \vspace*{\stretch{3}}
 
     {\zihao{-3}\heiti \ulenhance[1.5pt]{\sht@title}}
@@ -642,6 +703,47 @@
 
     \sht@date
     \vspace{\stretch{4}}
+  \end{center}
+  \clearpage
+  \thispagestyle{empty}
+  \cleardoublepage[empty]
+}
+\newcommand{\sht@maketitle@graduate@en}[1]{
+  \cleardoublepage
+  \thispagestyle{empty}
+  \begin{center}
+    \linespread{1.6}
+    \zihao{4}\bfseries
+    \vspace*{50pt}
+
+    {\zihao{-3}\bfseries \ulenhance[1.5pt]{\sht@title@en}}
+    \vspace*{\stretch{3}}
+
+    {
+      A~#1~submitted~to\\
+      ShanghaiTech~University\\
+      in~partial~fulfillment~of~the~requirement\\
+      for~the~degree~of\\
+      \ifthenelse{\equal{\sht@degree}{doctor}}{
+        Doctor~of~Philosophy\\
+      }{
+        \sht@degree@name@en\\
+      }
+      in~\sht@discipline@level@i@en
+
+      By
+
+      \sht@author@en
+
+      Supervisor:~\sht@supervisor@en
+    }
+    \vspace*{\stretch{3}}
+
+    {\sht@institution@en}
+    \vspace*{\stretch{1}}
+
+    {\sht@date@en}
+    \vspace{\stretch{3}}
   \end{center}
   \clearpage
   \thispagestyle{empty}
