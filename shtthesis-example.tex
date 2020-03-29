@@ -90,12 +90,12 @@
 
 \chapter{排版功能测试}
 \section{测试数学公式}
-\providecommand{\Vector}[1]{\symbfit{#1}}% general vectors in bold italic
-\providecommand{\unitVector}[1]{\symbfup{#1}}% unit vectors in bold roman
-\providecommand{\Matrix}[1]{\symbfup{#1}}% matrix in bold roman
-\providecommand{\unitMatrix}[1]{\symbfup{#1}}% identity matrix in bold roman
-\providecommand{\Tensor}[1]{\symbfsfup{#1}}% tensor in sans-serif bold italic
-\providecommand{\unitTensor}[1]{\symbfsfup{#1}}% identity tensor in sans-serif bold
+\providecommand{\Vector}[1]{\symbfit{#1}}
+\providecommand{\unitVector}[1]{\symbfup{#1}}
+\providecommand{\Matrix}[1]{\symbfup{#1}}
+\providecommand{\unitMatrix}[1]{\symbfup{#1}}
+\providecommand{\Tensor}[1]{\symbfsfup{#1}}
+\providecommand{\unitTensor}[1]{\symbfsfup{#1}}
 
 \begin{equation} \label{eq:appedns}
     \begin{cases}
@@ -161,5 +161,40 @@ Ordinary math: $A, F, L, 2, 3, 5, \sigma$, \verb|\text|: $\text{A, F, L, 2, 3, 5
     \hline
   \end{tabular}
 \end{table}
+
+\section{测试参考文献}
+测试 \verb|\citet|：\citet{wikibook2014latex}，\citet{lamport1986document, chen2005zhulu}。
+测试 \verb|\citep|：主要用于对正文内容的说明~\citep{chu2004tushu}，以及连续引用~\citep{stamerjohanns2009mathml, betts2005aging}。
+
+\appendix
+\chapter{附录测试}
+这是一个附录章节。
+
+\section{某一个附录 section}
+{\songti 霜蟾盥薇曜灵霜颸妙鬘虚霩淩澌菀枯菡萏泬寥窅冥毰毸濩落霅霅便嬛岧峣瀺灂姽婳愔嫕飒纚棽俪緸冤莩甲摛藻卮言倥侗椒觞期颐夜阑彬蔚倥偬澄廓簪缨陟遐迤逦缥缃鹣鲽憯懔闺闼璀错媕婀噌吰澒洞阛闠覼缕玓瓑逡巡諓諓琭琭瀌瀌踽踽叆叇氤氲瓠犀流眄蹀躞赟嬛茕頔璎珞螓首蘅皋惏悷缱绻昶皴皱颟顸愀然菡萏卑陬纯懿犇麤掱暒}
+
+{\heiti 嬏嬐嬑嬒嬓嬔嬕嬖嬗嬘嫱嬚嬛嬜嬞嬟嬠嫒嬢嬣嬥嬦嬧嬨嬩嫔嬫嬬奶嬬嬮嬯婴嬱嬲嬳嬴嬵嬶嬷婶嬹嬺嬻嬼嬽嬾嬿孀孁孂娘孄孅孆孇孆孈孉孊娈孋孊孍孎孏嫫婿媚嵭嵮嵯嵰嵱嵲嵳嵴嵵嵶嵷嵸嵹嵺嵻嵼嵽嵾嵿嶀嵝嶂嶃崭嶅嶆岖嶈嶉嶊嶋嶌嶍嶎嶏嶐嶑嶒嶓嵚嶕嶖嶘嶙嶚嶛嶜嶝嶞嶟峤嶡峣嶣嶤嶥嶦峄峃嶩嶪嶫嶬嶭崄嶯嶰嶱嶲嶳岙嶵嶶嶷嵘嶹岭嶻屿岳帋巀巁巂巃巄巅}
+
+{\kaishu 庯庰庱庲庳庴庵庹庺庻庼庽庿廀厕廃厩廅廆廇廋廌廍庼廏廐廑廒廔廕廖廗廘廙廛廜廞庑廤廥廦廧廨廭廮廯廰痈廲廵廸廹廻廼廽廿弁弅弆弇弉弖弙弚弜弝弞弡弢弣弤弨弩弪弫弬弭弮弰弲弪弴弶弸弻弼弽弿彖彗彘彚彛彜彝彞彟彴彵彶彷彸役彺彻彽彾佛徂徃徆徇徉后徍徎徏径徒従徔徕徖徙徚徛徜徝从徟徕御徢徣徤徥徦徧徨复循徫旁徭微徯徰徱徲徳徴徵徶德徸彻徺忁忂惔愔忇忈忉忔忕忖忚忛応忝忞忟忪挣挦挧挨挩挪挫挬挭挮挰掇授掉掊掋掍掎掐掑排掓掔掕挜掚挂掜掝掞掟掠采探掣掤掦措掫掬掭掮掯掰掱掲掳掴掵掶掸掹掺掻掼掽掾掿拣揁揂揃揅揄揆揇揈揉揊揋揌揍揎揑揓揔揕揖揗揘揙揤揥揦揧揨}
+
+{\fangsong 揫捂揰揱揲揳援揵揶揷揸揻揼揾揿搀搁搂搃搄搅搇搈搉搊搋搌搎搏搐搑搒摓摔摕摖摗摙摚摛掼摝摞摠摡斫斩斮斱斲斳斴斵斶斸旪旫旮旯晒晓晔晕晖晗晘晙晛晜晞晟晠晡晰晣晤晥晦晧晪晫晬晭晰晱晲晳晴晵晷晸晹晻晼晽晾晿暀暁暂暃暄暅暆暇晕晖暊暋暌暍暎暏暐暑暒暓暔暕暖暗旸暙暚暛暜暝暞暟暠暡暣暤暥暦暧暨暩暪暬暭暮暯暰昵暲暳暴暵}
+
+\backmatter
+\makebiblio
+
+\chapter{作者简历及攻读学位期间发表的学术论文与研究成果}
+
+\section*{作者简历}
+个人简历……
+
+\section*{已发表（或正式接受）的学术论文：}
+论文发表……
+
+\section*{申请或已获得的专利：}
+专利申请或授权记录……
+
+\begin{acknowledgement}
+  最终致谢信息……
+\end{acknowledgement}
 
 \end{document}

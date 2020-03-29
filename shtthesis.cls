@@ -2,8 +2,11 @@
 % Identification
 % ==============================================================================
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{shtthesis}
-[2020/03/28 0.2.0 An Unofficial Thesis Template for ShanghaiTech University]
+\ProvidesClass{shtthesis}[%
+  2020/03/28 %
+  0.2.0 %
+  An Unofficial Thesis Template for ShanghaiTech University%
+]
 \hyphenation{sht-thesis}
 \hyphenation{Sht-Thesis}
 \RequirePackage{xspace}
@@ -272,6 +275,7 @@
 \RequirePackage{letltxmacro}
 \RequirePackage{fontspec}[2016/12/27]
 \RequirePackage{caption}
+\RequirePackage{natbib}
 \RequirePackage{amsmath, amsthm, amssymb}
 \RequirePackage[
   mathrm = sym,
@@ -299,16 +303,20 @@
 % ------------------------------------------------------------------------------
 %   Basic information
 % ------------------------------------------------------------------------------
+\def\@title{\sht@title}
+\def\@author{\sht@author}
 \def\contentsname{目\hspace{1\ccwd}录}
 \def\listfigurename{图形列表}
 \def\listtablename{表格列表}
+\def\appendixname{附录}
+\def\indexname{索引}
+\def\refname{参考文献}
+\def\bibname{参考文献}
+\def\bibetal{等}
+\def\biband{和}
 \def\tablename{表}
 \def\figurename{图}
 \def\algname{算法}
-\def\bibname{参考文献}
-\def\refname{参考文献}
-\def\bibetal{等}
-\def\biband{和}
 \def\axiomname{公理}
 \def\theoremname{定理}
 \def\lemmaname{引理}
@@ -320,8 +328,6 @@
 \def\examplename{例}
 \def\remarkname{注}
 \def\proofname{证明}
-\def\@title{\sht@title}
-\def\@author{\sht@author}
 % ------------------------------------------------------------------------------
 %   Geometry and layouts
 % ------------------------------------------------------------------------------
@@ -341,6 +347,7 @@
 % ------------------------------------------------------------------------------
 %   Headers and footers
 % ------------------------------------------------------------------------------
+\pagestyle{fancy}
 \fancypagestyle{CenteralPageNumbered}{
   \fancyhf{}
   \pagenumbering{Roman}
@@ -398,7 +405,6 @@
   \renewcommand{\footrulewidth}{0pt}
 }
 \fancypagestyle{Plain}{}
-\pagestyle{fancy}
 \providecommand{\frontmatter}{}
 \LetLtxMacro{\TmpFrontmatter}{\frontmatter}
 \renewcommand{\frontmatter}{%
@@ -532,6 +538,14 @@
 % ------------------------------------------------------------------------------
 %   Utility functions for ToC and bookmarks
 % ------------------------------------------------------------------------------
+\newcommand*{\artxifcnt}[1]{% check if counter exists
+  \ifcsname c@#1\endcsname%
+    \expandafter\@firstoftwo%
+  \else%
+    \expandafter\@secondoftwo%
+  \fi
+}
+\artxifcnt{chapter}{\def\artxmaincnt{chapter}}{\def\artxmaincnt{section}}%
 \long\def\artxaux#1{}
 \newcommand{\intotocnostar}[3]{%
   % [<\chapter|...>,<*>,<title>]
@@ -914,6 +928,33 @@
 }{%
   \vspace{\baselineskip}%
   \par\noindent{\bfseries Key Words:} \sht@keywords@en%
+}
+% ------------------------------------------------------------------------------
+%   Bibliography
+% ------------------------------------------------------------------------------
+\citestyle{authoryear}
+\bibliographystyle{gbt7714-plain}
+\setlength{\bibsep}{0.0ex plus 0.2ex minus 0.2ex}
+\newcommand{\bibstyle@authoryear}{\bibpunct{(}{)}{;}{a}{,}{,}}
+\renewcommand*{\bibfont}{\small}
+\newcommand{\makebiblio}{%
+  \intotoc*{\cleardoublepage}{\bibname}%
+  \bibliography{reference}%
+}
+% ------------------------------------------------------------------------------
+%   Appendix
+% ------------------------------------------------------------------------------
+\providecommand{\appendix}{}
+\LetLtxMacro{\TmpAppendix}{\appendix}
+\renewcommand{\appendix}{%
+  \cleardoublepage%
+  \TmpAppendix%
+  \pagestyle{LRPageNumbered}%
+}
+\newenvironment{acknowledgement}{%
+  \chapter[致谢]{致\hspace{1\ccwd}谢}%
+}{%
+  \cleardoublepage%
 }
 % ==============================================================================
 % Post-processing
