@@ -428,7 +428,7 @@
 \ifthenelse{\equal{\sht@fontset}{windows}}{
   \setmainfont{Times New Roman}
   \setsansfont{Arial}
-  \setmonofont{Courier}
+  \setmonofont{Courier New}
 }{
   \ifthenelse{\equal{\sht@fontset}{mac}}{
     \setmainfont{Times New Roman}
@@ -467,22 +467,14 @@
 \ifthenelse{\equal{\sht@fontset}{windows}}{
   \def\fake@bold@factor{2.5}
   \IfFileExists{C:/bootfont.bin}{
-    \setCJKmainfont[
-      AutoFakeBold = \fake@bold@factor,
-        ItalicFont = KaiTi_GB2312,
-    ]{SimSun}
-    \setCJKfamilyfont{zhkai}[
-      AutoFakeBold = \fake@bold@factor,
-    ]{KaiTi_GB2312}
+    \def\windows@kaiti{KaiTi_GB2312}
   }{
-    \setCJKmainfont[
-      AutoFakeBold = \fake@bold@factor,
-        ItalicFont = KaiTi,
-    ]{SimSun}
-    \setCJKfamilyfont{zhkai}[
-      AutoFakeBold = \fake@bold@factor,
-    ]{KaiTi}
+    \def\windows@kaiti{KaiTi}
   }
+  \setCJKmainfont[
+    AutoFakeBold = \fake@bold@factor,
+      ItalicFont = \windows@kaiti,
+  ]{SimSun}
   \setCJKsansfont[
     AutoFakeBold = \fake@bold@factor,
   ]{SimHei}
@@ -492,6 +484,9 @@
   \setCJKfamilyfont{zhhei}[
     AutoFakeBold = \fake@bold@factor,
   ]{SimHei}
+  \setCJKfamilyfont{zhkai}[
+    AutoFakeBold = \fake@bold@factor,
+  ]{\windows@kaiti}
 }{}
 % ------------------------------------------------------------------------------
 %   Math fonts
