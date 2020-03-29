@@ -118,6 +118,14 @@
     },
     name = degree@type,
   },
+  degree-name = {
+    default = {工学博士},
+    name    = degree@name,
+  },
+  degree-name* = {
+    default = {Doctor~of~Philosophy},
+    name    = degree@name@en,
+  },
   language = {
     choices = {
       chinese,
@@ -132,19 +140,17 @@
   },
   title = {
     default = {标题},
-    code    = {
-      \title{\sht@title}
-    },
   },
   title* = {
     default = {Title},
     name    = title@en,
   },
+  keywords,
+  keywords* = {
+    name = keywords@en,
+  },
   author = {
     default = {姓名},
-    code    = {
-      \author{\sht@author}
-    },
   },
   author* = {
     default = {Name of author},
@@ -181,22 +187,20 @@
   joint-supervisor* = {
     name = joint@supervisor@en,
   },
-  degree-name = {
-    default = {工学博士},
-    name    = degree@name,
+  joint-supervisor-institution = {
+    name = joint@supervisor@institution,
   },
-  degree-name* = {
-    default = {Doctor~of~Philosophy},
-    name    = degree@name@en,
+  joint-supervisor-institution* = {
+    name = joint@supervisor@institution@en,
   },
   institution = {
-    default = {上海科技大学信息科学与技术学院},
+    % default = {上海科技大学信息科学与技术学院},
   },
   institution* = {
-    default = {%
-      School~of~Information~Science~and~Technology\\%
-      ShanghaiTech~University%
-    },
+    % default = {%
+    %   School~of~Information~Science~and~Technology\\%
+    %   ShanghaiTech~University%
+    % },
     name = institution@en
   },
   discipline = {
@@ -204,7 +208,7 @@
   },
   discipline* = {
     % default = {Computer Science and Technology},
-    name    = discipline@en,
+    name = discipline@en,
   },
   date = {
     default = {\the\year~年~\the\month~月},
@@ -267,13 +271,14 @@
 \RequirePackage{fancyhdr}
 \RequirePackage{letltxmacro}
 \RequirePackage{fontspec}[2016/12/27]
+\RequirePackage{caption}
 \RequirePackage{amsmath, amsthm, amssymb}
 \RequirePackage[
   mathrm = sym,
   mathit = sym,
   mathbf = sym,
   mathtt = sym,
-] {unicode-math}
+]{unicode-math}
 \AtEndPreamble{
   \RequirePackage{hyperref}
   \hypersetup{
@@ -291,6 +296,32 @@
 % ==============================================================================
 % Format Specifications
 % ==============================================================================
+% ------------------------------------------------------------------------------
+%   Basic information
+% ------------------------------------------------------------------------------
+\def\contentsname{目\hspace{1\ccwd}录}
+\def\listfigurename{图形列表}
+\def\listtablename{表格列表}
+\def\tablename{表}
+\def\figurename{图}
+\def\algname{算法}
+\def\bibname{参考文献}
+\def\refname{参考文献}
+\def\bibetal{等}
+\def\biband{和}
+\def\axiomname{公理}
+\def\theoremname{定理}
+\def\lemmaname{引理}
+\def\corollaryname{推论}
+\def\assertionname{断言}
+\def\propositionname{命题}
+\def\conjecturename{猜想}
+\def\definitionname{定义}
+\def\examplename{例}
+\def\remarkname{注}
+\def\proofname{证明}
+\def\@title{\sht@title}
+\def\@author{\sht@author}
 % ------------------------------------------------------------------------------
 %   Geometry and layouts
 % ------------------------------------------------------------------------------
@@ -367,6 +398,7 @@
   \renewcommand{\footrulewidth}{0pt}
 }
 \fancypagestyle{Plain}{}
+\pagestyle{fancy}
 \providecommand{\frontmatter}{}
 \LetLtxMacro{\TmpFrontmatter}{\frontmatter}
 \renewcommand{\frontmatter}{%
@@ -393,30 +425,42 @@
 % ------------------------------------------------------------------------------
 %   English fonts
 % ------------------------------------------------------------------------------
-\setmainfont{XITS} [
-  Extension      = .otf,
-  UprightFont    = *-Regular,
-  BoldFont       = *-Bold,
-  ItalicFont     = *-Italic,
-  BoldItalicFont = *-BoldItalic,
-  Ligatures      = TeX,
-]
-\setsansfont{texgyreheros} [
-  Extension      = .otf,
-  UprightFont    = *-regular,
-  BoldFont       = *-bold,
-  ItalicFont     = *-italic,
-  BoldItalicFont = *-bolditalic,
-  Ligatures      = TeX,
-]
-\setmonofont{texgyrecursor} [
-  Extension      = .otf,
-  UprightFont    = *-regular,
-  BoldFont       = *-bold,
-  ItalicFont     = *-italic,
-  BoldItalicFont = *-bolditalic,
-  Ligatures      = TeX,
-]
+\ifthenelse{\equal{\sht@fontset}{windows}}{
+  \setmainfont{Times New Roman}
+  \setsansfont{Arial}
+  \setmonofont{Courier}
+}{
+  \ifthenelse{\equal{\sht@fontset}{mac}}{
+    \setmainfont{Times New Roman}
+    \setsansfont{Helvetica}
+    \setmonofont{Courier}
+  }{
+    \setmainfont{XITS} [
+      Extension      = .otf,
+      UprightFont    = *-Regular,
+      BoldFont       = *-Bold,
+      ItalicFont     = *-Italic,
+      BoldItalicFont = *-BoldItalic,
+      Ligatures      = TeX,
+    ]
+    \setsansfont{texgyreheros} [
+      Extension      = .otf,
+      UprightFont    = *-regular,
+      BoldFont       = *-bold,
+      ItalicFont     = *-italic,
+      BoldItalicFont = *-bolditalic,
+      Ligatures      = TeX,
+    ]
+    \setmonofont{texgyrecursor} [
+      Extension      = .otf,
+      UprightFont    = *-regular,
+      BoldFont       = *-bold,
+      ItalicFont     = *-italic,
+      BoldItalicFont = *-bolditalic,
+      Ligatures      = TeX,
+    ]
+  }
+}
 % ------------------------------------------------------------------------------
 %   Chinese fonts
 % ------------------------------------------------------------------------------
@@ -424,37 +468,31 @@
   \def\fake@bold@factor{2.5}
   \IfFileExists{C:/bootfont.bin}{
     \setCJKmainfont[
-      AutoFakeBold=\fake@bold@factor,
-      ItalicFont=KaiTi_GB2312,
+      AutoFakeBold = \fake@bold@factor,
+        ItalicFont = KaiTi_GB2312,
     ]{SimSun}
-    \setCJKfamilyfont{zhkai}[AutoFakeBold=\fake@bold@factor]{KaiTi_GB2312}
+    \setCJKfamilyfont{zhkai}[
+      AutoFakeBold = \fake@bold@factor,
+    ]{KaiTi_GB2312}
   }{
     \setCJKmainfont[
-      AutoFakeBold=\fake@bold@factor,
-      ItalicFont=KaiTi,
+      AutoFakeBold = \fake@bold@factor,
+        ItalicFont = KaiTi,
     ]{SimSun}
-    \setCJKfamilyfont{zhkai}[AutoFakeBold=\fake@bold@factor]{KaiTi}
+    \setCJKfamilyfont{zhkai}[
+      AutoFakeBold = \fake@bold@factor,
+    ]{KaiTi}
   }
-  \setCJKsansfont[AutoFakeBold=\fake@bold@factor]{SimHei}
-  \setCJKfamilyfont{zhsong}[AutoFakeBold=\fake@bold@factor]{SimSun}
-  \setCJKfamilyfont{zhhei}[AutoFakeBold=\fake@bold@factor]{SimHei}
-}{
-  \ifthenelse{\equal{\sht@fontset}{mac}}{
-    \setCJKmainfont[
-         UprightFont = * Light,
-            BoldFont = * Bold,
-          ItalicFont = Kaiti SC,
-      BoldItalicFont = Kaiti SC Bold,
-    ]{Songti SC}
-    \setCJKsansfont[BoldFont=* Medium]{Heiti SC}
-    \setCJKfamilyfont{zhsong}[
-        UprightFont = * Light,
-           BoldFont = * Bold,
-      ]{Songti SC}
-    \setCJKfamilyfont{zhhei}[BoldFont=* Medium]{Heiti SC}
-    \setCJKfamilyfont{zhkai}[BoldFont=* Bold]{Kaiti SC}
-  }{}
-}
+  \setCJKsansfont[
+    AutoFakeBold = \fake@bold@factor,
+  ]{SimHei}
+  \setCJKfamilyfont{zhsong}[
+    AutoFakeBold = \fake@bold@factor,
+  ]{SimSun}
+  \setCJKfamilyfont{zhhei}[
+    AutoFakeBold = \fake@bold@factor,
+  ]{SimHei}
+}{}
 % ------------------------------------------------------------------------------
 %   Math fonts
 % ------------------------------------------------------------------------------
@@ -497,8 +535,64 @@
   \setmathfontface\mathsf{FiraMath-Regular.otf}
 }{}
 % ------------------------------------------------------------------------------
+%   Utility functions for ToC and bookmarks
+% ------------------------------------------------------------------------------
+\long\def\artxaux#1{}
+\newcommand{\intotocnostar}[3]{%
+  % [<\chapter|...>,<*>,<title>]
+  #1#2{%
+    \phantomsection%
+    \addcontentsline{toc}{\expandafter\artxaux\string#1}{#3}%
+    #3%
+  }
+  \markboth{\MakeUppercase{#3}}{}%
+}
+\newcommand{\intotocstar}[3][\artxmaincnt]{%
+  % [<chapter|...>,<extra commands>,<title>]
+  #2%
+  \phantomsection%
+  \addcontentsline{toc}{#1}{#3}%
+  \markboth{\MakeUppercase{#3}}{}%
+}
+\newcommand{\intotoc}{\@ifstar{\intotocstar}{\intotocnostar}}
+\newcommand{\intobmknostar}[4][0]{%
+  % [<level>,<\chapter|...>,<*>,<title>]
+  #2#3{%
+    \phantomsection%
+    \Hy@writebookmark%
+    {}%
+    {#4}%
+    {\@currentHref}%
+    {#1}%
+    {toc}%
+    #4%
+  }%
+  \markboth{\MakeUppercase{#4}}{}%
+}
+\newcommand{\intobmkstar}[3][0]{%
+  % [<level>,<extra commands>,<title>]
+  #2%
+  \phantomsection%
+  \Hy@writebookmark%
+  {}%
+  {#3}%
+  {\@currentHref}%
+  {#1}%
+  {toc}%
+  \markboth{\MakeUppercase{#3}}{}%
+}
+\newcommand{\intobmk}{\@ifstar{\intobmkstar}{\intobmknostar}}
+% ------------------------------------------------------------------------------
 %   Table of contents, figures and tables
 % ------------------------------------------------------------------------------
+\DeclareCaptionFont{wuhaocuti}{\zihao{5}\bfseries}
+\captionsetup{
+  format = plain,
+  hangindent = 2.0em,
+  skip = 8pt,
+  labelsep = quad,
+  font = {wuhaocuti},
+}
 \def\@dotsep{1.5mu}
 \def\@pnumwidth{2em}
 \def\@tocrmarg{2em}
@@ -567,6 +661,17 @@
 \renewcommand*\l@table{\@dottedtocline{1}{1em}{1.8em}}
 \setcounter{tocdepth}{2}
 \setcounter{secnumdepth}{3}
+\newcommand{\makeindices}{%
+  \begingroup%
+  \linespread{1.2}%
+  \intobmk*{\cleardoublepage}{\contentsname}%
+  \tableofcontents%
+  \intobmk*{\cleardoublepage}{\listfigurename}%
+  \listoffigures%
+  \intobmk*{\cleardoublepage}{\listtablename}%
+  \listoftables%
+  \endgroup%
+}
 % ------------------------------------------------------------------------------
 %   Content specifications
 % ------------------------------------------------------------------------------
@@ -624,20 +729,6 @@
 \newcommand\sht@schoollogo{%
   \includegraphics[width=10.48cm]{shanghaitech_logo.pdf}%
 }
-\renewcommand{\cleardoublepage}[1][plain]{%
-  \clearpage%
-  \ifodd%
-    \c@page%
-  \else%
-    \thispagestyle{#1}%
-    \hbox{}%
-    \newpage%
-    \if@twocolumn%
-      \hbox{}%
-      \newpage%
-    \fi%
-  \fi%
-}
 \renewcommand{\maketitle}{%
   \ifthenelse{\equal{\sht@degree}{doctor}}{
     \sht@maketitle@graduate{博士}
@@ -650,9 +741,10 @@
       \sht@error{Degree type `\sht@degree' is not supported yet}
     }
   }
+  \makedeclarations
 }
 % ------------------------------------------------------------------------------
-%   PhD/Master thesis covers
+%   PhD/Master covers
 % ------------------------------------------------------------------------------
 \newcommand{\sht@maketitle@graduate}[1]{%
   \cleardoublepage
@@ -668,15 +760,19 @@
         }%
       }%
     }
+
     \vspace*{\stretch{4}}
 
     \sht@schoollogo
+
     \vspace*{\stretch{2}}
 
     {\zihao{1}\heiti {#1 学位论文}}
+
     \vspace*{\stretch{3}}
 
     {\zihao{-3}\heiti \ulenhance[1.5pt]{\sht@title}}
+
     \vspace*{\stretch{3}}
 
     {
@@ -699,14 +795,16 @@
           \ulenhance[1.2pt]{\ulextend[318pt]{\sht@institution}} \\
       \end{tabular}
     }
+
     \vspace*{\stretch{4}}
 
     \sht@date
+
     \vspace{\stretch{4}}
   \end{center}
   \clearpage
   \thispagestyle{empty}
-  \cleardoublepage[empty]
+  \cleardoublepage
 }
 \newcommand{\sht@maketitle@graduate@en}[1]{
   \cleardoublepage
@@ -714,9 +812,11 @@
   \begin{center}
     \linespread{1.6}
     \zihao{4}\bfseries
+
     \vspace*{50pt}
 
     {\zihao{-3}\bfseries \ulenhance[1.5pt]{\sht@title@en}}
+
     \vspace*{\stretch{3}}
 
     {
@@ -737,15 +837,90 @@
 
       Supervisor:~\sht@supervisor@en
     }
+
     \vspace*{\stretch{3}}
 
     {\sht@institution@en}
+
     \vspace*{\stretch{1}}
 
     {\sht@date@en}
+
     \vspace{\stretch{3}}
   \end{center}
   \clearpage
   \thispagestyle{empty}
-  \cleardoublepage[empty]
+  \cleardoublepage
 }
+% ------------------------------------------------------------------------------
+%   Declarations
+% ------------------------------------------------------------------------------
+\newcommand{\makedeclarations}{%
+  \cleardoublepage
+  \thispagestyle{empty}
+  {
+    \linespread{1.6}\zihao{-4}
+
+    \vspace*{2ex}
+
+    \begin{center}
+      {\zihao{4}\bfseries\sffamily 上海科技大学\\研究生学位论文原创性声明}
+    \end{center}
+
+    本人郑重声明:所呈交的学位论文是本人在导师的指导下独立进行研究工作所取得的成果。%
+    尽我所知，除文中已经注明引用的内容外，本论文不包含任何其他个人或集体已经发表或撰写%
+    过的研究成果。对论文所涉及的研究工作做出贡献的其他个人和集体，均已在文中以明确方式%
+    标明或致谢。
+
+    \vspace*{3ex}
+
+    {\hfill{} {作者签名：\hspace*{14em}}}
+
+    {\hfill{} {日\quad\quad 期：\hspace*{14em}}}
+
+    \vspace*{6ex}
+
+    \begin{center}
+      {\zihao{4}\bfseries\sffamily 上海科技大学\\学位论文授权使用声明}
+    \end{center}
+
+    本人完全了解并同意遵守上海科技大学有关保存和使用学位论文的规定，即上海科技大学有权%
+    保留送交学位论文的副本，允许该论文被查阅，可以按照学术研究公开原则和保护知识产权%
+    的原则公布该论文的全部或部分内容，可以采用影印、缩印或其他复制手段保存、汇编本%
+    学位论文。
+    
+    涉密及延迟公开的学位论文在解密或延迟期后适用本声明。
+
+    \vspace*{3ex}
+
+    {\hfill{} {作者签名：\hspace*{10em} 导师签名：\hspace*{9em}}}
+
+    {\hfill{} {日\quad\quad 期：\hspace*{10em} 日\quad\quad 期：\hspace*{9em}}}
+
+    \vspace{3ex}
+  }
+  \clearpage
+  \thispagestyle{empty}
+  \cleardoublepage
+}
+% ------------------------------------------------------------------------------
+%   Abstract
+% ------------------------------------------------------------------------------
+\newenvironment{abstract}{%
+  \cleardoublepage%
+  \intobmk\chapter*{摘\hspace{1\ccwd}要}%
+}{%
+  \vspace{\baselineskip}%
+  \par\noindent{\bfseries 关键词：} \sht@keywords%
+}
+\newenvironment{abstract*}{%
+  \cleardoublepage%
+  \intobmk\chapter*{Abstract}%
+}{%
+  \vspace{\baselineskip}%
+  \par\noindent{\bfseries Key Words:} \sht@keywords@en%
+}
+% ==============================================================================
+% Post-processing
+% ==============================================================================
+\endinput
