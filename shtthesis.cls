@@ -1021,7 +1021,7 @@
 }
 \newenvironment{resume}{%
   \sht@check@resume@title
-  \section*{作者简历}
+  \section*{作者简历：}
   \ifsht@anonymous
     \sht@anonymous@name\par
     \comment
@@ -1074,6 +1074,18 @@
   \ifthenelse{\not \boolean{sht@anonymous}}{
     \endcomment
   }{}
+}
+\newenvironment{projects}{%
+  \sht@check@resume@title
+  \section*{参加的研究项目及获奖情况：}
+  \ifsht@anonymous
+    \sht@anonymous@name\par
+    \comment
+  \fi
+}{%
+  \ifsht@anonymous
+    \endcomment
+  \fi
 }
 \newenvironment{acknowledgement}{%
   \ifsht@anonymous
