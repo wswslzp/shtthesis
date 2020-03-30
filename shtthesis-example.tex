@@ -1,4 +1,5 @@
 \documentclass[
+  % anonymous,
   % fontset = mac,
 ]{shtthesis}
 
@@ -44,7 +45,7 @@
 
 \makeindices
 
-\begin{nomenclatures}[符号]
+\begin{nomenclatures}
   \header[单位]{符号}{说明}
   \item[$\Unit{m^{2} \cdot s^{-2} \cdot K^{-1}}$]{$R$}{the gas constant}
   \item[$\Unit{m^{2} \cdot s^{-2} \cdot K^{-1}}$]{$C_v$}{specific heat capacity at constant volume}
@@ -64,8 +65,7 @@
   \item{ZND}{Zel'dovich-von Neumann-Doering}
 \end{nomenclatures}
 
-\begin{nomenclatures}
-  \header{算子}{说明}
+\begin{nomenclatures}[算子 \& 说明]
   \item{$\Delta$}{difference}
   \item{$\nabla$}{gradient operator}
   \item{$\delta^{\pm}$}{upwind-biased interpolation scheme}
@@ -219,16 +219,25 @@ Ordinary math: $A, F, L, 2, 3, 5, \sigma$, \verb|\text|: $\text{A, F, L, 2, 3, 5
 \backmatter
 \makebiblio
 
-\chapter{作者简历及攻读学位期间发表的学术论文与研究成果}
+\begin{resume}
+  个人简历……
+\end{resume}
 
-\section*{作者简历}
-个人简历……
+\begin{publications}
+  论文发表…… （非匿名环境）
+\end{publications}
 
-\section*{已发表（或正式接受）的学术论文：}
-论文发表……
+\begin{publications*}
+  论文发表…… （匿名环境）
+\end{publications*}
 
-\section*{申请或已获得的专利：}
-专利申请或授权记录……
+\begin{patterns}
+  专利申请或授权记录…… （非匿名环境）
+\end{patterns}
+
+\begin{patterns*}
+  专利申请或授权记录…… （匿名环境）
+\end{patterns*}
 
 \begin{acknowledgement}
   最终致谢信息……

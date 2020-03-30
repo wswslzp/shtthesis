@@ -251,6 +251,11 @@
 % ------------------------------------------------------------------------------
 %   Class options
 % ------------------------------------------------------------------------------
+\SetupKeyvalOptions{
+  family = sht,
+  prefix = sht@,
+}
+\DeclareBoolOption[false]{anonymous}
 \DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{ctexbook}}
 \ProcessKeyvalOptions*
 % ------------------------------------------------------------------------------
@@ -266,6 +271,7 @@
 ]{ctexbook}
 \RequirePackage{geometry}
 \RequirePackage{calc}
+\RequirePackage{verbatim}
 \RequirePackage{etoolbox}
 \RequirePackage{ifthen}
 \RequirePackage{graphicx}
@@ -727,6 +733,7 @@
 % Cover Generation
 % ==============================================================================
 \def\ulhshift{-4em}
+\def\sht@anonymous@name{***}
 \newcommand{\ulunify}[1]{\uline{#1}}
 \newcommand{\ulenhance}[2][1pt]{%
   \def\ULthickness{#1}%
@@ -751,7 +758,9 @@
       \sht@error{Degree type `\sht@degree' is not supported yet}
     }
   }
-  \makedeclarations
+  \ifthenelse{\not \boolean{sht@anonymous}}{%
+    \makedeclarations%
+  }{}
 }
 % ------------------------------------------------------------------------------
 %   PhD/Master covers
@@ -791,9 +800,21 @@
       \def\arraystretch{1.3}
       \begin{tabular}{llc}
         作者姓名：&
-          \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{\sht@author}}} \\
+          \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{%
+            \ifsht@anonymous%
+              \sht@anonymous@name%
+            \else%
+              \sht@author%
+            \fi%
+          }}} \\
         指导教师：&
-          \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{\sht@supervisor}}} \\
+          \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{%
+            \ifsht@anonymous%
+              \sht@anonymous@name%
+            \else%
+              \sht@supervisor%
+            \fi%
+          }}} \\
         \ifdefempty{\sht@supervisor@institution}{}{ &
           \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{\sht@supervisor@institution}}} \\
         }
@@ -843,9 +864,18 @@
 
       By
 
-      \sht@author@en
+      \ifsht@anonymous%
+        \sht@anonymous@name%
+      \else%
+        \sht@author@en%
+      \fi%
 
-      Supervisor:~\sht@supervisor@en
+      Supervisor:~%
+      \ifsht@anonymous%
+        \sht@anonymous@name%
+      \else%
+        \sht@supervisor@en%
+      \fi%
     }
 
     \vspace*{\stretch{3}}
@@ -967,9 +997,9 @@
 \setlength{\bibsep}{0.0ex plus 0.2ex minus 0.2ex}
 \newcommand{\bibstyle@authoryear}{\bibpunct{(}{)}{;}{a}{,}{,}}
 \renewcommand*{\bibfont}{\small}
-\newcommand{\makebiblio}{%
+\newcommand{\makebiblio}[1][reference]{%
   \intotoc*{\cleardoublepage}{\bibname}%
-  \bibliography{reference}%
+  \bibliography{#1}%
 }
 % ------------------------------------------------------------------------------
 %   Appendix
@@ -981,9 +1011,80 @@
   \TmpAppendix%
   \pagestyle{LRPageNumbered}%
 }
-\newenvironment{acknowledgement}{%
-  \chapter[致谢]{致\hspace{1\ccwd}谢}%
+\newcounter{sht@resume@cnt}
+\setcounter{sht@resume@cnt}{0}
+\newcommand{\sht@check@resume@title}{
+  \ifnum\thesht@resume@cnt=0
+    \chapter{作者简历及攻读学位期间发表的学术论文与研究成果}
+  \fi
+  \stepcounter{sht@resume@cnt}
+}
+\newenvironment{resume}{%
+  \sht@check@resume@title
+  \section*{作者简历}
+  \ifsht@anonymous
+    \sht@anonymous@name\par
+    \comment
+  \fi
 }{%
+  \ifsht@anonymous
+    \endcomment
+  \fi
+}
+\newenvironment{publications}{%
+  \sht@check@resume@title
+  \ifsht@anonymous
+    \comment
+  \fi
+  \section*{已发表（或正式接受）的学术论文：}
+}{%
+  \ifsht@anonymous
+    \endcomment
+  \fi
+}
+\newenvironment{publications*}{%
+  \sht@check@resume@title
+  \ifthenelse{\not \boolean{sht@anonymous}}{
+    \comment
+  }{}
+  \section*{已发表（或正式接受）的学术论文：}
+}{%
+  \ifthenelse{\not \boolean{sht@anonymous}}{
+    \endcomment
+  }{}
+}
+\renewenvironment{patterns}{%
+  \sht@check@resume@title
+  \ifsht@anonymous
+    \comment
+  \fi
+  \section*{申请或已获得的专利：}
+}{%
+  \ifsht@anonymous
+    \endcomment
+  \fi
+}
+\newenvironment{patterns*}{%
+  \sht@check@resume@title
+  \ifthenelse{\not \boolean{sht@anonymous}}{
+    \comment
+  }{}
+  \section*{申请或已获得的专利：}
+}{%
+  \ifthenelse{\not \boolean{sht@anonymous}}{
+    \endcomment
+  }{}
+}
+\newenvironment{acknowledgement}{%
+  \ifsht@anonymous
+    \comment
+  \else
+    \chapter[致谢]{致\hspace{1\ccwd}谢}%
+  \fi
+}{%
+  \ifsht@anonymous
+    \endcomment
+  \fi
   \cleardoublepage%
 }
 % ==============================================================================
