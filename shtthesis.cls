@@ -247,6 +247,10 @@
     name    = end@date,
     default = {\the\year-\two@digits{\month}-\two@digits{\day}},
   },
+  anonymous-str = {
+    name = anonymous@str,
+    default = {***},
+  }
 }
 % ------------------------------------------------------------------------------
 %   Class options
@@ -485,22 +489,44 @@
     \def\windows@kaiti{KaiTi}
   }
   \setCJKmainfont[
-    AutoFakeBold = \fake@bold@factor,
-      ItalicFont = \windows@kaiti,
-  ]{SimSun}
+      AutoFakeBold = \fake@bold@factor,
+        ItalicFont = \windows@kaiti,
+    ]{SimSun}
   \setCJKsansfont[
-    AutoFakeBold = \fake@bold@factor,
-  ]{SimHei}
+      AutoFakeBold = \fake@bold@factor,
+    ]{SimHei}
   \setCJKfamilyfont{zhsong}[
-    AutoFakeBold = \fake@bold@factor,
-  ]{SimSun}
+      AutoFakeBold = \fake@bold@factor,
+    ]{SimSun}
   \setCJKfamilyfont{zhhei}[
-    AutoFakeBold = \fake@bold@factor,
-  ]{SimHei}
+      AutoFakeBold = \fake@bold@factor,
+    ]{SimHei}
   \setCJKfamilyfont{zhkai}[
-    AutoFakeBold = \fake@bold@factor,
-  ]{\windows@kaiti}
-}{}
+      AutoFakeBold = \fake@bold@factor,
+    ]{\windows@kaiti}
+}{
+  \ifthenelse{\equal{\sht@fontset}{mac}}{
+    \setCJKmainfont[
+           UprightFont = * Light,
+              BoldFont = * Bold,
+            ItalicFont = Kaiti SC,
+        BoldItalicFont = Kaiti SC Bold,
+      ]{Songti SC}
+    \setCJKsansfont[
+        UprightFont = * Light,
+           BoldFont = * Medium,
+      ]{Heiti SC}
+    \setCJKfamilyfont{zhsong}[
+        UprightFont = * Light,
+           BoldFont = * Bold,
+      ]{Songti SC}
+    \setCJKfamilyfont{zhhei}[
+        UprightFont = * Light,
+           BoldFont = * Medium,
+      ]{Heiti SC}
+    \setCJKfamilyfont{zhkai}[BoldFont=* Bold]{Kaiti SC}
+  }{}
+}
 % ------------------------------------------------------------------------------
 %   Math fonts
 % ------------------------------------------------------------------------------
@@ -733,7 +759,6 @@
 % Cover Generation
 % ==============================================================================
 \def\ulhshift{-4em}
-\def\sht@anonymous@name{***}
 \newcommand{\ulunify}[1]{\uline{#1}}
 \newcommand{\ulenhance}[2][1pt]{%
   \def\ULthickness{#1}%
@@ -802,7 +827,7 @@
         作者姓名：&
           \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{%
             \ifsht@anonymous%
-              \sht@anonymous@name%
+              \sht@anonymous@str%
             \else%
               \sht@author%
             \fi%
@@ -810,7 +835,7 @@
         指导教师：&
           \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{%
             \ifsht@anonymous%
-              \sht@anonymous@name%
+              \sht@anonymous@str%
             \else%
               \sht@supervisor%
             \fi%
@@ -865,14 +890,14 @@
       By
 
       \ifsht@anonymous%
-        \sht@anonymous@name%
+        \sht@anonymous@str%
       \else%
         \sht@author@en%
       \fi%
 
       Supervisor:~%
       \ifsht@anonymous%
-        \sht@anonymous@name%
+        \sht@anonymous@str%
       \else%
         \sht@supervisor@en%
       \fi%
@@ -1023,7 +1048,7 @@
   \sht@check@resume@title
   \section*{作者简历：}
   \ifsht@anonymous
-    \sht@anonymous@name\par
+    \sht@anonymous@str\par
     \comment
   \fi
 }{%
@@ -1079,7 +1104,7 @@
   \sht@check@resume@title
   \section*{参加的研究项目及获奖情况：}
   \ifsht@anonymous
-    \sht@anonymous@name\par
+    \sht@anonymous@str\par
     \comment
   \fi
 }{%
