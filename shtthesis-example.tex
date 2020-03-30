@@ -22,6 +22,14 @@
   discipline-level-1* = {Computer~Science~and~Technology},
 }
 
+\providecommand{\Vector}[1]{\symbfit{#1}}
+\providecommand{\unitVector}[1]{\symbfup{#1}}
+\providecommand{\Matrix}[1]{\symbfup{#1}}
+\providecommand{\unitMatrix}[1]{\symbfup{#1}}
+\providecommand{\Tensor}[1]{\symbfsfup{#1}}
+\providecommand{\unitTensor}[1]{\symbfsfup{#1}}
+\providecommand{\Unit}[1]{\,\mathrm{#1}}
+
 \begin{document}
 \maketitle
 
@@ -35,6 +43,33 @@
 \end{abstract*}
 
 \makeindices
+
+\begin{nomenclatures}[符号]
+  \header[单位]{符号}{说明}
+  \item[$\Unit{m^{2} \cdot s^{-2} \cdot K^{-1}}$]{$R$}{the gas constant}
+  \item[$\Unit{m^{2} \cdot s^{-2} \cdot K^{-1}}$]{$C_v$}{specific heat capacity at constant volume}
+  \item[$\Unit{m^{2} \cdot s^{-2} \cdot K^{-1}}$]{$C_p$}{specific heat capacity at constant pressure}
+  \item[$\Unit{m^{2} \cdot s^{-2}}$]{$E$}{specific total energy}
+  \item[$\Unit{kg \cdot m \cdot s^{-3} \cdot K^{-1}}$]{$k$}{thermal conductivity}
+  \item[$\Unit{kg \cdot m^{-1} \cdot s^{-2}}$]{$S_{ij}$}{deviatoric stress tensor}
+  \item[$\Unit{kg \cdot m^{-1} \cdot s^{-2}}$]{$\tau_{ij}$}{viscous stress tensor}
+  \item[$\Unit{1}$]{$\delta_{ij}$}{Kronecker tensor}
+\end{nomenclatures}
+
+\begin{nomenclatures}[缩写]
+  \header{缩写}{全称}
+  \item{CFD}{Computational Fluid Dynamics}
+  \item{CFL}{Courant-Friedrichs-Lewy}
+  \item{WENO}{Weighted Essentially Non-oscillatory}
+  \item{ZND}{Zel'dovich-von Neumann-Doering}
+\end{nomenclatures}
+
+\begin{nomenclatures}
+  \header{算子}{描述}
+  \item{$\Delta$}{difference}
+  \item{$\nabla$}{gradient operator}
+  \item{$\delta^{\pm}$}{upwind-biased interpolation scheme}
+\end{nomenclatures}
 
 \mainmatter
 \chapter{\ShtThesis 测试文档}
@@ -90,12 +125,6 @@
 
 \chapter{排版功能测试}
 \section{测试数学公式}
-\providecommand{\Vector}[1]{\symbfit{#1}}
-\providecommand{\unitVector}[1]{\symbfup{#1}}
-\providecommand{\Matrix}[1]{\symbfup{#1}}
-\providecommand{\unitMatrix}[1]{\symbfup{#1}}
-\providecommand{\Tensor}[1]{\symbfsfup{#1}}
-\providecommand{\unitTensor}[1]{\symbfsfup{#1}}
 
 \begin{equation} \label{eq:appedns}
     \begin{cases}
@@ -143,7 +172,7 @@ Ordinary math: $A, F, L, 2, 3, 5, \sigma$, \verb|\text|: $\text{A, F, L, 2, 3, 5
 \begin{figure}[htb]
   \centering
   \includegraphics[width=0.75\columnwidth]{shanghaitech_logo.pdf}
-  \caption[上海科技大学校徽]{上海科技大学校徽，\emph{这部分内容不会出现在图形列表的图题中}。}
+  \caption[上海科技大学校徽]{上海科技大学校徽；这部分内容不会出现在图形列表的图题中。}
 \end{figure}
 
 \section{测试表格}
@@ -151,7 +180,7 @@ Ordinary math: $A, F, L, 2, 3, 5, \sigma$, \verb|\text|: $\text{A, F, L, 2, 3, 5
 
 \begin{table}[htb]
   \centering
-  \caption[一个普通的表格]{一个普通的表格，\emph{这部分内容同样不会出现在表格列表的表题中}。}
+  \caption[一个普通的表格]{一个普通的表格；这部分内容同样不会出现在表格列表的表题中。}
   \begin{tabular}{lcc}
     \hline
     项目 & 数值 1 & 数值 2 \\
@@ -165,6 +194,14 @@ Ordinary math: $A, F, L, 2, 3, 5, \sigma$, \verb|\text|: $\text{A, F, L, 2, 3, 5
 \section{测试参考文献}
 测试 \verb|\citet|：\citet{wikibook2014latex}，\citet{lamport1986document, chen2005zhulu}。
 测试 \verb|\citep|：主要用于对正文内容的说明~\citep{chu2004tushu}，以及连续引用~\citep{stamerjohanns2009mathml, betts2005aging}。
+
+\section{测试列表环境}
+测试 \verb|\item| 命令有没有被搞乱……
+\begin{enumerate}
+  \item foo
+  \item bar
+  \item baz
+\end{enumerate}
 
 \appendix
 \chapter{附录测试}

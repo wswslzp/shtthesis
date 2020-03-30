@@ -276,6 +276,7 @@
 \RequirePackage{fontspec}[2016/12/27]
 \RequirePackage{caption}
 \RequirePackage{natbib}
+\RequirePackage{enumitem}
 \RequirePackage{amsmath, amsthm, amssymb}
 \RequirePackage[
   mathrm = sym,
@@ -928,6 +929,35 @@
 }{%
   \vspace{\baselineskip}%
   \par\noindent{\bfseries Key Words:} \sht@keywords@en%
+}
+% ------------------------------------------------------------------------------
+%   Nomenclatures
+% ------------------------------------------------------------------------------
+\newcounter{sht@nomenclature@cnt}
+\setcounter{sht@nomenclature@cnt}{0}
+\def\sht@null@arg{}
+\newenvironment{nomenclatures}[1][\sht@null@arg]{%
+  \ifnum\thesht@nomenclature@cnt=0
+    \cleardoublepage
+    \intobmk\chapter*{符号列表}%
+  \fi
+  \stepcounter{sht@nomenclature@cnt}
+  \ifthenelse{\not \equal{#1}{\sht@null@arg}}{
+    \section*{#1}
+  }{
+    \par\vspace{24pt}
+  }
+  \renewcommand{\item}[3][\sht@null@arg]{
+    \ifthenelse{\not \equal{##1}{\sht@null@arg}}{
+      \par\noindent\makebox[0.15\columnwidth][l]{##2}{{##3}\hfill{##1}}
+    }{
+      \par\noindent\makebox[0.15\columnwidth][l]{##2}{##3}
+    }
+  }
+  \providecommand{\header}[3][\sht@null@arg]{
+    \item[\textbf{##1}]{\textbf{##2}}{\textbf{##3}}
+  }
+}{
 }
 % ------------------------------------------------------------------------------
 %   Bibliography
