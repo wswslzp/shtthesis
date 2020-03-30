@@ -757,7 +757,7 @@
 %   PhD/Master covers
 % ------------------------------------------------------------------------------
 \newcommand{\sht@maketitle@graduate}[1]{%
-  \cleardoublepage
+  \intobmk*{\cleardoublepage}{封面}
   \thispagestyle{empty}
   \begin{center}
     \linespread{1.6}\zihao{4}\bfseries
@@ -817,7 +817,7 @@
   \cleardoublepage
 }
 \newcommand{\sht@maketitle@graduate@en}[1]{
-  \cleardoublepage
+  \intobmk*{\cleardoublepage}{Cover}
   \thispagestyle{empty}
   \begin{center}
     \linespread{1.6}
@@ -866,7 +866,7 @@
 %   Declarations
 % ------------------------------------------------------------------------------
 \newcommand{\makedeclarations}{%
-  \cleardoublepage
+  \intobmk*{\cleardoublepage}{声明}
   \thispagestyle{empty}
   {
     \linespread{1.6}\zihao{-4}
