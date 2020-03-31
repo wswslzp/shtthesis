@@ -199,11 +199,27 @@ Ordinary math: $A, F, L, 2, 3, 5, \sigma$, \verb|\text|: $\text{A, F, L, 2, 3, 5
 
 \section{测试列表环境}
 测试 \verb|\item| 命令有没有被搞乱……
+
+\verb|enumerate| 环境：
 \begin{enumerate}
-  \item foo
-  \item bar
-  \item baz
+  \item \shtthesis 的目标在于简化学位论文的撰写，利用\LaTeX{}格式与内容分离的特征，模板将格式设计好后，作者可只需关注论文内容……
+
+  \shtthesis 利用\LaTeX{}格式与内容分离的特征……
+  \item \shtthesis 模板将格式设计好后，作者可只需关注论文内容……
 \end{enumerate}
+
+\verb|description| 环境：
+\begin{description}
+  \item[\shtthesis] 的目标在于简化学位论文的撰写，利用\LaTeX{}格式与内容分离的特征，模板将格式设计好后……
+  \item[\shtthesis] 的目标在于简化学位论文的撰写，利用\LaTeX{}格式与内容分离的特征，模板将格式设计好后，作者可只需关注论文内容……
+\end{description}
+
+行内列表，使用短标签：
+\begin{enumerate*}[a)]
+  \item \shtthesis 的目标在于简化学位论文的撰写……
+  \item \shtthesis 利用\LaTeX{}格式与内容分离的特征……
+  \item \shtthesis 模板将格式设计好后，作者可只需关注论文内容……
+\end{enumerate*}
 
 \makebiblio
 

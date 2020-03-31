@@ -287,7 +287,7 @@
 \RequirePackage{fontspec}[2016/12/27]
 \RequirePackage{caption}
 \RequirePackage{natbib}
-\RequirePackage{enumitem}
+\RequirePackage[shortlabels, inline]{enumitem}
 \RequirePackage{amsmath}
 \RequirePackage{mathtools}
 \RequirePackage[
@@ -784,6 +784,10 @@
   space = auto,
   autoindent = true,
 }
+% ------------------------------------------------------------------------------
+%   List environments
+% ------------------------------------------------------------------------------
+\setlist{nosep}
 % ==============================================================================
 % Cover Generation
 % ==============================================================================
