@@ -289,6 +289,7 @@
 \RequirePackage{natbib}
 \RequirePackage{enumitem}
 \RequirePackage{amsmath}
+\RequirePackage{mathtools}
 \RequirePackage[
   mathrm = sym,
   mathit = sym,
@@ -525,6 +526,44 @@
   }{}
 }
 % ------------------------------------------------------------------------------
+%   Math content specifications
+%
+%   Following setup is adapted from `thuthesis'
+% ------------------------------------------------------------------------------
+\unimathsetup{
+  math-style = ISO,
+  bold-style = ISO,
+  nabla      = upright,
+  partial    = upright,
+}
+\protected\def\le{\leqslant}
+\protected\def\ge{\geqslant}
+\AtBeginDocument{%
+  \renewcommand\leq{\leqslant}%
+  \renewcommand\geq{\geqslant}%
+}
+\removenolimits{%
+  \int\iint\iiint\iiiint\oint\oiint\oiiint
+  \intclockwise\varointclockwise\ointctrclockwise\sumint
+  \intbar\intBar\fint\cirfnint\awint\rppolint
+  \scpolint\npolint\pointint\sqint\intlarhk\intx
+  \intcap\intcup\upint\lowint
+}
+\AtBeginDocument{%
+  \renewcommand{\Re}{\operatorname{Re}}%
+  \renewcommand{\Im}{\operatorname{Im}}%
+}
+\newcommand\bm{\symbf}
+\renewcommand\boldsymbol{\symbf}
+\newcommand\square{\mdlgwhtsquare}
+\AtBeginDocument{%
+  \renewcommand\checkmark{\ensuremath{✓}}%
+}
+\allowdisplaybreaks[4]
+\newtagform{dots}{\ldots\ (}{)}
+\usetagform{dots}
+\renewcommand{\eqref}[1]{\textup{(\ref{#1})}}
+% ------------------------------------------------------------------------------
 %   Math fonts
 % ------------------------------------------------------------------------------
 \IfFontExistsTF{XITSMath-Regular.otf}{
@@ -745,42 +784,6 @@
   space = auto,
   autoindent = true,
 }
-% ------------------------------------------------------------------------------
-%   Math content specifications
-%
-%   Following setup is adapted from `thuthesis'
-% ------------------------------------------------------------------------------
-\unimathsetup{
-  math-style = ISO,
-  bold-style = ISO,
-  nabla      = upright,
-  partial    = upright,
-}
-\protected\def\le{\leqslant}
-\protected\def\ge{\geqslant}
-\AtBeginDocument{%
-  \renewcommand\leq{\leqslant}%
-  \renewcommand\geq{\geqslant}%
-}
-\removenolimits{%
-  \int\iint\iiint\iiiint\oint\oiint\oiiint
-  \intclockwise\varointclockwise\ointctrclockwise\sumint
-  \intbar\intBar\fint\cirfnint\awint\rppolint
-  \scpolint\npolint\pointint\sqint\intlarhk\intx
-  \intcap\intcup\upint\lowint
-}
-\AtBeginDocument{%
-  \renewcommand{\Re}{\operatorname{Re}}%
-  \renewcommand{\Im}{\operatorname{Im}}%
-}
-\newcommand\bm{\symbf}
-\renewcommand\boldsymbol{\symbf}
-\newcommand\square{\mdlgwhtsquare}
-\AtBeginDocument{%
-  \renewcommand\checkmark{\ensuremath{✓}}%
-}
-\allowdisplaybreaks[4]
-\renewcommand\theequation{\ifnum \c@chapter>\z@ \thechapter-\fi\@arabic\c@equation}
 % ==============================================================================
 % Cover Generation
 % ==============================================================================
