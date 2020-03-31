@@ -1,6 +1,7 @@
 .vscode
 .DS_Store
 Tmp
+_minted*
 
 # ignore latexmk temporary files
 *.gz
@@ -16,15 +17,28 @@ Tmp
 *.out
 *.toc
 *.xdv
+*-converted-to.pdf
 *.thm
+*.lof
 
 # ignore compiled docuemnt within root
-*.pdf
-!shanghaitech.pdf
+/*.pdf
 !shanghaitech_logo.pdf
+
+# ignore office temp files
+~$*.doc*
+~$*.ppt*
+~$*.pdf
 
 # ignore font files
 *.TTF
 *.otf
 Fonts/COPYING-Fandol.txt
 Fonts/LICENSE-Source.txt
+
+# ignore data archeaves
+*.npz
+*.pth
+
+# ignore duplicated files
+* 2.*
