@@ -800,7 +800,7 @@
   \hbox to #1 {\hfill \hspace*{\ulhshift} #2 \hfill}%
 }
 \newcommand\sht@schoollogo{%
-  \includegraphics[width=10.48cm]{shanghaitech_logo.pdf}%
+  \includegraphics[width=10.48cm]{shanghaitech-logo.pdf}%
 }
 \renewcommand{\maketitle}{%
   \ifthenelse{\equal{\sht@degree}{doctor}}{
