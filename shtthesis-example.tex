@@ -1,6 +1,6 @@
 \documentclass[
-  anonymous,
-  fontset = mac,
+  % anonymous,
+  % fontset = mac,
 ]{shtthesis}
 
 \shtsetup{
@@ -192,7 +192,7 @@ Ordinary math: $A, F, L, 2, 3, 5, \sigma$, \verb|\text|: $\text{A, F, L, 2, 3, 5
 \end{table}
 
 \section{测试参考文献}
-测试 \verb|\citet|：\citet{wikibook2014latex}，\citet{lamport1986document, chen2005zhulu}。
+测试 \verb|\citet|：主要用于将引用信息直接列入文本中 \citet{wikibook2014latex}，以及连续引用 \citet{lamport1986document, chen2005zhulu}。
 测试 \verb|\citep|：主要用于对正文内容的说明~\citep{chu2004tushu}，以及连续引用~\citep{stamerjohanns2009mathml, betts2005aging}。
 
 \section{测试列表环境}
@@ -203,8 +203,10 @@ Ordinary math: $A, F, L, 2, 3, 5, \sigma$, \verb|\text|: $\text{A, F, L, 2, 3, 5
   \item baz
 \end{enumerate}
 
+\makebiblio
+
 \appendix
-\chapter{附录测试}
+\chapter{一章附录}
 这是一个附录章节。
 
 \section{某一个附录 section}
@@ -216,8 +218,73 @@ Ordinary math: $A, F, L, 2, 3, 5, \sigma$, \verb|\text|: $\text{A, F, L, 2, 3, 5
 
 {\fangsong 揫捂揰揱揲揳援揵揶揷揸揻揼揾揿搀搁搂搃搄搅搇搈搉搊搋搌搎搏搐搑搒摓摔摕摖摗摙摚摛掼摝摞摠摡斫斩斮斱斲斳斴斵斶斸旪旫旮旯晒晓晔晕晖晗晘晙晛晜晞晟晠晡晰晣晤晥晦晧晪晫晬晭晰晱晲晳晴晵晷晸晹晻晼晽晾晿暀暁暂暃暄暅暆暇晕晖暊暋暌暍暎暏暐暑暒暓暔暕暖暗旸暙暚暛暜暝暞暟暠暡暣暤暥暦暧暨暩暪暬暭暮暯暰昵暲暳暴暵}
 
+\chapter{另一章附录}
+这是一个附录章节。
+
+\section{测试图片}
+本节测试图片插入和标题索引。
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.75\columnwidth]{shanghaitech_logo.pdf}
+  \caption[上海科技大学校徽]{上海科技大学校徽；这部分内容不会出现在图形列表的图题中。}
+\end{figure}
+
+\section{测试表格}
+本节测试基本的表格绘制和索引。
+
+\begin{table}[htb]
+  \centering
+  \caption[一个普通的表格]{一个普通的表格；这部分内容同样不会出现在表格列表的表题中。}
+  \begin{tabular}{lcc}
+    \hline
+    项目 & 数值 1 & 数值 2 \\
+    \hline
+    指标1 & 1926 & 0817 \\
+    指标2 & 114  & 514 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{测试参考文献}
+测试 \verb|\citet|：主要用于将引用信息直接列入文本中 \citet{wikibook2014latex}，以及连续引用 \citet{lamport1986document, chen2005zhulu}。
+测试 \verb|\citep|：主要用于对正文内容的说明~\citep{chu2004tushu}，以及连续引用~\citep{stamerjohanns2009mathml, betts2005aging}。
+
+\section{测试数学公式}
+
+\begin{equation} \label{eq:appedns}
+    \begin{cases}
+        \frac{\partial \rho}{\partial t} + \nabla\cdot(\rho\Vector{V}) = 0\\
+        \frac{\partial (\rho\Vector{V})}{\partial t} + \nabla\cdot(\rho\Vector{V}\Vector{V}) = \nabla\cdot\Tensor{\sigma}\\
+        \frac{\partial (\rho E)}{\partial t} + \nabla\cdot(\rho E\Vector{V}) = \nabla\cdot(k\nabla T) + \nabla\cdot(\Tensor{\sigma}\cdot\Vector{V})
+    \end{cases}
+\end{equation}
+\begin{equation}
+    \frac{\partial }{\partial t}\int\limits_{\Omega} u \, \mathrm{d}\Omega + \int\limits_{S} \unitVector{n}\cdot(u\Vector{V}) \, \mathrm{d}S = \dot{\phi}
+\end{equation}
+\[
+    \begin{split}
+        \mathcal{L} \{f\}(s) &= \int _{0^{-}}^{\infty} f(t) e^{-st} \, \mathrm{d}t, \ 
+        \mathscr{L} \{f\}(s) = \int _{0^{-}}^{\infty} f(t) e^{-st} \, \mathrm{d}t\\
+        \mathcal{F} {\bigl (} f(x+x_{0}) {\bigr )} &= \mathcal{F} {\bigl (} f(x) {\bigr )} e^{2\pi i\xi x_{0}}, \ 
+        \mathscr{F} {\bigl (} f(x+x_{0}) {\bigr )} = \mathscr{F} {\bigl (} f(x) {\bigr )} e^{2\pi i\xi x_{0}}
+    \end{split}
+\]
+
+Ordinary math: $A, F, L, 2, 3, 5, \sigma$, \verb|\text|: $\text{A, F, L, 2, 3, 5, \sigma}$.
+
+\verb|\mathrm|: $\mathrm{A, F, L, 2, 3, 5, \sigma}$, \verb|\mathbf|: $\mathbf{A, F, L, 2, 3, 5, \sigma}$.
+
+\verb|\mathit|: $\mathit{A, F, L, 2, 3, 5, \sigma}$, \verb|\mathsf|: $\mathsf{A, F, L, 2, 3, 5, \sigma}$.
+
+\verb|\mathtt|: $\mathtt{A, F, L, 2, 3, 5, \sigma}$, \verb|\mathfrak|: $\mathfrak{A, F, L, 2, 3, 5, \sigma}$.
+
+\verb|\mathbb|: $\mathbb{A, F, L, 2, 3, 5, \sigma}$, \verb|\mathcal|: $\mathcal{A, F, L, 2, 3, 5, \sigma}$.
+
 \backmatter
-\makebiblio
+\begin{acknowledgement}
+  最终致谢信息……
+\end{acknowledgement}
 
 \begin{resume}
   个人简历…… （仅非匿名环境显示）
@@ -242,9 +309,5 @@ Ordinary math: $A, F, L, 2, 3, 5, \sigma$, \verb|\text|: $\text{A, F, L, 2, 3, 5
 \begin{projects}
   个人参与的科研项目、获奖情况…… （仅非匿名环境显示）
 \end{projects}
-
-\begin{acknowledgement}
-  最终致谢信息……
-\end{acknowledgement}
 
 \end{document}

@@ -282,12 +282,13 @@
 \RequirePackage{indentfirst}
 \RequirePackage[normalem]{ulem}
 \RequirePackage{fancyhdr}
+\RequirePackage{tocvsec2}
 \RequirePackage{letltxmacro}
 \RequirePackage{fontspec}[2016/12/27]
 \RequirePackage{caption}
 \RequirePackage{natbib}
 \RequirePackage{enumitem}
-\RequirePackage{amsmath, amsthm, amssymb}
+\RequirePackage{amsmath}
 \RequirePackage[
   mathrm = sym,
   mathit = sym,
@@ -327,18 +328,6 @@
 \def\biband{和}
 \def\tablename{表}
 \def\figurename{图}
-\def\algname{算法}
-\def\axiomname{公理}
-\def\theoremname{定理}
-\def\lemmaname{引理}
-\def\corollaryname{推论}
-\def\assertionname{断言}
-\def\propositionname{命题}
-\def\conjecturename{猜想}
-\def\definitionname{定义}
-\def\examplename{例}
-\def\remarkname{注}
-\def\proofname{证明}
 % ------------------------------------------------------------------------------
 %   Geometry and layouts
 % ------------------------------------------------------------------------------
@@ -400,6 +389,29 @@
   \renewcommand{\headrulewidth}{0.8pt}
   \renewcommand{\footrulewidth}{0pt}
 }
+\fancypagestyle{LRPageNumberedAppendix}{
+  \fancyhf{}
+  \fancyhead[C]{
+    \footnotesize
+    \ifnumodd{\value{page}}{%
+      附\hspace{1\ccwd}录%
+    }{
+      \nouppercase\@title
+    }
+  }
+  \fancyfoot[C]{
+    \footnotesize
+    \ifnumodd{\value{page}}{
+      \hspace*{\fill}
+      \thepage
+    }{
+      \thepage
+      \hspace*{\fill}
+    }
+  }
+  \renewcommand{\headrulewidth}{0.8pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
 \fancypagestyle{LRPageNumberedWithoutHead}{
   \fancyhf{}
   \fancyfoot[C]{
@@ -428,12 +440,6 @@
   \TmpMainmatter%
   \pagestyle{LRPageNumbered}%
 }
-\providecommand{\backmatter}{}
-\LetLtxMacro{\TmpBackmatter}{\backmatter}
-\renewcommand{\backmatter}{%
-  \TmpBackmatter%
-  \pagestyle{LRPageNumbered}%
-}
 % ------------------------------------------------------------------------------
 %   Font utilities
 % ------------------------------------------------------------------------------
@@ -442,42 +448,30 @@
 % ------------------------------------------------------------------------------
 %   English fonts
 % ------------------------------------------------------------------------------
-\ifthenelse{\equal{\sht@fontset}{windows}}{
-  \setmainfont{Times New Roman}
-  \setsansfont{Arial}
-  \setmonofont{Courier New}
-}{
-  \ifthenelse{\equal{\sht@fontset}{mac}}{
-    \setmainfont{Times New Roman}
-    \setsansfont{Helvetica}
-    \setmonofont{Courier}
-  }{
-    \setmainfont{XITS} [
-      Extension      = .otf,
-      UprightFont    = *-Regular,
-      BoldFont       = *-Bold,
-      ItalicFont     = *-Italic,
-      BoldItalicFont = *-BoldItalic,
-      Ligatures      = TeX,
-    ]
-    \setsansfont{texgyreheros} [
-      Extension      = .otf,
-      UprightFont    = *-regular,
-      BoldFont       = *-bold,
-      ItalicFont     = *-italic,
-      BoldItalicFont = *-bolditalic,
-      Ligatures      = TeX,
-    ]
-    \setmonofont{texgyrecursor} [
-      Extension      = .otf,
-      UprightFont    = *-regular,
-      BoldFont       = *-bold,
-      ItalicFont     = *-italic,
-      BoldItalicFont = *-bolditalic,
-      Ligatures      = TeX,
-    ]
-  }
-}
+\setmainfont{texgyretermes} [
+  Extension      = .otf,
+  UprightFont    = *-regular,
+  BoldFont       = *-bold,
+  ItalicFont     = *-italic,
+  BoldItalicFont = *-bolditalic,
+  Ligatures      = TeX,
+]
+\setsansfont{texgyreheros} [
+  Extension      = .otf,
+  UprightFont    = *-regular,
+  BoldFont       = *-bold,
+  ItalicFont     = *-italic,
+  BoldItalicFont = *-bolditalic,
+  Ligatures      = TeX,
+]
+\setmonofont{texgyrecursor} [
+  Extension      = .otf,
+  UprightFont    = *-regular,
+  BoldFont       = *-bold,
+  ItalicFont     = *-italic,
+  BoldItalicFont = *-bolditalic,
+  Ligatures      = TeX,
+]
 % ------------------------------------------------------------------------------
 %   Chinese fonts
 % ------------------------------------------------------------------------------
@@ -509,7 +503,7 @@
     \setCJKmainfont[
            UprightFont = * Light,
               BoldFont = * Bold,
-            ItalicFont = Kaiti SC,
+            ItalicFont = Kaiti SC Regular,
         BoldItalicFont = Kaiti SC Bold,
       ]{Songti SC}
     \setCJKsansfont[
@@ -524,18 +518,15 @@
         UprightFont = * Light,
            BoldFont = * Medium,
       ]{Heiti SC}
-    \setCJKfamilyfont{zhkai}[BoldFont=* Bold]{Kaiti SC}
+    \setCJKfamilyfont{zhkai}[
+        UprightFont = * Regular,
+           BoldFont = * Bold,
+      ]{Kaiti SC}
   }{}
 }
 % ------------------------------------------------------------------------------
 %   Math fonts
 % ------------------------------------------------------------------------------
-\unimathsetup{
-  math-style = ISO,
-  bold-style = ISO,
-  nabla      = upright,
-  partial    = upright,
-}
 \IfFontExistsTF{XITSMath-Regular.otf}{
   \setmathfont{XITSMath-Regular} [
     Extension    = .otf,
@@ -571,14 +562,13 @@
 % ------------------------------------------------------------------------------
 %   Utility functions for ToC and bookmarks
 % ------------------------------------------------------------------------------
-\newcommand*{\artxifcnt}[1]{% check if counter exists
-  \ifcsname c@#1\endcsname%
-    \expandafter\@firstoftwo%
+\newcommand{\artxmaincnt}{%
+  \ifcsname c@chapter\endcsname%
+    chapter%
   \else%
-    \expandafter\@secondoftwo%
-  \fi
+    section%
+  \fi%
 }
-\artxifcnt{chapter}{\def\artxmaincnt{chapter}}{\def\artxmaincnt{section}}%
 \long\def\artxaux#1{}
 \newcommand{\intotocnostar}[3]{%
   % [<\chapter|...>,<*>,<title>]
@@ -755,6 +745,42 @@
   space = auto,
   autoindent = true,
 }
+% ------------------------------------------------------------------------------
+%   Math content specifications
+%
+%   Following setup is adapted from `thuthesis'
+% ------------------------------------------------------------------------------
+\unimathsetup{
+  math-style = ISO,
+  bold-style = ISO,
+  nabla      = upright,
+  partial    = upright,
+}
+\protected\def\le{\leqslant}
+\protected\def\ge{\geqslant}
+\AtBeginDocument{%
+  \renewcommand\leq{\leqslant}%
+  \renewcommand\geq{\geqslant}%
+}
+\removenolimits{%
+  \int\iint\iiint\iiiint\oint\oiint\oiiint
+  \intclockwise\varointclockwise\ointctrclockwise\sumint
+  \intbar\intBar\fint\cirfnint\awint\rppolint
+  \scpolint\npolint\pointint\sqint\intlarhk\intx
+  \intcap\intcup\upint\lowint
+}
+\AtBeginDocument{%
+  \renewcommand{\Re}{\operatorname{Re}}%
+  \renewcommand{\Im}{\operatorname{Im}}%
+}
+\newcommand\bm{\symbf}
+\renewcommand\boldsymbol{\symbf}
+\newcommand\square{\mdlgwhtsquare}
+\AtBeginDocument{%
+  \renewcommand\checkmark{\ensuremath{✓}}%
+}
+\allowdisplaybreaks[4]
+\renewcommand\theequation{\ifnum \c@chapter>\z@ \thechapter-\fi\@arabic\c@equation}
 % ==============================================================================
 % Cover Generation
 % ==============================================================================
@@ -811,7 +837,7 @@
 
     \vspace*{\stretch{2}}
 
-    {\zihao{1}\heiti {#1 学位论文}}
+    {\zihao{1}\heiti #1学位论文}
 
     \vspace*{\stretch{3}}
 
@@ -1029,17 +1055,28 @@
 % ------------------------------------------------------------------------------
 %   Appendix
 % ------------------------------------------------------------------------------
-\providecommand{\appendix}{}
-\LetLtxMacro{\TmpAppendix}{\appendix}
+\LetLtxMacro{\origin@appendix}{\appendix}
 \renewcommand{\appendix}{%
-  \cleardoublepage%
-  \TmpAppendix%
+  \origin@appendix
+  \intotoc*{\cleardoublepage}{\appendixname}%
+  \settocdepth{part}%
+  \pagestyle{LRPageNumberedAppendix}%
+}
+% ------------------------------------------------------------------------------
+%   Backmatter
+% ------------------------------------------------------------------------------
+\providecommand{\backmatter}{}
+\LetLtxMacro{\origin@backmatter}{\backmatter}
+\renewcommand{\backmatter}{%
+  \origin@backmatter%
+  \settocdepth{chapter}%
   \pagestyle{LRPageNumbered}%
 }
 \newcounter{sht@resume@cnt}
 \setcounter{sht@resume@cnt}{0}
 \newcommand{\sht@check@resume@title}{
   \ifnum\thesht@resume@cnt=0
+    \cleardoublepage
     \chapter{作者简历及攻读学位期间发表的学术论文与研究成果}
   \fi
   \stepcounter{sht@resume@cnt}
@@ -1116,15 +1153,18 @@
   \ifsht@anonymous
     \comment
   \else
-    \chapter[致谢]{致\hspace{1\ccwd}谢}%
+    \cleardoublepage
+    \chapter[致谢]{致\hspace{1\ccwd}谢}\chaptermark{致\hspace{1\ccwd}谢}%
   \fi
 }{%
   \ifsht@anonymous
     \endcomment
   \fi
-  \cleardoublepage%
 }
 % ==============================================================================
 % Post-processing
 % ==============================================================================
+\AtEndDocument{
+  \cleardoublepage
+}
 \endinput

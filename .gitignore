@@ -16,6 +16,7 @@ Tmp
 *.out
 *.toc
 *.xdv
+*.thm
 
 # ignore compiled docuemnt within root
 *.pdf
