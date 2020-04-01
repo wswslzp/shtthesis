@@ -1,0 +1,325 @@
+\documentclass[
+  % anonymous,
+  fontset = mac,
+]{shtthesis}
+
+\shtsetup{
+  degree = {master},
+  degree-name = {工学硕士},
+  degree-name* = {Master~of~Science~in~Engineering},
+  secret-level = {白给},
+  title = {\ShtThesis~v\version~使用说明},
+  title* = {A~User's~Guide\\to\\\ShtThesis~v\version},
+  keywords = {上海科技大学，学位论文，\LaTeX{}},
+  keywords* = {ShanghaiTech~University, Thesis, \LaTeX{}},
+  author = {李润东},
+  author* = {Li~Rundong},
+  institution = {上海科技大学信息科学与技术学院},
+  institution* = {School~of~Information~Science~and~Technology\\ShanghaiTech~University},
+  supervisor = {范睿~副教授},
+  supervisor* = {Professor~Fan~Rui},
+  supervisor-institution = {上海科技大学信息科学与技术学院},
+  discipline-level-1 = {计算机科学与技术},
+  discipline-level-1* = {Computer~Science~and~Technology},
+}
+
+\usepackage{xcolor}
+\definecolor{shtred}{RGB}{146,46,23}
+% `latex' and `shell' environments are adapted from `thuthesis'
+\usepackage{listings}
+\lstdefinestyle{lstStyleBase}{%
+  basicstyle=\small\ttfamily,
+  aboveskip=\medskipamount,
+  belowskip=\medskipamount,
+  lineskip=0pt,
+  boxpos=c,
+  showlines=false,
+  extendedchars=true,
+  upquote=true,
+  tabsize=2,
+  showtabs=false,
+  showspaces=false,
+  showstringspaces=false,
+  numbers=none,
+  linewidth=\linewidth,
+  xleftmargin=4pt,
+  xrightmargin=0pt,
+  resetmargins=false,
+  breaklines=true,
+  breakatwhitespace=false,
+  breakindent=0pt,
+  breakautoindent=true,
+  columns=flexible,
+  keepspaces=true,
+  gobble=0,
+  framesep=3pt,
+  rulesep=1pt,
+  framerule=1pt,
+  backgroundcolor=\color{gray!5},
+  stringstyle=\color{green!40!black!100},
+  keywordstyle=\bfseries\color{blue!50!black},
+  commentstyle=\slshape\color{black!60}}
+
+\lstdefinestyle{lstStyleShell}{%
+  style=lstStyleBase,
+  frame=l,
+  rulecolor=\color{shtred},
+  language=bash}
+
+\lstdefinestyle{lstStyleLaTeX}{%
+  style=lstStyleBase,
+  frame=l,
+  rulecolor=\color{shtred},
+  language=[LaTeX]TeX}
+
+\lstnewenvironment{latex}{\lstset{style=lstStyleLaTeX}}{}
+\lstnewenvironment{shell}{\lstset{style=lstStyleShell}}{}
+
+\usepackage{hologo}
+\ifthenelse{\equal{\currentfontset}{windows}}{
+  \newfontface\EmojiFont{Segoe UI Emoji}[Renderer=HarfBuzz]
+}{
+  \ifthenelse{\equal{\currentfontset}{mac}}{
+    \newfontface\EmojiFont{Apple Color Emoji}[Renderer=HarfBuzz]
+  }{
+    \newfontface\EmojiFont{Noto Color Emoji}[Renderer=HarfBuzz]
+  }
+}
+\providecommand{\emoji}[1]{%
+  \begingroup%
+  \EmojiFont #1%
+  \endgroup%
+}
+\IfFontExistsTF{Times New Roman}{
+  \providefontfamily\timesnewroman{Times New Roman}
+}{
+  \providecommand{\timesnewroman}{\rmfamily}
+}
+\IfFontExistsTF{Times}{
+  \providefontfamily\timesfamily{Times}
+}{
+  \providecommand{\timesfamily}{\rmfamily}
+}
+\IfFontExistsTF{XITS}{
+  \providefontfamily\xitsfamily{XITS}
+}{
+  \providecommand{\xitsfamily}{\rmfamily}
+}
+
+\usepackage{subcaption}
+\usepackage{ctable}
+
+\begin{document}
+\maketitle
+
+\frontmatter
+\begin{abstract}
+  这篇文档阐述 \shtthesis 的使用方法，包括文档编译方式、文档类选项、文档类提供的功能及其他便于用户（\emph{也就是正在阅读这篇文档的您}）快速撰写符合上海科技大学要求的学位论文的技术要点。
+
+  \shtthesis 旨在以最简实现和最小依赖完整覆盖《上海科技大学研究生学位论文撰写规范（初稿）》的所有格式需求，且不为用户额外设限。从 v\version 起，仅需单个 \verb|shtthesis.cls| 文件即可满足排版需求。文档通过 \verb|\shtsetup| 命令统一设定学位论文信息，且仅提供满足格式需求的最少额外命令。用户可根据自身撰文习惯，引入额外的宏包和命令完成学位论文撰写。
+\end{abstract}
+
+\begin{abstract*}
+  We elaborate on the usage of \shtthesis, which includes the compiling process, document class options, functionalities, and other additional technical points to facilitate the user (that is, \emph{you}) to quickly develop their thesis to meet the format requirements of ShanghaiTech University. 
+
+  \shtthesis is intended to cover all requirements in 《上海科技大学研究生学位 论文撰写规范(初稿)》with minimal function set and introduce no restriction to the user. Beginning with v\version, the \verb|shtthesis.cls| file standalone is suﬀicient for the thesis typesetting. This document class uses \verb|\shtsetup| to uniformly set up thesis information and only provides minimum auxiliary commands to meet all format requirements. The user can import other packages and functionalities according to their writing habits. 
+\end{abstract*}
+
+\makeindices
+
+\begin{nomenclatures}
+  \header[单位]{符号}{说明}
+  \item[${m^{2} \cdot s^{-2} \cdot K^{-1}}$]{$R$}{the gas constant}
+  \item[${m^{2} \cdot s^{-2} \cdot K^{-1}}$]{$C_v$}{specific heat capacity at constant volume}
+  \item[${m^{2} \cdot s^{-2} \cdot K^{-1}}$]{$C_p$}{specific heat capacity at constant pressure}
+  \item[${m^{2} \cdot s^{-2}}$]{$E$}{specific total energy}
+  \item[${kg \cdot m \cdot s^{-3} \cdot K^{-1}}$]{$k$}{thermal conductivity}
+  \item[${kg \cdot m^{-1} \cdot s^{-2}}$]{$S_{ij}$}{deviatoric stress tensor}
+  \item[${kg \cdot m^{-1} \cdot s^{-2}}$]{$\tau_{ij}$}{viscous stress tensor}
+  \item[${1}$]{$\delta_{ij}$}{Kronecker tensor}
+\end{nomenclatures}
+
+\begin{nomenclatures}[缩写]
+  \header{缩写}{全称}
+  \item{CFD}{Computational Fluid Dynamics}
+  \item{CFL}{Courant-Friedrichs-Lewy}
+  \item{WENO}{Weighted Essentially Non-oscillatory}
+  \item{ZND}{Zel'dovich-von Neumann-Doering}
+\end{nomenclatures}
+
+\begin{nomenclatures}[算子 \& 说明]
+  \item{$\Delta$}{difference}
+  \item{$\nabla$}{gradient operator}
+  \item{$\delta^{\pm}$}{upwind-biased interpolation scheme}
+\end{nomenclatures}
+
+\mainmatter
+\chapter{模板介绍}
+\shtthesis (\textbf{S}hang\textbf{h}ai\textbf{T}ech University \textbf{THESIS}) 是根据《上海科技大学研究生学位论文撰写规范（初稿）》（下文简称《规范》）编写的、适用于上海科技大学学位论文写作的\emph{非官方} \LaTeX 模板。目前版本（v\version）提供了博士、硕士学位论文排版选项，且能够自动生成用于盲审的匿名版以及最终提交的非匿名版论文。
+
+这篇文档将尽量详细地阐释 \shtthesis 文档类的使用方法和技巧。由于这篇文档直接使用 \shtthesis 排版，所以其源代码文件 \texttt{\jobname\-.tex} 也可以作为一个实际样例以供读者参考使用。
+
+我们非常希望在 \shtthesis 后续版本中加入本科学位论文的排版选项，因此亟需有上海科技大学本科论文排版经验的同学参与到 \shtthesis 项目中。我们也计划将该使用说明和模板文件 \verb|shtthesis.cls| 统一重构为 \verb|.dtx| 文件。同时，我们也非常希望得到用户宝贵的反馈和建议。若您有意为 \shtthesis 贡献 Issues 和 Pull Requests，请移步至项目主页 \url{https://github.com/lirundong/sht-thesis}。
+
+\chapter{模板使用}
+\section{模板安装}
+\shtthesis 提供的文档类型文件为 \verb|shtthesis.cls|，封面所需的上海科技大学校徽文件为 \verb|shanghaitech-logo.pdf|，用户仅需将这两个文件拷贝至自己的论文目录下即可完成模板安装。假设用户的论文文件为 \verb|thesis.tex|，则工作目录中必要的文件包括：
+\begin{center}
+  \begin{tabular}{ll}
+    \toprule
+    文件名称 & 说明 \\
+    \midrule 
+    \verb|shtthesis.cls| & 模板文档类型 \\
+    \verb|shanghaitech-logo.pdf| & 上海科技大学校徽 \\
+    \verb|thesis.tex| & 论文文件 \\
+    \verb|reference.bib| & 参考文献默认文件名 \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+
+\section{文档编译}
+\shtthesis 支持使用 \hologo{XeLaTeX} 和 \hologo{LuaLaTeX} 编译（注意，\emph{不支持} \hologo{pdfLaTeX}）。尝试编译本文档的源代码 \texttt{\jobname.tex} 至 PDF 文件是了解 \shtthesis 编译流程最直观的方法。我们推荐在最新的 \hologo{TeX} Live 环境下，使用 \verb|latexmk| 工具进行编译。Windows 及 Linux 用户请下载安装 \hologo{TeX} Live (\url{https://www.tug.org/texlive/})，macOS 用户请下载安装 Mac\hologo{TeX} (\url{https://www.tug.org/mactex/})。不推荐在 overleaf 等在线平台编译使用 \shtthesis，项目主页也不接受与 overleaf 相关的 Issues。
+
+在完成环境配置后，即可使用 \verb|latexmk| 工具完成编译。使用 \hologo{XeLaTeX} 引擎进行编译的命令为：
+\begin{shell}
+> latexmk -pdfxe shtthesis-user-guide.tex
+\end{shell}
+若使用 \hologo{LuaLaTeX} 引擎，则编译命令为：
+\begin{shell}
+> latexmk -pdflua shtthesis-user-guide.tex
+\end{shell}
+一般来说，\hologo{XeLaTeX} 引擎的编译速度较快且占用资源较少，而 \hologo{LuaLaTeX} 引擎的编译结果似乎有更好的跨平台规范性。在 \shtthesis 开发过程中，曾出现过在 macOS 下 \hologo{XeLaTeX} 编译的 PDF 在 Windows 下无法打开，而 \hologo{LuaLaTeX} 编译结果正常的情况。
+
+若使用 LuaHB\hologo{TeX} 引擎编译，还可进一步使用 emoji 等特殊功能。例如：\emoji{ 👴🏻👴🏼👴🏽👴🏾👴🏿👴👨🏻‍🦳🎅🏻🦹🏻‍♂️🕵🏼‍♂️👨🏼‍⚕️👨🏼‍🌾👨🏼‍🍳👨🏼‍💼👨🏼‍🔧👨🏼‍🔬👨🏼‍🎨👨🏼‍🚒👨🏼‍✈️👨🏼‍⚖️🧔🏼🤵🏼🧙🏻‍♂️🧖🏼‍♂️👨🏼‍🌾👮🏼‍♂️👨🏼‍🏫👨🏼‍🚀}。LuaHB\hologo{TeX} 引擎在 \hologo{TeX} Live 2019 下实现为 \verb|lualatex-dev|，在 \verb|latexmk| 的使用方法为：
+\begin{shell}
+> latexmk -pdflua -pdflualatex=lualatex-dev \
+    shtthesis-user-guide.tex
+\end{shell}
+
+在编译用户自己的论文时，只需将上述命令中 \texttt{\jobname\-.tex} 替换为 \verb|thesis.tex| 即可。
+
+\section{载入模板类}
+模板安装完成后，在论文文件 \verb|thesis.tex| 开头使用
+\begin{latex}
+\documentclass{shtthesis}
+\end{latex}
+即可载入模板。\shtthesis 模板类的选项包括 \verb|anonymous|，以及传递给 \textsf{cexbook} 的其他选项。
+
+\subsection{\texttt{anonymous} 选项}
+为方便生成盲审所需的匿名版论文，在文档类传入 \verb|anonymous| 即可将论文 PDF 中英文封面的作者信息、导师信息，以及附录中的作者简历替换为匿名字符串，将作者论文发表、专利申请记录替换为匿名版本，并隐去文末的致谢部分：
+\begin{latex}
+\documentclass[anonymous]{shtthesis}
+\end{latex}
+
+\shtthesis 默认的匿名字符串为连续的三个英文星号 ***，该字符串可以在 \verb|\shtsetup| 中使用 anonymous-str 选项修改，详见第 TODO 节。论文文末的作者论文发表、专利申请记录分别使用非匿名的 \verb|publications|、\verb|patterns| 环境，及匿名的 \verb|publications*|、\verb|patterns*| 环境录入，并分别在非匿名版和匿名版论文中显示，详见第 TODO 节。
+
+\subsection{传递给 \textsf{ctexbook} 的选项}
+\shtthesis 实际使用 \CTeX 宏包提供的 \textsf{ctexbook} 文档类排版，故除 \verb|anonymous| 外的其余类参数会传递给 \textsf{ctexbook}。其中需要用户注意的选项为 fontset，即设定论文所用的字体集。\CTeX 宏包自身应该能够根据编译平台选择合适的字体集，然而我们在 \shtthesis 开发过程中发现，\CTeX 有时会将字体集回退至 \TeX Live 提供的最基础的 Fandol 字符集而造成缺字的情况。因此，我们推荐用户根据自身所用平台手动设置相应的 fontset。例如，在 Windows 平台下设置 \verb|fontset=windows|，在 macOS 平台下设置 \verb|fontset=mac|：
+\begin{latex}
+\documentclass[fontset=windows]{shtthesis}
+\end{latex}
+
+\shtthesis 主要支持的 \verb|fontset| 参数包括 \verb|windows|、\verb|mac| 和 \verb|fandol|，分别对应 Windows、Mac 和 Fandol 字符集。各字符集所用的字体见表~\ref{tab::fonts} 所示。
+
+\begin{table}[htb]
+  \centering
+  \caption{不同字符集下 \shtthesis 所用字体}
+  \label{tab::fonts}
+  \begin{subtable}{\columnwidth}
+    \centering
+    \caption{\shtthesis 所用中文字体}
+    \label{tab::chs_fonts}
+    \begin{tabular}{l *{3}{c}}
+      \toprule
+       & Windows & Mac & Fandol \\
+      \midrule
+      宋体 & 中易宋体 & 华文宋体简体 & Fandol 宋体 \\
+      黑体 & 中易黑体 & 华文黑体简体 & Fandol 黑体 \\
+      楷书 & 中易楷体 & 华文楷体简体 & Fandol 楷体 \\
+      仿宋 & 中易仿宋 & 华文仿宋简体 & Fandol 仿宋 \\
+      \bottomrule
+    \end{tabular}
+  \end{subtable}
+  \newline
+  \vspace{12pt}
+  \newline
+  \begin{subtable}{\columnwidth}
+    \centering
+    \caption{\shtthesis 所用英文字体}
+    \label{tab::eng_fonts}
+    \begin{tabular}{l *{3}{c}}
+      \toprule
+       & Windows & Mac & Fandol \\
+      \midrule
+      Serif      & TeX Gyre Terms & TeX Gyre Terms & TeX Gyre Terms \\
+      Sans Serif & TeX Gyre Heros & TeX Gyre Heros & TeX Gyre Heros \\
+      Typewriter & TeX Gyre Cursor & TeX Gyre Cursor & TeX Gyre Cursor \\
+      \bottomrule
+    \end{tabular}
+  \end{subtable}
+\end{table}
+
+需要注意 Fandol 字体集并不能完整覆盖 GBK，故对于部分生僻字可能出现漏字情况。\shtthesis 提供了 \verb|\currentfontset| 测试当前所用字符集，其用法为：
+\begin{quotation}
+当前文档所用字符集为 \texttt{\currentfontset}。
+\end{quotation}
+用户可以在不显著违反《规范》的前提下（例如，{\rmfamily TeX Gyre Terms}、{\xitsfamily XITS}、{\timesfamily Times} 和 {\timesnewroman Times New Roman} 几种字体几乎没有明显区别，见表~\ref{tab::serif_fonts}）按照自身需求自定义字符集，或通过其他参数改变 \textsf{ctexbook} 的排版行为。\textsf{ctexbook} 可用参数详见 \CTeX 文档。\footnote{\url{http://mirrors.ctan.org/language/chinese/ctex/ctex.pdf}}
+
+\begin{table}[htb]
+  \centering
+  \caption{不同英文衬线字体测试}
+  \label{tab::serif_fonts}
+  \begin{tabular}{ll}
+    \toprule
+    Font Name & Content \\
+    \midrule
+    TeX Gyre Terms & {\rmfamily The quick brown fox jumps over the lazy dog.} \\
+    XITS & {\xitsfamily The quick brown fox jumps over the lazy dog.} \\
+    Times & {\timesfamily The quick brown fox jumps over the lazy dog.} \\
+    Times New Roman & {\timesnewroman The quick brown fox jumps over the lazy dog.} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{设定论文信息}
+\shtthesis 在 \verb|\shtsetup| 命令中，使用 key=value 方式统一设定论文信息。\shtthesis 需要知晓学位类型（v\version 支持 master 和 doctor）才能进行进一步排版；其次根据《规范》，博士学位论文和硕士学位论文需要在中英文封面中，依次列出论文密级、论文标题、作者姓名、导师信息、学位类别、一级学科、学校/学院名称及论文完成时间，并在中英文摘要之后列出论文关键词。以上信息均可通过 \verb|\shtsetup| 命令，在论文导言区（即 \verb|\documentclass| 之后、\verb|\begin{document}| 之前）设定。用户可以一次性调用 \verb|\shtsetup| 设定所有信息，也可分多次设定，但是最后一次设定一定要在 \verb|\begin{document}| 之前。例如：
+\begin{latex}
+\shtsetup{
+  degree = {master},
+}
+\end{latex}
+
+\makebiblio
+
+\appendix
+
+\backmatter
+\begin{acknowledgement}
+  最终致谢信息……
+\end{acknowledgement}
+
+\begin{resume}
+  个人简历…… （仅非匿名环境显示）
+\end{resume}
+
+\begin{publications}
+  论文发表…… （非匿名环境）
+\end{publications}
+
+\begin{publications*}
+  论文发表…… （匿名环境）
+\end{publications*}
+
+\begin{patterns}
+  专利申请或授权记录…… （非匿名环境）
+\end{patterns}
+
+\begin{patterns*}
+  专利申请或授权记录…… （匿名环境）
+\end{patterns*}
+
+\begin{projects}
+  个人参与的科研项目、获奖情况…… （仅非匿名环境显示）
+\end{projects}
+
+\end{document}

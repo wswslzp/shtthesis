@@ -443,7 +443,7 @@
 %   Font utilities
 % ------------------------------------------------------------------------------
 \newcommand\sht@fontset{\csname g__ctex_fontset_tl\endcsname}
-\newcommand\currentfontset{\sht@fontset\xspace}
+\newcommand\currentfontset{\sht@fontset}
 % ------------------------------------------------------------------------------
 %   English fonts
 % ------------------------------------------------------------------------------
