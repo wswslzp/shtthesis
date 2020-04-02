@@ -93,17 +93,17 @@
 \IfFontExistsTF{Times New Roman}{
   \providefontfamily\timesnewroman{Times New Roman}
 }{
-  \providecommand{\timesnewroman}{\rmfamily}
+  \providecommand{\timesnewroman}{\emph{Times New Roman missing}}
 }
 \IfFontExistsTF{Times}{
   \providefontfamily\timesfamily{Times}
 }{
-  \providecommand{\timesfamily}{\rmfamily}
+  \providecommand{\timesfamily}{\emph{Times missing}}
 }
 \IfFontExistsTF{XITS}{
   \providefontfamily\xitsfamily{XITS}
 }{
-  \providecommand{\xitsfamily}{\rmfamily}
+  \providecommand{\xitsfamily}{\emph{XITS missing}}
 }
 
 \usepackage{subcaption}
@@ -282,10 +282,14 @@
 \end{table}
 
 \section{设定论文信息}
-\shtthesis 在 \verb|\shtsetup| 命令中，使用 key=value 方式统一设定论文信息。\shtthesis 需要知晓学位类型（v\version 支持 master 和 doctor）才能进行进一步排版；其次根据《规范》，博士学位论文和硕士学位论文需要在中英文封面中，依次列出论文密级、论文标题、作者姓名、导师信息、学位类别、一级学科、学校/学院名称及论文完成时间，并在中英文摘要之后列出论文关键词。以上信息均可通过 \verb|\shtsetup| 命令，在论文导言区（即 \verb|\documentclass| 之后、\verb|\begin{document}| 之前）设定。用户可以一次性调用 \verb|\shtsetup| 设定所有信息，也可分多次设定，但是最后一次设定一定要在 \verb|\begin{document}| 之前。例如：
+\shtthesis 在 \verb|\shtsetup| 命令中，使用 key=value 方式统一设定论文信息。\shtthesis 需要知晓学位类型（v\version 支持 master 和 doctor）才能进行进一步排版；其次根据《规范》，博士学位论文和硕士学位论文需要在中英文封面中，依次列出论文密级、论文标题、作者姓名、导师信息、学位类别、一级学科、学校/学院名称及论文完成时间，并在中英文摘要之后列出论文关键词。以上信息均可通过 \verb|\shtsetup| 命令，在论文导言区（即 \verb|\documentclass| 之后、\verb|\begin{document}| 之前）设定。用户可以一次性调用 \verb|\shtsetup| 设定所有信息，也可分多次设定，但是最后一次设定一定要在 \verb|\begin{document}| 之前，并且需要注意 \verb|\shtsetup| 命令内\emph{不能有空行}。例如：
 \begin{latex}
 \shtsetup{
   degree = {master},
+}
+% other preamble contents...
+\shtsetup{
+  degree-name* = {Master~of~Science~in~Engineering},
 }
 \end{latex}
 
