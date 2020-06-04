@@ -2,6 +2,26 @@
 
 `sht-thesis` 项目派生于 `ucasthesis`，一个在 GPLv3 License 下分发的项目。根据该许可证条款，`sht-thesis` 项目列出基于 `ucasthesis` (commit `faad94b` 之后) 的所有修改条目：
 
+## 2020-06-05
+
+项目名称改为 shtthesis，并完全重构项目结构。
+
+> Release: v0.2.0
+
+1. 重构项目结构，只需指定 `\documentclass{shtthesis}` 即可满足基本排版格式要求；
+2. 提供 `\shtsetup` 命令统一设定论文信息：
+   ```latex
+   \shtsetup{
+     title = {论文标题},
+     title* = {Title~of~Thesis},
+     author = {作者姓名},
+     author* = {Name~of~Author},
+     % ...
+   }
+   ```
+3. 根据重构后的模板类重新编写了使用说明文档；
+4. 正文章节不再仅开始于奇数页。
+
 ## 2020-02-26
 
 > Release: v0.1.1

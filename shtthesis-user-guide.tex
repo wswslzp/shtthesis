@@ -1,7 +1,4 @@
-\documentclass[
-  % anonymous,
-  fontset = mac,
-]{shtthesis}
+\documentclass{shtthesis}
 
 \shtsetup{
   degree = {master},
@@ -15,7 +12,8 @@
   author = {李润东},
   author* = {Li~Rundong},
   institution = {上海科技大学信息科学与技术学院},
-  institution* = {School~of~Information~Science~and~Technology\\ShanghaiTech~University},
+  institution* = {School~of~Information~Science~and~Technology\\%
+                  ShanghaiTech~University},
   supervisor = {范睿~副教授},
   supervisor* = {Professor~Fan~Rui},
   supervisor-institution = {上海科技大学信息科学与技术学院},
@@ -27,6 +25,7 @@
 \definecolor{shtred}{RGB}{146,46,23}
 % `latex' and `shell' environments are adapted from `thuthesis'
 \usepackage{listings}
+\newcommand\prompt{\textup{\$}}
 \lstdefinestyle{lstStyleBase}{%
   basicstyle=\small\ttfamily,
   aboveskip=\medskipamount,
@@ -58,36 +57,44 @@
   backgroundcolor=\color{gray!5},
   stringstyle=\color{green!40!black!100},
   keywordstyle=\bfseries\color{blue!50!black},
-  commentstyle=\slshape\color{black!60}}
-
+  commentstyle=\slshape\color{black!60},
+  escapeinside={`'},
+}
 \lstdefinestyle{lstStyleShell}{%
   style=lstStyleBase,
   frame=l,
   rulecolor=\color{shtred},
   language=bash}
-
 \lstdefinestyle{lstStyleLaTeX}{%
   style=lstStyleBase,
   frame=l,
   rulecolor=\color{shtred},
   language=[LaTeX]TeX}
-
 \lstnewenvironment{latex}{\lstset{style=lstStyleLaTeX}}{}
 \lstnewenvironment{shell}{\lstset{style=lstStyleShell}}{}
 
 \usepackage{hologo}
-\ifthenelse{\equal{\currentfontset}{windows}}{
-  \newfontface\EmojiFont{Segoe UI Emoji}[Renderer=HarfBuzz]
-}{
-  \ifthenelse{\equal{\currentfontset}{mac}}{
-    \newfontface\EmojiFont{Apple Color Emoji}[Renderer=HarfBuzz]
+\usepackage{ifluatex}
+\ifluatex
+  \ifthenelse{\equal{\currentfontset}{windows}}{
+    \newfontface\EmojiFont{Segoe UI Emoji}[Renderer=HarfBuzz]
   }{
-    \newfontface\EmojiFont{Noto Color Emoji}[Renderer=HarfBuzz]
+    \ifthenelse{\equal{\currentfontset}{mac}}{
+      \newfontface\EmojiFont{Apple Color Emoji}[Renderer=HarfBuzz]
+    }{
+      \newfontface\EmojiFont{Noto Color Emoji}[Renderer=HarfBuzz]
+    }
   }
-}
+\else
+  \providecommand{\EmojiFont}{\emph{Current \LaTeX{} engine does not support Emoji}}
+\fi
 \providecommand{\emoji}[1]{%
   \begingroup%
-  \EmojiFont #1%
+  \ifluatex%
+    \EmojiFont #1%
+  \else%
+    \EmojiFont%
+  \fi%
   \endgroup%
 }
 \IfFontExistsTF{Times New Roman}{
@@ -100,29 +107,33 @@
 }{
   \providecommand{\timesfamily}{\emph{Times missing}}
 }
-\IfFontExistsTF{XITS}{
-  \providefontfamily\xitsfamily{XITS}
+\IfFontExistsTF{XITS-Regular.otf}{
+  \providefontfamily\xitsfamily{XITS-Regular.otf}
 }{
   \providecommand{\xitsfamily}{\emph{XITS missing}}
 }
 
 \usepackage{subcaption}
 \usepackage{ctable}
+\usepackage{bicaption}
+\captionsetup[figure][bi-second]{name=Figure}
+\captionsetup[table][bi-second]{name=Table}
 
 \begin{document}
+
 \maketitle
 
 \frontmatter
 \begin{abstract}
-  这篇文档阐述 \shtthesis 的使用方法，包括文档编译方式、文档类选项、文档类提供的功能及其他便于用户（\emph{也就是正在阅读这篇文档的您}）快速撰写符合上海科技大学要求的学位论文的技术要点。
+  本文档阐述 \shtthesis 的使用方法，包括其编译方式、文档类选项、文档类提供的功能及其他便于用户（\emph{也就是正在阅读这篇文档的您}）快速撰写符合上海科技大学要求的学位论文的技术要点。
 
-  \shtthesis 旨在以最简实现和最小依赖完整覆盖《上海科技大学研究生学位论文撰写规范（初稿）》的所有格式需求，且不为用户额外设限。从 v\version 起，仅需单个 \verb|shtthesis.cls| 文件即可满足排版需求。文档通过 \verb|\shtsetup| 命令统一设定学位论文信息，且仅提供满足格式需求的最少额外命令。用户可根据自身撰文习惯，引入额外的宏包和命令完成学位论文撰写。
+  \shtthesis 旨在以最简实现和最小依赖完整覆盖《上海科技大学研究生学位论文撰写规范（初稿）》的所有格式要求，且不为用户额外设限。从 v\version 起，仅需指定 documentclass 为 \shtthesis 即可满足基本排版要求。文档通过 \verb|\shtsetup| 命令统一设定学位论文信息，且仅提供满足格式需求的最少额外命令以保证兼容性。用户可根据自身撰文习惯，引入额外的宏包和命令完成学位论文撰写。
 \end{abstract}
 
 \begin{abstract*}
-  We elaborate on the usage of \shtthesis, which includes the compiling process, document class options, functionalities, and other additional technical points to facilitate the user (that is, \emph{you}) to quickly develop their thesis to meet the format requirements of ShanghaiTech University. 
+  We elaborate on the usage of document class \shtthesis, including its compiling process, class options, provided functionalities, and other technical points to facilitate the user (that is, \emph{you}) to quickly develop their thesis to meet the format requirements of ShanghaiTech University. 
 
-  \shtthesis is intended to cover all requirements in 《上海科技大学研究生学位 论文撰写规范(初稿)》with minimal function set and introduce no restriction to the user. Beginning with v\version, the \verb|shtthesis.cls| file standalone is suﬀicient for the thesis typesetting. This document class uses \verb|\shtsetup| to uniformly set up thesis information and only provides minimum auxiliary commands to meet all format requirements. The user can import other packages and functionalities according to their writing habits. 
+  \shtthesis is intended to cover all requirements in 《上海科技大学研究生学位论文撰写规范(初稿)》with minimal function set and introduce no restriction to the user. Beginning with v\version, specifying documentclass to \shtthesis is suﬀicient for the basic thesis typesetting requirements. This document class uses \verb|\shtsetup| to uniformly set up thesis information and only provides minimum auxiliary commands to meet all format requirements. The user can import other packages and functionalities according to their writing habits. 
 \end{abstract*}
 
 \makeindices
@@ -155,15 +166,15 @@
 
 \mainmatter
 \chapter{模板介绍}
-\shtthesis (\textbf{S}hang\textbf{h}ai\textbf{T}ech University \textbf{THESIS}) 是根据《上海科技大学研究生学位论文撰写规范（初稿）》（下文简称《规范》）编写的、适用于上海科技大学学位论文写作的\emph{非官方} \LaTeX 模板。目前版本（v\version）提供了博士、硕士学位论文排版选项，且能够自动生成用于盲审的匿名版以及最终提交的非匿名版论文。
+\shtthesis (\textbf{S}hang\textbf{h}ai\textbf{T}ech University \textbf{THESIS}) 是根据《上海科技大学研究生学位论文撰写规范（初稿）》（下文简称《规范》）编写的、适用于上海科技大学学位论文写作的\emph{非官方} \LaTeX 模板。目前版本（v\version）提供了博士、硕士学位论文排版选项，且能够自动生成用于盲审的匿名版以及最终提交的打印版论文。
 
-这篇文档将尽量详细地阐释 \shtthesis 文档类的使用方法和技巧。由于这篇文档直接使用 \shtthesis 排版，所以其源代码文件 \texttt{\jobname\-.tex} 也可以作为一个实际样例以供读者参考使用。
+这篇文档将尽量详细地阐释 \shtthesis 的使用方法和技巧。由于这篇文档直接使用 \shtthesis 排版，所以其源代码文件 \texttt{\jobname.tex} 也可以作为一个实际样例以供读者参考使用。
 
-我们非常希望在 \shtthesis 后续版本中加入本科学位论文的排版选项，因此亟需有上海科技大学本科论文排版经验的同学参与到 \shtthesis 项目中。我们也计划将该使用说明和模板文件 \verb|shtthesis.cls| 统一重构为 \verb|.dtx| 文件。同时，我们也非常希望得到用户宝贵的反馈和建议。若您有意为 \shtthesis 贡献 Issues 和 Pull Requests，请移步至项目主页 \url{https://github.com/lirundong/sht-thesis}。
+我们计划在 \shtthesis 后续版本中加入本科学位论文的排版选项，因此亟需有上海科技大学本科论文排版经验的同学参与到 \shtthesis 项目中。我们也计划将该使用说明和模板文件 \verb|shtthesis.cls| 统一重构为 \verb|.dtx| 文件。同时，我们也非常希望得到用户宝贵的反馈和建议。若您有意为 \shtthesis 贡献 issues 和 pull requests，请移步至项目主页 \url{https://github.com/lirundong/sht-thesis}。
 
 \chapter{模板使用}
 \section{模板安装}
-\shtthesis 提供的文档类型文件为 \verb|shtthesis.cls|，封面所需的上海科技大学校徽文件为 \verb|shanghaitech-logo.pdf|，用户仅需将这两个文件拷贝至自己的论文目录下即可完成模板安装。假设用户的论文文件为 \verb|thesis.tex|，则工作目录中必要的文件包括：
+\shtthesis 提供的文档类型文件为 \verb|shtthesis.cls|，封面所需的上海科技大学校徽文件为 \verb|shanghaitech-logo.pdf|，参考文献 GBT-7714 格式文件为 \verb|gbt7714-plain.bst|，用户仅需将这三个文件拷贝至自己论文的工作目录下即可完成安装。假设用户的论文文件为 \verb|thesis.tex|，则工作目录中必要的文件包括：
 \begin{center}
   \begin{tabular}{ll}
     \toprule
@@ -171,6 +182,7 @@
     \midrule 
     \verb|shtthesis.cls| & 模板文档类型 \\
     \verb|shanghaitech-logo.pdf| & 上海科技大学校徽 \\
+    \verb|gbt7714-plain.bst| & 参考文献格式文件 \\
     \verb|thesis.tex| & 论文文件 \\
     \verb|reference.bib| & 参考文献默认文件名 \\
     \bottomrule
@@ -178,48 +190,53 @@
 \end{center}
 
 \section{文档编译}
-\shtthesis 支持使用 \hologo{XeLaTeX} 和 \hologo{LuaLaTeX} 编译（注意，\emph{不支持} \hologo{pdfLaTeX}）。尝试编译本文档的源代码 \texttt{\jobname.tex} 至 PDF 文件是了解 \shtthesis 编译流程最直观的方法。我们推荐在最新的 \hologo{TeX} Live 环境下，使用 \verb|latexmk| 工具进行编译。Windows 及 Linux 用户请下载安装 \hologo{TeX} Live (\url{https://www.tug.org/texlive/})，macOS 用户请下载安装 Mac\hologo{TeX} (\url{https://www.tug.org/mactex/})。不推荐在 overleaf 等在线平台编译使用 \shtthesis，项目主页也不接受与 overleaf 相关的 Issues。
+\shtthesis 支持使用 \hologo{XeLaTeX} 和 \hologo{LuaLaTeX} 编译（注意，\emph{不支持} \hologo{pdfLaTeX}）。尝试编译本文档的源代码 \texttt{\jobname.tex} 至 PDF 文件是了解 \shtthesis 编译流程最直观的方法。我们推荐在最新的 \hologo{TeX} Live 环境下，使用 \verb|latexmk| 工具进行编译。Windows 及 Linux 用户请下载安装 \hologo{TeX} Live (\url{https://www.tug.org/texlive/})，macOS 用户请下载安装 Mac\hologo{TeX} (\url{https://www.tug.org/mactex/})。不推荐在 overleaf 等在线平台编译使用 \shtthesis，项目主页不接受与 overleaf 相关的 issues。
 
 在完成环境配置后，即可使用 \verb|latexmk| 工具完成编译。使用 \hologo{XeLaTeX} 引擎进行编译的命令为：
 \begin{shell}
-> latexmk -pdfxe shtthesis-user-guide.tex
+`\prompt' latexmk -pdfxe
 \end{shell}
 若使用 \hologo{LuaLaTeX} 引擎，则编译命令为：
 \begin{shell}
-> latexmk -pdflua shtthesis-user-guide.tex
+`\prompt' latexmk -pdflua
 \end{shell}
-一般来说，\hologo{XeLaTeX} 引擎的编译速度较快且占用资源较少，而 \hologo{LuaLaTeX} 引擎的编译结果似乎有更好的跨平台规范性。在 \shtthesis 开发过程中，曾出现过在 macOS 下 \hologo{XeLaTeX} 编译的 PDF 在 Windows 下无法打开，而 \hologo{LuaLaTeX} 编译结果正常的情况。
-
-若使用 LuaHB\hologo{TeX} 引擎编译，还可进一步使用 emoji 等特殊功能。例如：\emoji{ 👴🏻👴🏼👴🏽👴🏾👴🏿👴👨🏻‍🦳🎅🏻🦹🏻‍♂️🕵🏼‍♂️👨🏼‍⚕️👨🏼‍🌾👨🏼‍🍳👨🏼‍💼👨🏼‍🔧👨🏼‍🔬👨🏼‍🎨👨🏼‍🚒👨🏼‍✈️👨🏼‍⚖️🧔🏼🤵🏼🧙🏻‍♂️🧖🏼‍♂️👨🏼‍🌾👮🏼‍♂️👨🏼‍🏫👨🏼‍🚀}。LuaHB\hologo{TeX} 引擎在 \hologo{TeX} Live 2019 下实现为 \verb|lualatex-dev|，在 \verb|latexmk| 的使用方法为：
+一般来说，\hologo{XeLaTeX} 引擎的编译速度较快且占用资源较少，而 \hologo{LuaLaTeX} 引擎的编译结果似乎有更好的跨平台规范性。在 \shtthesis 开发过程中，曾出现过在 macOS 下 \hologo{XeLaTeX} 编译的 PDF 在 Windows 下无法打开，而 \hologo{LuaLaTeX} 编译结果正常的情况。若使用 LuaHB\hologo{TeX} 引擎编译，还可进一步使用 emoji 等特殊功能。例如：\emoji{ 👴🏻👴🏼👴🏽👴🏾👴🏿👴👨🏻‍🦳🎅🏻🦹🏻‍♂️🕵🏼‍♂️👨🏼‍⚕️👨🏼‍🌾👨🏼‍🍳👨🏼‍💼👨🏼‍🔧👨🏼‍🔬👨🏼‍🎨👨🏼‍🚒👨🏼‍✈️👨🏼‍⚖️🧔🏼🤵🏼🧙🏻‍♂️🧖🏼‍♂️👨🏼‍🌾👮🏼‍♂️👨🏼‍🏫👨🏼‍🚀}。LuaHB\hologo{TeX} 引擎是 \hologo{TeX} Live 2020 中 \hologo{LuaLaTeX} 的默认实现，在 \hologo{TeX} Live 2019 下使用 LuaHB\hologo{TeX} 的方法为：
 \begin{shell}
-> latexmk -pdflua -pdflualatex=lualatex-dev \
-    shtthesis-user-guide.tex
+`\prompt' latexmk -pdflua -pdflualatex=lualatex-dev
 \end{shell}
-
-在编译用户自己的论文时，只需将上述命令中 \texttt{\jobname\-.tex} 替换为 \verb|thesis.tex| 即可。
 
 \section{载入模板类}
 模板安装完成后，在论文文件 \verb|thesis.tex| 开头使用
 \begin{latex}
 \documentclass{shtthesis}
 \end{latex}
-即可载入模板。\shtthesis 模板类的选项包括 \verb|anonymous|，以及传递给 \textsf{cexbook} 的其他选项。
+即可载入模板。\shtthesis 接受的类参数包括：用于生成盲审论文的 \verb|anonymous| 选项，用于生成打印版论文的 \verb|print| 选项，以及传递给 \textsf{cexbook} 的其他选项。
 
-\subsection{\texttt{anonymous} 选项}
-为方便生成盲审所需的匿名版论文，在文档类传入 \verb|anonymous| 即可将论文 PDF 中英文封面的作者信息、导师信息，以及附录中的作者简历替换为匿名字符串，将作者论文发表、专利申请记录替换为匿名版本，并隐去文末的致谢部分：
+\subsection{\texttt{anonymous} 选项} \label{sec::option_anonymous}
+为方便生成盲审所需的匿名版论文，在文档类传入 \verb|anonymous| 即可将论文中英文封面的作者信息、导师信息，以及附录中的作者简历替换为匿名字符串，将作者论文发表、专利申请记录替换为匿名版本，并隐去文末的致谢部分：
 \begin{latex}
 \documentclass[anonymous]{shtthesis}
 \end{latex}
+\shtthesis 默认的匿名字符串为连续的三个英文星号“***”，该字符串可使通过 \verb|\shtsetup| 的 anonymous-str 选项修改：
+\begin{latex}
+\shtsetup{
+  anonymous-str = XXX, % 作者、导师姓名在匿名环境下显示为 XXX
+}
+\end{latex}
+\verb|\shtsetup| 命令的使用方法详见第~\ref{sec::setup_info} 节。
 
-\shtthesis 默认的匿名字符串为连续的三个英文星号 ***，该字符串可以在 \verb|\shtsetup| 中使用 anonymous-str 选项修改，详见第 TODO 节。论文文末的作者论文发表、专利申请记录分别使用非匿名的 \verb|publications|、\verb|patterns| 环境，及匿名的 \verb|publications*|、\verb|patterns*| 环境录入，并分别在非匿名版和匿名版论文中显示，详见第 TODO 节。
+\subsection{\texttt{print} 选项}
+传入 \verb|print| 选项后，论文中所有超链接变为黑色（包括文献引用、URL 等），以避免黑白打印后彩色链接内容呈浅灰色影响观感；同时将奇数页、偶数页的内侧页边距分别增加 0.63 厘米以便于装订。
+\begin{latex}
+\documentclass[print]{shtthesis}
+\end{latex}
 
-\subsection{传递给 \textsf{ctexbook} 的选项}
-\shtthesis 实际使用 \CTeX 宏包提供的 \textsf{ctexbook} 文档类排版，故除 \verb|anonymous| 外的其余类参数会传递给 \textsf{ctexbook}。其中需要用户注意的选项为 fontset，即设定论文所用的字体集。\CTeX 宏包自身应该能够根据编译平台选择合适的字体集，然而我们在 \shtthesis 开发过程中发现，\CTeX 有时会将字体集回退至 \TeX Live 提供的最基础的 Fandol 字符集而造成缺字的情况。因此，我们推荐用户根据自身所用平台手动设置相应的 fontset。例如，在 Windows 平台下设置 \verb|fontset=windows|，在 macOS 平台下设置 \verb|fontset=mac|：
+\subsection{传递给 \textsf{ctexbook} 的其他选项}
+\shtthesis 实际使用 \CTeX 宏包提供的 \textsf{ctexbook} 文档类排版，除 \verb|anonymous| 和 \verb|print| 外的其余类参数会传递给 \textsf{ctexbook}。其中需要注意的选项为 fontset，即设定论文所用的字体集。\CTeX 宏包自身能够根据编译平台选择合适的字体集，但有时会出现平台识别失败从而回退至 \TeX Live 提供的最基础的 Fandol 字体集导致缺字的情况。此时可以手动设置相应的 fontset，例如在 Windows 平台下设置 \verb|fontset=windows|，在 macOS 平台下设置 \verb|fontset=mac|：
 \begin{latex}
 \documentclass[fontset=windows]{shtthesis}
 \end{latex}
-
-\shtthesis 主要支持的 \verb|fontset| 参数包括 \verb|windows|、\verb|mac| 和 \verb|fandol|，分别对应 Windows、Mac 和 Fandol 字符集。各字符集所用的字体见表~\ref{tab::fonts} 所示。
+不同字符集所用字体见表~\ref{tab::fonts}。
 
 \begin{table}[htb]
   \centering
@@ -233,10 +250,10 @@
       \toprule
        & Windows & Mac & Fandol \\
       \midrule
-      宋体 & 中易宋体 & 华文宋体简体 & Fandol 宋体 \\
-      黑体 & 中易黑体 & 华文黑体简体 & Fandol 黑体 \\
-      楷书 & 中易楷体 & 华文楷体简体 & Fandol 楷体 \\
-      仿宋 & 中易仿宋 & 华文仿宋简体 & Fandol 仿宋 \\
+      \songti   宋体 & \songti   中易宋体 & \songti   华文宋体简体 & \songti   Fandol 宋体 \\
+      \heiti    黑体 & \heiti    中易黑体 & \heiti    华文黑体简体 & \heiti    Fandol 黑体 \\
+      \kaishu   楷书 & \kaishu   中易楷体 & \kaishu   华文楷体简体 & \kaishu   Fandol 楷体 \\
+      \fangsong 仿宋 & \fangsong 中易仿宋 & \fangsong 华文仿宋简体 & \fangsong Fandol 仿宋 \\
       \bottomrule
     \end{tabular}
   \end{subtable}
@@ -245,25 +262,19 @@
   \newline
   \begin{subtable}{\columnwidth}
     \centering
-    \caption{\shtthesis 所用英文字体}
+    \caption{\shtthesis 所用英文字体（全平台一致）}
     \label{tab::eng_fonts}
-    \begin{tabular}{l *{3}{c}}
+    \begin{tabular}{*{3}{c}}
       \toprule
-       & Windows & Mac & Fandol \\
+      \textrm{Serif} & \textsf{Sans Serif} & \texttt{Typewriter} \\
       \midrule
-      Serif      & TeX Gyre Terms & TeX Gyre Terms & TeX Gyre Terms \\
-      Sans Serif & TeX Gyre Heros & TeX Gyre Heros & TeX Gyre Heros \\
-      Typewriter & TeX Gyre Cursor & TeX Gyre Cursor & TeX Gyre Cursor \\
+      \textrm{\TeX{} Gyre Termes} & \textsf{\TeX{} Gyre Heros} & \texttt{\TeX{} Gyre Cursor} \\
       \bottomrule
     \end{tabular}
   \end{subtable}
 \end{table}
 
-需要注意 Fandol 字体集并不能完整覆盖 GBK，故对于部分生僻字可能出现漏字情况。\shtthesis 提供了 \verb|\currentfontset| 测试当前所用字符集，其用法为：
-\begin{quotation}
-当前文档所用字符集为 \texttt{\currentfontset}。
-\end{quotation}
-用户可以在不显著违反《规范》的前提下（例如，{\rmfamily TeX Gyre Terms}、{\xitsfamily XITS}、{\timesfamily Times} 和 {\timesnewroman Times New Roman} 几种字体几乎没有明显区别，见表~\ref{tab::serif_fonts}）按照自身需求自定义字符集，或通过其他参数改变 \textsf{ctexbook} 的排版行为。\textsf{ctexbook} 可用参数详见 \CTeX 文档。\footnote{\url{http://mirrors.ctan.org/language/chinese/ctex/ctex.pdf}}
+用户可以在不显著违反《规范》的前提下按照自身需求自定义字符集（例如在排版正文英文字体时，{\rmfamily \TeX{} Gyre Termes}、{\xitsfamily XITS}、{\timesfamily Times} 和 {\timesnewroman Times New Roman} 几种字体几乎没有明显区别，见表~\ref{tab::serif_fonts}），或通过其他设置调整 \textsf{ctexbook} 的排版行为。\textsf{ctexbook} 使用方法详见 \CTeX 文档。\footnote{\url{http://mirrors.ctan.org/language/chinese/ctex/ctex.pdf}}
 
 \begin{table}[htb]
   \centering
@@ -273,37 +284,310 @@
     \toprule
     Font Name & Content \\
     \midrule
-    TeX Gyre Terms & {\rmfamily The quick brown fox jumps over the lazy dog.} \\
-    XITS & {\xitsfamily The quick brown fox jumps over the lazy dog.} \\
-    Times & {\timesfamily The quick brown fox jumps over the lazy dog.} \\
-    Times New Roman & {\timesnewroman The quick brown fox jumps over the lazy dog.} \\
+    \rmfamily \TeX{} Gyre Termes & \rmfamily The quick brown fox jumps over the lazy dog. \\
+    \xitsfamily XITS & \xitsfamily The quick brown fox jumps over the lazy dog. \\
+    \timesfamily Times & \timesfamily The quick brown fox jumps over the lazy dog. \\
+    \timesnewroman Times New Roman & \timesnewroman The quick brown fox jumps over the lazy dog. \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-\section{设定论文信息}
-\shtthesis 在 \verb|\shtsetup| 命令中，使用 key=value 方式统一设定论文信息。\shtthesis 需要知晓学位类型（v\version 支持 master 和 doctor）才能进行进一步排版；其次根据《规范》，博士学位论文和硕士学位论文需要在中英文封面中，依次列出论文密级、论文标题、作者姓名、导师信息、学位类别、一级学科、学校/学院名称及论文完成时间，并在中英文摘要之后列出论文关键词。以上信息均可通过 \verb|\shtsetup| 命令，在论文导言区（即 \verb|\documentclass| 之后、\verb|\begin{document}| 之前）设定。用户可以一次性调用 \verb|\shtsetup| 设定所有信息，也可分多次设定，但是最后一次设定一定要在 \verb|\begin{document}| 之前，并且需要注意 \verb|\shtsetup| 命令内\emph{不能有空行}。例如：
+\section{学位及封面信息} \label{sec::setup_info}
+\shtthesis 需要知晓学位类型（v\version 支持 master 和 doctor）才能进行进一步排版；其次根据《规范》，博士学位论文和硕士学位论文需要在中英文封面中，依次列出论文密级、论文标题、作者姓名、导师信息、学位类别、一级学科、学校/学院名称及论文完成时间，并在中英文摘要之后列出论文关键词。以上信息均可通过 \verb|\shtsetup| 命令，在论文导言区（即 \verb|\documentclass| 之后、\verb|\begin{document}| 之前）以 key=value 方式统一设定。用户可以一次性调用 \verb|\shtsetup| 设定所有信息，也可分多次设定。例如：
 \begin{latex}
 \shtsetup{
   degree = {master},
-}
-% other preamble contents...
-\shtsetup{
+  degree-name = {工学硕士},
   degree-name* = {Master~of~Science~in~Engineering},
+  secret-level = {白给},
+  title = {\ShtThesis~v\version~使用说明},
+  title* = {A~User's~Guide\\to\\\ShtThesis~v\version},
+  keywords = {上海科技大学，学位论文，\LaTeX{}},
+  keywords* = {ShanghaiTech~University, Thesis, \LaTeX{}},
+  author = {李润东},
+  author* = {Li~Rundong},
+  institution = {上海科技大学信息科学与技术学院},
+  institution* = {School~of~Information~Science~and~Technology\\%
+                  ShanghaiTech~University},
+  supervisor = {范睿~副教授},
+  supervisor* = {Professor~Fan~Rui},
+  supervisor-institution = {上海科技大学信息科学与技术学院},
+  discipline-level-1 = {计算机科学与技术},
+  discipline-level-1* = {Computer~Science~and~Technology},
+  date = {2020~年~6~月},
+  date* = {June,~2020},
 }
+\end{latex}
+其中，表示中文信息条目的 key 为 \verb|-| 连接的小写单词（例如 \verb|degree-name|），由 \verb|*| 结尾的 key 一般表示对应的英文条目（例如 \verb|degree-name*|）；value 可以在前后添加大括号，也可以不添加。特别需要注意 \verb|\shtsetup| 命令内\emph{不能有空行}。
+
+\subsection{学位信息}
+需要设定的学位信息包括：学位类型（degree）、学位名称（degree-name）和英文学位名称（degree-name*），具体见表~\ref{tab::degree_info}。学位类型会影响 \shtthesis 的中英文封面内容。
+\begin{table}[htb]
+\centering
+\caption{通过\texttt{shtsetup}设定的学位信息} \label{tab::degree_info}
+\small
+\begin{tabular}{llp{0.5\columnwidth}}
+  \toprule
+  key & value 样例 & 说明 \\
+  \midrule
+  degree & doctor & v\version 目前支持硕士（master）和博士（doctor）论文排版 \\
+  degree-name & 学术型博士 & 中文学位名称，《规范》中学术型学位中文名称包括：学术型博士、理学硕士、工学硕士 \\
+  degree-name* & Doctor~of~Philosophy & 英文学位名称，《规范》中上述学位对应的英文名称为：Doctor~of~Philosophy、Master~of~Natural~Science、Master~of~Science~in~Engineering \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{论文标题信息}
+设定论文中英文标题和涉密等级。中文标题（title）和英文标题（title*）中可以包含换行符。涉密等级（secret-level）会以“密级：\uline{XXX}”显示在中文封面右上角，未设定涉密等级则不显示相关信息。
+
+\subsection{作者信息}
+需要设定的作者信息包括：作者中英文姓名（author 和 author*）、一级学科中英文名称（discipline-level-1 和 discipline-level-1*）和学校/学院中英文名称（institution 和 institution*）。注意《规范》要求以姓氏拼音在前、名字拼音在后、中间以半角空格分隔的格式书写英文姓名。
+\begin{latex}
+\shtsetup{
+  author = 李润东,
+  author* = {Li~Rundong}, % 正确写法
+  % author* = {Rundong~Li}, % 错误写法
+}
+\end{latex}
+
+在设定学校/学院名称时，中文名称（institution）不可带换行符，英文名称（institution*）应在学院、学校名称间加入换行符，否则封面排版会出现错误。
+\begin{latex}
+\shtsetup{
+  institution = 上海科技大学信息科学与技术学院,
+  institution* = {School~of~Information~Science~and~Technology\\%
+                  ShanghaiTech~University},
+}
+\end{latex}
+
+\subsection{导师信息}
+需要设定的导师信息包括：导师中英文姓名（supervisor 和 supervisor*）和导师单位中文名称（supervisor-institution）。注意在中文封面中，导师姓名和单位分两行显示在“指导教师”条目下。根据《规范》，导师中文姓名（supervisor）应包含导师职称，如教授、副教授、助理教授、研究员、副研究员，以一个半角空格跟随在姓名之后；导师英文姓名（supervisor*）则统一以“Professor”开头，与英文姓名以一个半角空格隔开。导师单位中文名称（supervisor-institution）不可包含换行符。
+\begin{latex}
+\shtsetup{
+  supervisor = {范睿~副教授},
+  supervisor* = {Professor~Fan~Rui},
+  supervisor-institution = {上海科技大学信息科学与技术学院},
+}
+\end{latex}
+
+\subsection{成文日期}
+通过 date 和 date* 分别设置中英文成文日期，日期内容请参考《规范》，日期格式为：
+\begin{latex}
+\shtsetup{
+  date = {2020~年~6~月},
+  date* = {June,~2020},
+}
+\end{latex}
+
+\section{前言部分}
+《规范》规定论文前言部分应包含论文原创性声明和授权使用声明、中英文摘要、目录及图形、表格列表。若有需要，可加入符号列表。\shtthesis 会自动生成目录和图表列表，在不设置 \verb|anonymous| 选项时会自动生成声明页。\shtthesis 提供了摘要和符号列表环境，以便于用户生成中英文摘要和符号列表。
+
+\subsection{论文摘要及关键词}
+论文中英文摘要在正文部分 \verb|\frontmatter| 之后、\verb|\makeindices| 之前，分别在 \verb|abstract| 和 \verb|abstract*| 环境中输入。摘要环境对内容没有限制。
+\begin{latex}
+\begin{abstract}
+  中文摘要内容...
+\end{abstract}
+
+\begin{abstract*}
+  English abstract content...
+\end{abstract*}
+\end{latex}
+
+论文中英文关键词在 \verb|\shtsetup| 命令中分别以 keywords 和 keywords* 设定。注意 \shtthesis v\version 中尚未实现分词处理，此处输入的 value 会不经任何预处理，直接插入至正文中排版。因此，中文关键词（keywords）之间应该以中文逗号“，”隔开且不包含空格；英文关键词（keywords*）之间应该以半角逗号“,”隔开，并在每一半角逗号后跟随一个半角空格。
+\begin{latex}
+\shtsetup{
+  keywords = {上海科技大学，学位论文，\LaTeX{}},
+  keywords* = {ShanghaiTech~University, Thesis, \LaTeX{}},
+}
+\end{latex}
+
+\subsection{目录及图形、表格、符号列表}
+\shtthesis 重载了 \verb|\makeindices| 命令，可一次生成目录、图形列表和表格列表。默认目录中正文标题列出至第 3 级（即 subsection），若包含附录则目录中只列出“附录”一项（附录各级标题仍会生成 PDF 书签），图形、表格列表中列出图表标题的全部内容。对于特别长的图形、表格标题，可以在 \verb|\caption| 命令中指定短标题，从而使列表条目更为简明：
+\begin{latex}
+\begin{figure}
+  \caption[出现在图形列表内的短标题]{出现在正文中的长标题}
+  % ...
+\end{figure}
+\end{latex}
+
+\shtthesis 提供了 \verb|nomenclatures| 环境用于生成符号列表，使用方法为：
+\begin{latex}
+\begin{nomenclatures}[`\emph{caption}']
+  \head[`\emph{unitCap}']{`\emph{symbCap}'}{`\emph{descriptionCap}'}
+  \item[`\emph{unit}']{`\emph{symb}'}{`\emph{description}'}
+  % ...
+\end{nomenclatures}
+\end{latex}
+每次 \verb|nomenclatures| 调用会分别生成一组符号列表，每一 \verb|\item| 会生成一行符号描述。若 caption 不为空则会为当前组生成一个不编号的 section 级的标题。\verb|\head| 为可选指令，会为当前组生成一个“表头”，但必须在 \verb|\item| 之前列出。\verb|\item| 接受一个可选参数 unit 作为符号的单位，若其不为空则在当前行右对齐出现。\verb|nomenclatures| 的使用样例可以参考 \texttt{\jobname.tex} 中“符号列表”部分。注意在 \shtthesis v\version 中 \verb|\item| 的 description 折行后会出现排版错误，故暂时不支持较长的符号描述。
+
+\section{正文部分}
+\shtthesis 正文部分的书写与一般 \LaTeX 项目无异。为保证兼容性，\shtthesis 除修改公式编号格式以符合《规范》要求外，不提供证明、定理等任何额外环境。文献引用目前只支持“著者——出版年”格式。
+
+\subsection{编号公式}
+\shtthesis 通过 \textsf{mathtools} 宏包在公式编号前添加 $\ldots$ 以符合《规范》对公式编号的格式要求，如：
+\begin{align}
+P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
+\end{align}
+同时重载了 \verb|\eqref|，使得公式编号格式修改后，其引用仍与 \textsf{amsmath} 无异：贝叶斯定理~\eqref{eq::bayesian}。
+
+\subsection{文献引用} \label{sec::citation}
+\shtthesis 目前仅通过 \textsf{natbib} 支持“著者——出版年”格式的引用，可以使用 \verb|\citet| 进行文本形式的引用 \citet{Bohan1928}，使用 \verb|\citep| 进行括号形式的引用 \citep{yuan2012lanc}，以及使用 \verb|\citeyear| 进行年份引用 \citeyear{walls2013drought}。当引用内容是组成正文的一部分时，应使用文本形式的引用，否则使用括号形式的引用。一个实用的区分技巧是，如果你在做口头介绍时会说出引用内容，就应使用文本形式的引用，否则使用括号形式的引用。
+
+\shtthesis 默认使用的参考文献文件为 reference.bib，若使用其他文件则需在 \verb|\makebiblio| 命令后指明
+\begin{latex}
+\makebiblio[mybiblio] % 读取 mybiblio.bib 文件
+\end{latex}
+需要注意若文献条目的作者姓名非英文，则需额外增加 key 字段指定作者英文姓名，并在姓氏拼英后加注音调，以确保文献条目在文末的参考文献中正确排列。例如 \citet{bravo1990comparative} 无需额外处理，而 \citet{chen1980zhongguo} 对应的 bib 条目需修改为
+\begin{latex}
+@incollection{chen1980zhongguo,
+  author    = {陈晋镳 and 张惠民 and 朱士兴 and 赵震 and 王振刚},
+  key       = {Chen2 Jing Ao Zhang1 Hui Ming Zhu1 Shi Xing Zhao4 Zhen Wang2 Zhen Gang},
+  title     = {蓟县震旦亚界研究},
+  editor    = {中国地质科学院天津地质矿产研究所},
+  booktitle = {中国震旦亚界},
+  address   = {天津},
+  publisher = {天津科学技术出版社},
+  year      = {1980},
+  pages     = {56--114},
+}
+\end{latex}
+
+\subsection{列表环境}
+\shtthesis 微调了编号列表（\verb|enumerate|）和非编号列表（\verb|itemize|）环境，以适应中文排版惯例。编号列表默认使用数字编号：
+\begin{enumerate}
+  \item 起来，饥寒交迫的奴隶！
+  \item 起来，全世界受苦的人！
+  \item 满腔的热血已经沸腾，
+  \item 要为真理而斗争！
+\end{enumerate}
+也可以在 \verb|\begin{enumerate}| 之后，以短标签（short label）形式指定编号格式。例如，使用小写字母+半角括号作为编号：
+\begin{enumerate}[a)]
+  \item 旧世界打个落花流水，
+  \item 奴隶们起来，起来！
+  \item 不要说我们一无所有，
+  \item 我们要做天下的主人！
+\end{enumerate}
+还可以通过 \verb|resume*| 参数，“继续”被中断的列表编号：
+\begin{enumerate}[a), resume*]
+  \item 这是最后的斗争，
+  \item 团结起来到明天，
+  \item 英特纳雄耐尔
+  \item 就一定要实现！
+\end{enumerate}
+
+关键字（\verb|description|）环境在每一条目关键字后增加了加粗全角冒号“\textbf{：}”以适应中文排版惯例。例如：《中华人民共和国劳动法》
+\begin{description}
+  \item[第一章第三条] 劳动者享有平等就业和选择职业的权利、取得劳动报酬的权利、休息休假的权利、获得劳动安全卫生保护的权利、接受职业技能培训的权利、享受社会保险和福利的权利、提请劳动争议处理的权利以及法律规定的其他劳动权利。
+  \item[第四章第三十六条] 国家实行劳动者每日工作时间不超过八小时、平均每周工作时间不超过四十四小时的工时制度。
+  \item[第四章第四十一条] 用人单位由于生产经营需要，经与工会和劳动者协商后可以延长工作时间，一般每日不得超过一小时；因特殊原因需要延长工作时间的，在保障劳动者身体健康的条件下延长工作时间每日不得超过三小时，但是每月不得超过三十六小时。
+  \item[第四章第四十三条] 用人单位不得违反本法规定延长劳动者的工作时间。   
+\end{description}
+
+\subsection{双语图表标题}
+《规范》要求正文中所有图形、表格标题使用中英双语。此需求可以通过 \textsf{bicaption} 宏包实现，如图~\ref{img::sht_logo} 所示。
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.5\columnwidth]{shanghaitech-logo.pdf}
+  \bicaption{上海科技大学校徽}{School logo of ShanghaiTech University}
+  \label{img::sht_logo}
+\end{figure}
+
+由于在排版较长的、自包含的图表标题时，使用双语图表标题会导致可读性下降，\shtthesis 默认不载入 \textsf{bicaption} 宏包。（ \shtthesis 作者在 2020 年学位申请时并未使用双语标题。）若确实需要双语标题，可在导言区内手动载入并设定 \textsf{bicaption}：
+\begin{latex}
+\usepackage{bicaption}
+\captionsetup[figure][bi-second]{name=Figure}
+\captionsetup[table][bi-second]{name=Table}
+\end{latex}
+
+\section{附录及其他内容} \label{sec::backmatter}
+正文完成后，使用 \verb|\makebiblio| 命令可生成参考文献，若需读取自定义 bib 文件请参考第~\ref{sec::citation} 节。使用 \verb|\appendix| 命令后，即可像书写正文一样书写附录。默认目录中只显示“附录”一项，不显示附录各级标题。
+\begin{latex}
+\appendix
+\chapter{...}
+% ...
+\end{latex}
+
+《规范》要求在文末依此列出致谢、作者简历、攻读学位期间发表的论文与研究成果。用户可使用 \shtthesis 提供的相应环境 \verb|acknowledgement|、\verb|resume|、\verb|publications|、\verb|patterns| 和 \verb|projects| 进行排版。同时为了生成符合盲审要求的论文，\shtthesis 也提供了对应的\emph{匿名环境} \verb|publications*|、\verb|patterns*| 和 \verb|projects*|。在打开 \verb|anonymous| 选项（第~\ref{sec::option_anonymous} 节）后，论文中不出现“致谢”一节，作者简历内容替换为匿名字符串，其他小节使用匿名环境内容排版。注意在第一次使用任一上述环境前，需要使用 \verb|\backmatter| 切换至后记模式。
+
+\subsection{致谢}
+在 \verb|acknowledgement| 环境内书写致谢，致谢内容在匿名模式下不显示。
+\begin{latex}
+\begin{acknowledgement}
+  致谢信息……
+\end{acknowledgement}
+\end{latex}
+
+\subsection{简历及科研成果}
+此部分需要依此书写个人简历（\verb|resume| 环境）、已发表（或正式接受）的学术论文（\verb|publications| 和 \verb|publications*| 环境）、申请或已获得的专利（\verb|patterns| 和 \verb|patterns*| 环境）、参加的研究项目及获奖情况（\verb|projects| 和 \verb|projects*|）。根据是否匿名分别显示非匿名环境内容和匿名环境内容。
+\begin{latex}
+\begin{resume}
+  个人简历…… （仅非匿名环境显示）
+\end{resume}
+
+\begin{publications}
+  论文发表记录…… （非匿名时显示）
+\end{publications}
+
+\begin{publications*}
+  论文发表记录…… （匿名时显示）
+\end{publications*}
+% ...
 \end{latex}
 
 \makebiblio
 
 \appendix
+\chapter{其他排版细节测试}
+本章中的测试材料，数学公式部分来自 \textsf{ucasthesis} 附录 B\footnote{\url{https://github.com/mohuangrui/ucasthesis/blob/master/Tex/Appendix.tex}}，生僻字部分来自《生僻字大全（按部首分类）》\footnote{\url{http://xh.5156edu.com/page/z4745m2559j18770.html}}。
+
+\section{排版数学公式}
+\providecommand{\Vector}[1]{\ensuremath{\mathbf{ #1 }}}
+\providecommand{\Tensor}[1]{\ensuremath{\mathbf{\mathsf{ #1 }}}}
+\begin{equation}
+  \begin{cases}
+      \frac{\partial \rho}{\partial t} + \nabla\cdot(\rho\Vector{V}) = 0 \\
+      \frac{\partial (\rho\Vector{V})}{\partial t} + \nabla\cdot(\rho\Vector{V}\Vector{V}) = \nabla\cdot\Tensor{\sigma} \\
+      \frac{\partial (\rho E)}{\partial t} + \nabla\cdot(\rho E\Vector{V}) = \nabla\cdot(k\nabla T) + \nabla\cdot(\Tensor{\sigma}\cdot\Vector{V})
+  \end{cases}
+\end{equation}
+\begin{equation}
+  \frac{\partial }{\partial t}\int\limits_{\Omega} u \, \mathrm{d}\Omega + \int\limits_{S} \Vector{n}\cdot(u\Vector{V}) \, \mathrm{d}S = \dot{\phi}
+\end{equation}
+\[
+  \begin{split}
+      \mathcal{L} \{f\}(s) &= \int _{0^{-}}^{\infty} f(t) e^{-st} \, \mathrm{d}t, \ 
+      \mathscr{L} \{f\}(s) = \int _{0^{-}}^{\infty} f(t) e^{-st} \, \mathrm{d}t\\
+      \mathcal{F} {\bigl (} f(x+x_{0}) {\bigr )} &= \mathcal{F} {\bigl (} f(x) {\bigr )} e^{2\pi i\xi x_{0}}, \ 
+      \mathscr{F} {\bigl (} f(x+x_{0}) {\bigr )} = \mathscr{F} {\bigl (} f(x) {\bigr )} e^{2\pi i\xi x_{0}}
+  \end{split}
+\]
+
+Ordinary math: $A,F,L,2,3,5,\sigma$. \verb|\mathrm|: $\mathrm{A,F,L,2,3,5,\sigma}$.
+
+\verb|\mathbf|: $\mathbf{A,F,L,2,3,5,\sigma}$. \verb|\mathit|: $\mathit{A,F,L,2,3,5,\sigma}$.
+
+\verb|\mathsf|: $\mathsf{A,F,L,2,3,5,\sigma}$. \verb|\mathtt|: $\mathtt{A,F,L,2,3,5,\sigma}$.
+
+\verb|\mathfrak|: $\mathfrak{A,F,L,2,3,5,\sigma}$. \verb|\mathbb|: $\mathbb{A,F,L,2,3,5,\sigma}$.
+
+\verb|\mathcal|: $\mathcal{A,F,L,2,3,5,\sigma}$. \verb|\mathscr|: $\mathscr{A,F,L,2,3,5,\sigma}$.
+
+\section{排版生僻字}
+{\songti 叧叨叭叱叴叵叺叻叼叽叾卟叿吀吁吂吅吆吇吋吒吔吖吘吙吚吜吡吢吣吤吥吧吩吪吭吮吰吱吲呐吷吺吽呁呃呄呅呇呉呋呋呌呍呎呏呐呒呓呔呕呗呙呚呛呜呝呞呟呠呡呢呣呤呥呦呧周呩呪呫呬呭呮呯呰呱呲呴呶呵呷呸呹呺呻呾呿咀咁咂咃咄咅咇咈咉咊咋咍咎咐咑咓咔咕咖咗咘咙咚咛咜咝咞咟咠咡咢咣咤咥咦咧咨咩咪咫咬咭咮咯咰咲咳咴咵咶啕咹咺咻呙咽咾咿哂哃哅哆哇哈哊哋哌哎哏哐哑哒哓哔哕哖哗哘哙哚哛哜哝哞哟哠咔哣哤哦哧哩哪哫哬哯哰唝哵哶哷哸哹哻哼哽哾哿唀唁唂唃呗唅唆唈唉唊唋唌唍唎唏唑唒唓唔唣唖唗唘唙吣唛唜唝唞唟唠唡唢唣唤唥唦唧唨唩唪唫唬唭唯唰唲唳唴唵唶唷念唹唺唻唼唽唾唿啀啁啃啄啅啇啈啉啋啌啍啎问啐啑啒启啔啕啖啖啘啙啚啛啜啝哑启啠啡唡衔啥啦啧啨啩啪啫啬啭啮啯啰啱啲啳啴啵啶啷啹啺啻啼啽啾啿喀喁喂喃善喅喆喇喈喉喊喋喌喍喎喏喐喑喒喓喔喕喖喗喙喛喞喟喠喡喢喣喤喥喦喨喩喯喭喯喰喱哟喳喴喵営喷喸喹喺喼喽喾喿嗀嗁嗂嗃嗄嗅呛啬嗈嗉唝嗋嗌嗍吗嗏嗐嗑嗒嗓嗕嗖嗗嗘嗙呜嗛嗜嗝嗞嗟嗠嗡嗢嗧嗨唢嗪嗫嗬嗭嗮嗰嗱嗲嗳嗴嗵哔嗷嗸嗹嗺嗻嗼嗽嗾嗿嘀嘁嘂嘃嘄嘅嘅嘇嘈嘉嘊嘋嘌喽嘎嘏嘐嘑嘒嘓呕嘕啧嘘嘙嘚嘛唛嘝嘞嘞嘟嘠嘡嘢嘣嘤嘥嘦嘧嘨哗嘪嘫嘬嘭唠啸囍嘴哓嘶嘷呒嘹嘺嘻嘼啴嘾嘿噀噂噃噄咴噆噇噈噉噊噋噌噍噎噏噐噑噒嘘噔噕噖噗噘噙噚噛噜咝噞噟哒噡噢噣噤哝哕噧噩噪噫噬噭噮嗳噰噱哙噳喷噵噶噷吨噺噻噼噽噾噿咛嚁嚂嚃嚄嚅嚆吓嚈嚉嚊嚋哜嚍嚎嚏尝嚑嚒嚓嚔噜嚖嚗嚘啮嚚嚛嚜嚝嚞嚟嚠嚡嚢嚣嚤呖嚧咙嚩咙嚧嚪嚫嚬嚭嚯嚰嚱亸喾嚵嘤嚷嚸嚹嚺嚻嚼嚽嚾嚿啭嗫嚣囃囄冁囆囇呓囊囋囍囎囏囐嘱囒啮囔囕囖}
+
+{\heiti 圠圡圢圤圥圦圧圩圪圫圬圮圯地圱圲圳圴圵圶圷圸圹圻圼埢鴪址坁坂坃坄坅坆坈坉坊坋坌坍坒坓坔坕坖坘坙坜坞坢坣坥坧坨坩坪坫坬坭坮坯垧坱坲坳坴坶坸坹坺坻坼坽坾坿垀垁垃垅垆垇垈垉垊垌垍垎垏垐垑垓垔垕垖垗垘垙垚垛垜垝垞垟垠垡垤垥垧垨垩垪垫垬垭垮垯垰垱垲垲垳垴埯垶垷垸垹垺垺垻垼垽垾垽垿埀埁埂埃埄埅埆埇埈埉埊埋埌埍城埏埐埑埒埓埔埕埖埗埘埙埚埛野埝埞域埠垭埢埣埤埥埦埧埨埩埪埫埬埭埮埯埰埱埲埳埴埵埶执埸培基埻崎埽埾埿堀堁堃堄坚堆堇堈堉垩堋堌堍堎堏堐堑堒堓堔堕垴堗堘堙堚堛堜埚堞堟堠堢堣堥堦堧堨堩堫堬堭堮尧堰报堲堳场堶堷堸堹堺堻堼堽堾堼堾碱塀塁塂塃塄塅塇塆塈塉块茔塌塍塎垲塐塑埘塓塕塖涂塘塙冢塛塜塝塟塠墘塣墘塥塦塧塨塩塪填塬塭塮塯塰塱塲塳塴尘塶塷塸堑塺塻塼塽塾塿墀墁墂墄墅墆墇墈墉垫墋墌墍墎墏墐墒墒墓墔墕墖墘墖墚墛坠墝增墠墡墢墣墤墥墦墧墨墩墪樽墬墭堕墯墰墱墲坟墴墵垯墷墸墹墺墙墼墽垦墿壀壁壂壃壄壅壆坛壈壉壊垱壌壍埙壏壐壑壒压壔壕壖壗垒圹垆壛壜壝垄壠壡坜壣壤壥壦壧壨坝塆圭}
+
+{\kaishu 奵奺奻奼奾奿妀妁妅妉妊妋妌妍妎妏妐妑妔妕妗妘妚妛妜妟妠妡妢妤妦妧妩妫妭妮妯妰妱妲妴妵妶妷妸妺妼妽妿姀姁姂姃姄姅姆姇姈姉姊姌姗姎姏姒姕姖姘姙姛姝姞姟姠姡姢姣姤姥奸姧姨姩姫姬姭姮姯姰姱姲姳姴姵姶姷姸姹姺姻姼姽姾娀威娂娅娆娈娉娊娋娌娍娎娏娐娑娒娓娔娕娖娗娙娚娱娜娝娞娟娠娡娢娣娤娥娦娧娨娩娪娫娬娭娮娯娰娱娲娳娴娵娷娸娹娺娻娽娾娿婀娄婂婃婄婅婇婈婋婌婍婎婏婐婑婒婓婔婕婖婗婘婙婛婜婝婞婟婠婡婢婣婤婥妇婧婨婩婪婫娅婮婯婰婱婲婳婵婷婸婹婺婻婼婽婾婿媀媁媂媄媃媅媪媈媉媊媋媌媍媎媏媐媑媒媓媔媕媖媗媘媙媚媛媜媝媜媞媟媠媡媢媣媤媥媦媨媩媪媫媬媭妫媰媱媲媳媴媵媶媷媸媹媺媻媪媾嫀嫃嫄嫅嫆嫇嫈嫉嫊袅嫌嫍嫎嫏嫐嫑嫒嫓嫔嫕嫖妪嫘嫙嫚嫛嫜嫝嫞嫟嫠嫡嫢嫣嫤嫥嫦嫧嫨嫧嫩嫪嫫嫬嫭嫮嫯嫰嫱嫲嫳嫴嫳妩嫶嫷嫸嫹嫺娴嫼嫽嫾婳妫嬁嬂嬃嬄嬅嬆嬇娆嬉嬊娇嬍嬎嬏嬐嬑嬒嬓嬔嬕嬖嬗嬘嫱嬚嬛嬜嬞嬟嬠嫒嬢嬣嬥嬦嬧嬨嬩嫔嬫嬬奶嬬嬮嬯婴嬱嬲嬳嬴嬵嬶嬷婶嬹嬺嬻嬼嬽嬾嬿孀孁孂娘孄孅孆孇孆孈孉孊娈孋孊孍孎孏嫫婿媚}
+
+{\fangsong 敳屮屰屲屳屴屵屶屷屸屹屺屻屼屽屾屿岃岄岅岆岇岈岉岊岋岌岍岎岏岐岑岒岓岔岕岖岘岙岚岜岝岞岟岠岗岢岣岤岥岦岧岨岪岫岬岮岯岰岲岴岵岶岷岹岺岻岼岽岾岿峀峁峂峃峄峅峆峇峈峉峊峋峌峍峎峏峐峑峒峓崓峖峗峘峚峙峛峜峝峞峟峠峢峣峤峥峦峧峨峩峪峬峫峭峮峯峱峲峳岘峵峷峸峹峺峼峾峿崀崁崂崃崄崅崆崇崈崉崊崋崌崃崎崏崐崒崓崔崕崖崘崚崛崜崝崞崟岽崡峥崣崤崥崦崧崨崩崪崫崬崭崮崯崰崱崲嵛崴崵崶崷崸崹崺崻崼崽崾崿嵀嵁嵂嵃嵄嵅嵆嵇嵈嵉嵊嵋嵌嵍嵎嵏岚嵑岩嵓嵔嵕嵖嵗嵘嵙嵚嵛嵜嵝嵞嵟嵠嵡嵢嵣嵤嵥嵦嵧嵨嵩嵪嵫嵬嵭嵮嵯嵰嵱嵲嵳嵴嵵嵶嵷嵸嵹嵺嵻嵼嵽嵾嵿嶀嵝嶂嶃崭嶅嶆岖嶈嶉嶊嶋嶌嶍嶎嶏嶐嶑嶒嶓嵚嶕嶖嶘嶙嶚嶛嶜嶝嶞嶟峤嶡峣嶣嶤嶥嶦峄峃嶩嶪嶫嶬嶭崄嶯嶰嶱嶲嶳岙嶵嶶嶷嵘嶹岭嶻屿岳帋巀巁巂巃巄巅巆巇巈巉巊岿巌巍巎巏巐巑峦巓巅巕岩巗巘巙巚}
 
 \backmatter
 \begin{acknowledgement}
-  最终致谢信息……
+\shtthesis 派生于中国科学院大学论文模板 \textsf{ucasthesis}\footnote{\url{https://github.com/mohuangrui/ucasthesis}，使用 GPLv3 许可证分发。}，v0.2.0 开发过程中参考了清华大学论文模板 \textsf{thuthesis}\footnote{\url{https://github.com/tuna/thuthesis}，使用 LPPL-1.3c 许可证分发}，特别是 \verb|\thusetup| 命令的设计和实现。这些项目中流淌的智慧，以及项目作者们的专业态度和共享精神使得 \shtthesis 的开发及完善成为可能。
 \end{acknowledgement}
 
 \begin{resume}
-  个人简历…… （仅非匿名环境显示）
+  李润东，\shtthesis 项目初版作者及维护者，热爱摸鱼。
 \end{resume}
 
 \begin{publications}
