@@ -1,6 +1,6 @@
-# ShangHaiTech university THESIS (sht-thesis)
+# ShangHaiTech university THESIS (shtthesis)
 
-`shtthesis` 项目派生于 [`ucasthesis`](https://github.com/mohuangrui/ucasthesis)，是根据《上海科技大学研究生学位论文撰写规范（初稿）》编写的、适用于上海科技大学学位论文写作的**非官方** LaTeX 模板。只需设定 `\documentclass{shtthesis}` 并通过 `\shtsetup` 设置相关信息，即可迅速完成学位论文排版：
+`shtthesis` project, forked from [`ucasthesis`](https://github.com/mohuangrui/ucasthesis), is an **unofficial** LaTeX thesis template for ShanghaiTech University and satisfies all format requirements in 《上海科技大学研究生学位论文撰写规范（初稿）》. The user just need to set `\documentclass{shtthesis}` and to setup mandatory information via `\shtsetup`, then his or her thesis document will be typeset properly:
 ```latex
 \documentclass{shtthesis}
 
@@ -16,33 +16,32 @@
 % ...
 ```
 
-## 模板下载
-
-- 稳定版：
-  - GitHub Release: 请移步至 [release](https://github.com/lirundong/sht-thesis/releases) 页面，根据发布信息下载相应文件；
+## Get the Template
+- Stable version:
+  - GitHub Release: please refer to [release](https://github.com/lirundong/sht-thesis/releases) page, and download required files based on release information;
   - CTAN: TODO
-- 开发版：直接克隆 master 分支
+- Develop version: directly clone the GitHub repo
   ```bash
   git clone https://github.com/lirundong/sht-thesis.git
   ```
 
-## 快速上手
+## Get Started
 
-在下载或克隆代码库后，依次
+After cloning or downloading this template, please
 
-0. **完整安装**一个现代化的 TeX 发行版：
-   - Windows 或 Linux：[TeX Live](https://www.tug.org/texlive/)
-   - macOS：[MacTeX](https://www.tug.org/mactex/)
-1. 在 terminal （Windows 使用 CMD）中切换至当前目录，使用 `latexmk` 工具，调用 LuaLaTeX 或 XeLaTeX 引擎编译项目（**注意**：不支持 pdfLaTeX）:
+0. Install a modern TeX distribution **in full scheme**:
+   - Windows or Linux: [TeX Live](https://www.tug.org/texlive/)
+   - macOS: [MacTeX](https://www.tug.org/mactex/)
+1. Open your terminal (CMD for Windows users) and switch to this directory, compile this template by `latexmk` tool with LuaLaTeX or XeLaTeX engine (**note**: pdfLaTeX is not supported):
    ```bash
    latexmk -pdflua
-   # 若调用 XeLaTeX 引擎，则执行
+   # if you prefer XeLaTeX engine:
    # latexmk -pdfxe
    ```
-   编译所得文件即为**使用说明**：shtthesis-user-guide.pdf；
-2. 强烈建议先快速看一遍上一步得到的使用说明，或预编译的[使用说明文件](shtthesis.pdf)；
-3. 打开文档的源文件 [shtthesis-user-guide.tex](shtthesis-user-guide.tex)，开始愉快的写作之旅吧 :smirk:
+   the output file shtthesis-user-guide.pdf is the compiled user guide document
+2. We strongly recommend you to skim though the compiled user guide, or the [pre-compiled version](shtthesis.pdf)
+3. Open the document source file [shtthesis-user-guide.tex](shtthesis-user-guide.tex) and enjoy TeXing :smirk:
 
-## 开源许可证
+## License
 
-`shtthesis` 项目根据 GNU Public License V3 分发，具体条款见 [LICENSE](LICENSE)。
+`shtthesis` project is licensed under GNU Public License V3, see [LICENSE](LICENSE) for details.
