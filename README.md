@@ -18,7 +18,7 @@
 
 ## Get the Template
 - Stable version:
-  - GitHub Release: please refer to [release](https://github.com/lirundong/sht-thesis/releases) page, and download required files based on release information;
+  - GitHub Release: please refer to [release](https://github.com/lirundong/sht-thesis/releases) page, and download required files based on release information
   - CTAN: TODO
 - Develop version: directly clone the GitHub repo
   ```bash
