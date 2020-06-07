@@ -4,7 +4,7 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{shtthesis}[%
   2020/06/05 %
-  0.2.0 %
+  v0.2.0 %
   An Unofficial Thesis Template for ShanghaiTech University%
 ]
 \hyphenation{sht-thesis}
