@@ -1,5 +1,4 @@
 # ShangHaiTech university THESIS (shtthesis)
-
 `shtthesis` project, forked from [`ucasthesis`](https://github.com/mohuangrui/ucasthesis), is an **unofficial** LaTeX thesis template for ShanghaiTech University and satisfies all format requirements in 《上海科技大学研究生学位论文撰写规范（初稿）》. The user just need to set `\documentclass{shtthesis}` and to setup mandatory information via `\shtsetup`, then his or her thesis document will be typeset properly:
 ```latex
 \documentclass{shtthesis}
@@ -25,8 +24,9 @@
   git clone https://github.com/lirundong/sht-thesis.git
   ```
 
-## Get Started
+Please, read through [the user's guide](shtthesis-user-guide.pdf) before continuing.
 
+## Get Started
 After cloning or downloading this template, please
 
 0. Install a modern TeX distribution **in full scheme**:
@@ -38,10 +38,10 @@ After cloning or downloading this template, please
    # if you prefer XeLaTeX engine:
    # latexmk -pdfxe
    ```
-   the output file shtthesis-user-guide.pdf is the compiled user guide document
-2. We strongly recommend you to skim though the compiled user guide, or the [pre-compiled version](shtthesis.pdf)
-3. Open the document source file [shtthesis-user-guide.tex](shtthesis-user-guide.tex) and enjoy TeXing :smirk:
+   the output file `shtthesis-user-guide.pdf` is the compiled user guide document
+2. Open the document source file [shtthesis-user-guide.tex](shtthesis-user-guide.tex) and enjoy TeXing :smirk:
 
 ## License
-
-`shtthesis` project is licensed under GNU Public License V3, see [LICENSE](LICENSE) for details.
+- The copyright of ShanghaiTech University logo (`shanghaitech-logo.pdf`) is owned by ShanghaiTech University
+- `shtthesis-gbt7714-plain.bst` is modified from [gbt7714](https://github.com/CTeX-org/gbt7714-bibtex-style) project and licensed under LaTeX Project Public License v1.3c, see [lppl-1.3c](https://www.latex-project.org/lppl/lppl-1-3c.txt) for details
+- The rest of `shtthesis` project is licensed under GNU Public License V3, see [LICENSE](LICENSE) for details

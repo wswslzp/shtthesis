@@ -24,7 +24,7 @@ _minted*
 # ignore compiled docuemnt within root
 *.pdf
 !shanghaitech-logo.pdf
-!shtthesis.pdf
+!shtthesis-user-guide.pdf
 
 # ignore office temp files
 ~$*.doc*

@@ -13,6 +13,7 @@
 \newcommand\shtthesis{\textup{\sffamily shtthesis}\xspace}
 \newcommand\ShtThesis{\textup{\sffamily ShtThesis}\xspace}
 \newcommand\version{0.2.0\xspace}
+\newcommand\versiondate{2020/06/05\xspace}
 % ==============================================================================
 % Options and Declarations
 % ==============================================================================
@@ -1147,7 +1148,7 @@
 % ------------------------------------------------------------------------------
 \providecommand{\bibstyle@authoryear}{\bibpunct{(}{)}{;}{a}{,}{,}}
 \citestyle{authoryear}
-\bibliographystyle{gbt7714-plain}
+\bibliographystyle{shtthesis-gbt7714-plain}
 \setlength{\bibsep}{0.0ex plus 0.2ex minus 0.2ex}
 \renewcommand*{\bibfont}{\small}
 \providecommand{\makebiblio}[1][reference]{%

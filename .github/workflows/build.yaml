@@ -1,0 +1,20 @@
+name: Build
+
+on:
+  push:
+  schedule:
+  - cron: "0 0 * * *"
+
+jobs:
+  test:
+
+    runs-on: macos-10.15
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install macTeX
+      run: |
+        brew cask install mactex-no-gui
+    - name: build thesis
+      run: |
+        latexmk -pdflua
