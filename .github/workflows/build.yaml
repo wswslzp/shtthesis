@@ -6,14 +6,26 @@ on:
   - cron: "0 0 * * *"
 
 jobs:
-  test:
-    runs-on: macos-10.15
+  build_on_macos:
+    name: Build thesis on macOS
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
     - name: Install macTeX
       run: |
         brew cask install mactex-no-gui
+    - name: Build thesis
+      run: |
         eval $(/usr/libexec/path_helper)
-    - name: build thesis
+        latexmk -pdflua
+  build_on_linux:
+    name: Build thesis on Linux
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install TeX Live
+      run: |
+        apt install texlive-full
+    - name: Build thesis
       run: |
         latexmk -pdflua
