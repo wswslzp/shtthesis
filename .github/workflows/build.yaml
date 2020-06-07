@@ -16,7 +16,7 @@ jobs:
         brew cask install mactex-no-gui
     - name: Build thesis
       run: |
-        eval $(/usr/libexec/path_helper)
+        eval "$(/usr/libexec/path_helper)"
         latexmk -pdflua
   build_on_linux:
     name: Build thesis on Linux
@@ -25,7 +25,19 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install TeX Live
       run: |
-        apt install texlive-full
+        sudo apt update
+        sudo apt install texlive-full
+    - name: Build thesis
+      run: |
+        latexmk -pdflua
+  build_on_windows:
+    name: Build thesis on Windows
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install MiKTeX
+      run: |
+        choco install miktex
     - name: Build thesis
       run: |
         latexmk -pdflua
