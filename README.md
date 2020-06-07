@@ -1,4 +1,9 @@
 # ShangHaiTech university THESIS (shtthesis)
+
+&nbsp; | macOS | Windows | Linux
+------|-------|---------|------
+Build | ![Build](https://github.com/lirundong/sht-thesis/workflows/Build/badge.svg) | -- | --
+
 `shtthesis` project, forked from [`ucasthesis`](https://github.com/mohuangrui/ucasthesis), is an **unofficial** LaTeX thesis template for ShanghaiTech University and satisfies all format requirements in 《上海科技大学研究生学位论文撰写规范（初稿）》. The user just need to set `\documentclass{shtthesis}` and to setup mandatory information via `\shtsetup`, then his or her thesis document will be typeset properly:
 ```latex
 \documentclass{shtthesis}
