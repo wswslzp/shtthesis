@@ -1,15 +1,4 @@
-selected_scheme scheme-custom
-collection-basic 1
-collection-bibtexextra 1
-collection-binextra 1
-collection-fontsrecommended 1
-collection-langchinese 1
-collection-langcjk 1
-collection-latex 1
-collection-latexextra 1
-collection-luatex 1
-collection-mathscience 1
-collection-xetex 1
+selected_scheme     scheme-full
 TEXDIR              /tmp/texlive
 TEXMFSYSCONFIG      /tmp/texlive/texmf-config
 TEXMFSYSVAR         /tmp/texlive/texmf-var

@@ -6,7 +6,6 @@ on: [push]
 
 env:
   CTAN_URL: https://mirrors.rit.edu/CTAN
-  TL_PACKAGES: xspace kvdefinekeys kvsetkeys kvoptions datetime geometry calc verbatim etoolbox ifthen graphicx indentfirst ulem fancyhdr tocvsec2 letltxmacro fontspec caption natbib enumitem amsmath mathtools xcolor unicode-math hyperref listings hologo ifluatex subcaption ctable bicaption xits tex-gyre-math tex-gyre firamath-otf
 
 jobs:
   build-ubuntu:
@@ -20,8 +19,6 @@ jobs:
         wget ${{ env.CTAN_URL }}/systems/texlive/tlnet/install-tl-unx.tar.gz
         tar -xzf install-tl-unx.tar.gz
         cd install-tl-20* && ./install-tl --profile ../.github/workflows/texlive.profile
-        tlmgr install ${{ env.TL_PACKAGES }}
-        tlmgr update --self --all --no-auto-install --repository=${{ env.CTAN_URL }}/systems/texlive/tlnet/
     - name: Build user document
       run: |
         export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
@@ -37,8 +34,6 @@ jobs:
         curl -O ${{ env.CTAN_URL }}/systems/texlive/tlnet/install-tl-unx.tar.gz
         tar -xzf install-tl-unx.tar.gz
         cd install-tl-20* && ./install-tl --profile ../.github/workflows/texlive.profile
-        tlmgr install ${{ env.TL_PACKAGES }}
-        tlmgr update --self --all --no-auto-install --repository=${{ env.CTAN_URL }}/systems/texlive/tlnet/
         tlmgr conf texmf OSFONTDIR /System/Library/AssetsV2/com_apple_MobileAsset_Font6
     - name: Build user document
       run: |
@@ -57,9 +52,7 @@ jobs:
         Expand-Archive install-tl.zip -DestinationPath .
         Set-Location install-tl-*
         .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive-win.profile
-        tlmgr install ${{ env.TL_PACKAGES }}
-        tlmgr update --self --all --no-auto-install --repository=${{ env.CTAN_URL }}/systems/texlive/tlnet/
-    - name: Test fduthesis
+    - name: Build user document
       run: |
         ${env:PATH} = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
         latexmk -pdflua
