@@ -13,6 +13,10 @@ jobs:
     if: "!endsWith(github.event.head_commit.message, '[ci skip]')"
     steps:
     - uses: actions/checkout@v2
+    - name: Install additional Chinese fonts
+      run: |
+        sudo apt-get update
+        sudo apt-get install --yes fonts-noto-cjk fonts-noto-color-emoji
     - name: Install TeX Live
       run: |
         export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
@@ -34,10 +38,10 @@ jobs:
         curl -O ${{ env.CTAN_URL }}/systems/texlive/tlnet/install-tl-unx.tar.gz
         tar -xzf install-tl-unx.tar.gz
         cd install-tl-20* && ./install-tl --profile ../.github/workflows/texlive.profile
-        tlmgr conf texmf OSFONTDIR /System/Library/AssetsV2/com_apple_MobileAsset_Font6
     - name: Build user document
       run: |
         export PATH=/tmp/texlive/bin/x86_64-darwin:$PATH
+        tlmgr conf texmf OSFONTDIR /System/Library/AssetsV2/com_apple_MobileAsset_Font6
         latexmk -pdflua
   # Line wrap problem is difficult to resolve on windows.
   build-windows:
@@ -45,6 +49,9 @@ jobs:
     if: "!endsWith(github.event.head_commit.message, '[ci skip]')"
     steps:
     - uses: actions/checkout@v2
+    - name: Install additional Chinese fonts
+      run: |
+        DISM /Online /Add-Capability /CapabilityName:Language.Fonts.Hans~~~und-HANS~0.0.1.0
     - name: Install TeX Live
       run: |
         ${env:PATH} = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
