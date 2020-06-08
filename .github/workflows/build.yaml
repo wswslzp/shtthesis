@@ -100,7 +100,7 @@ jobs:
       run: |
         Invoke-WebRequest -Uri ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso.sha512 -OutFile texlive2020.iso.sha512
         $hash = (Get-Content .\texlive2020.iso.sha512 -Raw).Substring(0, 10)
-        core.setOutput('hash', $hash)
+        echo "::set-output name=hash::$hash"
     - name: Check TeX Live cache
       id: texlive-cache
       uses: actions/cache@v2
