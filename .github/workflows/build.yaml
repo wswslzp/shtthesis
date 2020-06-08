@@ -5,7 +5,9 @@ name: Build
 on: [push]
 
 env:
-  CTAN_URL: https://mirrors.rit.edu/CTAN
+  CTAN_URL: http://mirrors.ctan.org
+  DOWNLOAD_DIR: texlive_download
+  EXTRACT_DIR: texlive_extract
 
 jobs:
   build-ubuntu:
@@ -13,35 +15,70 @@ jobs:
     if: "!endsWith(github.event.head_commit.message, '[ci skip]')"
     steps:
     - uses: actions/checkout@v2
-    - name: Install additional Chinese fonts
+    - name: Install Source Han fonts
       run: |
         sudo apt-get update
-        sudo apt-get install --yes fonts-noto-cjk fonts-noto-color-emoji
+        sudo apt-get install --yes fonts-noto-cjk
+    - name: Get TeX Live hash
+      id: texlive-hash
+      run: |
+        HASH=$(curl -sSL ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso.sha512 | head -c 10)
+        echo "::set-output name=hash::$HASH"
+    - name: Check TeX Live cache
+      id: texlive-cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.DOWNLOAD_DIR }}
+        key: ${{ steps.texlive-hash.outputs.hash }}
+    - name: Download TeX Live image
+      if: steps.texlive-cache.outputs.cache-hit != 'true'
+      run: |
+        mkdir ${{ env.DOWNLOAD_DIR }}
+        pushd ${{ env.DOWNLOAD_DIR }}
+        curl -O -L ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso
+        popd
     - name: Install TeX Live
       run: |
-        export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
-        wget ${{ env.CTAN_URL }}/systems/texlive/tlnet/install-tl-unx.tar.gz
-        tar -xzf install-tl-unx.tar.gz
-        cd install-tl-20* && ./install-tl --profile ../.github/workflows/texlive.profile
+        7z x ${{ env.DOWNLOAD_DIR }}/texlive2020.iso -o${{ env.EXTRACT_DIR }}
+        chmod +x ${{ env.EXTRACT_DIR }}/install-tl
+        ./${{ env.EXTRACT_DIR }}/install-tl --profile .github/workflows/texlive.profile
     - name: Build user document
       run: |
         export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
+        sed -i '1s/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
         latexmk -pdflua
   build-macos:
     runs-on: macos-latest
     if: "!endsWith(github.event.head_commit.message, '[ci skip]')"
     steps:
     - uses: actions/checkout@v2
+    - name: Get TeX Live hash
+      id: texlive-hash
+      run: |
+        HASH=$(curl -sSL ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso.sha512 | head -c 10)
+        echo "::set-output name=hash::$HASH"
+    - name: Check TeX Live cache
+      id: texlive-cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.DOWNLOAD_DIR }}
+        key: ${{ steps.texlive-hash.outputs.hash }}
+    - name: Download TeX Live image
+      if: steps.texlive-cache.outputs.cache-hit != 'true'
+      run: |
+        mkdir ${{ env.DOWNLOAD_DIR }}
+        pushd ${{ env.DOWNLOAD_DIR }}
+        curl -O -L ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso
+        popd
     - name: Install TeX Live
       run: |
-        export PATH=/tmp/texlive/bin/x86_64-darwin:$PATH
-        curl -O ${{ env.CTAN_URL }}/systems/texlive/tlnet/install-tl-unx.tar.gz
-        tar -xzf install-tl-unx.tar.gz
-        cd install-tl-20* && ./install-tl --profile ../.github/workflows/texlive.profile
+        7z x ${{ env.DOWNLOAD_DIR }}/texlive2020.iso -o${{ env.EXTRACT_DIR }}
+        chmod +x ${{ env.EXTRACT_DIR }}/install-tl
+        ./${{ env.EXTRACT_DIR }}/install-tl --profile .github/workflows/texlive.profile
     - name: Build user document
       run: |
         export PATH=/tmp/texlive/bin/x86_64-darwin:$PATH
-        tlmgr conf texmf OSFONTDIR /System/Library/AssetsV2/com_apple_MobileAsset_Font6
+        sed -i '1s/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
         latexmk -pdflua
   # Line wrap problem is difficult to resolve on windows.
   build-windows:
@@ -49,17 +86,36 @@ jobs:
     if: "!endsWith(github.event.head_commit.message, '[ci skip]')"
     steps:
     - uses: actions/checkout@v2
-    - name: Install additional Chinese fonts
+    - name: Install utilities
       run: |
-        DISM /Online /Add-Capability /CapabilityName:Language.Fonts.Hans~~~und-HANS~0.0.1.0
+        choco install sed
+    - name: Get TeX Live hash
+      id: texlive-hash
+      run: |
+        Invoke-WebRequest -Uri ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso.sha512 -OutFile texlive2020.iso.sha512
+        $hash = [char[]](Get-Content .\texlive2020.iso.sha512 -Encoding byte -TotalCount 10)
+        core.setOutput('hash', $hash)
+    - name: Check TeX Live cache
+      id: texlive-cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.DOWNLOAD_DIR }}
+        key: ${{ steps.texlive-hash.outputs.hash }}
+    - name: Download TeX Live image
+      if: steps.texlive-cache.outputs.cache-hit != 'true'
+      run: |
+        New-Item ${{ env.DOWNLOAD_DIR }} -ItemType Directory
+        Push-Location ${{ env.DOWNLOAD_DIR }}
+        Invoke-WebRequest -Uri ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso -OutFile texlive2020.iso
+        Pop-Location
     - name: Install TeX Live
       run: |
-        ${env:PATH} = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
-        Invoke-WebRequest -Uri ${{ env.CTAN_URL }}/systems/texlive/tlnet/install-tl.zip -OutFile install-tl.zip
-        Expand-Archive install-tl.zip -DestinationPath .
-        Set-Location install-tl-*
+        7z x ${{ env.DOWNLOAD_DIR }}/texlive2020.iso -o${{ env.EXTRACT_DIR }}
+        Push-Location ${{ env.EXTRACT_DIR }}
         .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive-win.profile
+        Pop-Location
     - name: Build user document
       run: |
         ${env:PATH} = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
+        sed -i '1s/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
         latexmk -pdflua
