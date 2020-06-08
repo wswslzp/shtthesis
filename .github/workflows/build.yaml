@@ -2,7 +2,10 @@
 
 name: Build
 
-on: [push]
+on:
+  push:
+  schedule:
+  - cron:  '0 0 * * *'
 
 env:
   CTAN_URL: http://mirrors.ctan.org
@@ -52,6 +55,9 @@ jobs:
     if: "!endsWith(github.event.head_commit.message, '[ci skip]')"
     steps:
     - uses: actions/checkout@v2
+    - name: Install utilities
+      run: |
+        brew install gnu-sed
     - name: Get TeX Live hash
       id: texlive-hash
       run: |
@@ -78,7 +84,7 @@ jobs:
     - name: Build user document
       run: |
         export PATH=/tmp/texlive/bin/x86_64-darwin:$PATH
-        sed -i '1s/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
+        gsed -i '1s/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
         latexmk -pdflua
   # Line wrap problem is difficult to resolve on windows.
   build-windows:
@@ -93,7 +99,7 @@ jobs:
       id: texlive-hash
       run: |
         Invoke-WebRequest -Uri ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso.sha512 -OutFile texlive2020.iso.sha512
-        $hash = [char[]](Get-Content .\texlive2020.iso.sha512 -Encoding byte -TotalCount 10)
+        $hash = (Get-Content .\texlive2020.iso.sha512 -Raw).Substring(0, 10)
         core.setOutput('hash', $hash)
     - name: Check TeX Live cache
       id: texlive-cache
