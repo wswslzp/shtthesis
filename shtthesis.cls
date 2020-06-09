@@ -276,12 +276,14 @@
 %   Load minimum mandatory packages
 % ------------------------------------------------------------------------------
 \LoadClass{ctexbook}
+\RequirePackage[hyperref, table]{xcolor}
 \RequirePackage{geometry}
 \RequirePackage{calc}
 \RequirePackage{verbatim}
 \RequirePackage{etoolbox}
 \RequirePackage{ifthen}
 \RequirePackage{graphicx}
+\RequirePackage{todonotes}
 \RequirePackage{indentfirst}
 \RequirePackage[normalem]{ulem}
 \RequirePackage{fancyhdr}
@@ -299,7 +301,6 @@
   mathbf = sym,
   mathtt = sym,
 ]{unicode-math}
-\RequirePackage[hyperref, table]{xcolor}
 \AtEndPreamble{
   \RequirePackage{hyperref}
   \hypersetup{
@@ -903,7 +904,13 @@
   \hbox to #1 {\hfill \hspace*{\ulhshift} #2 \hfill}%
 }
 \newcommand\sht@schoollogo{%
-  \includegraphics[width=10.48cm]{shanghaitech-logo.pdf}%
+  \IfFileExists{shanghaitech-logo.pdf}{%
+    \includegraphics[width=10.48cm]{shanghaitech-logo.pdf}%
+  }{%
+    \missingfigure[figwidth=10.48cm, figheight=2.79cm]{%
+      \small 校徽文件 \texttt{shanghaitech-logo.pdf} 缺失，请至\href{https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf}{项目主页}下载！%
+    }%
+  }%
 }
 \renewcommand{\maketitle}{%
   \ifthenelse{\equal{\sht@degree}{doctor}}{

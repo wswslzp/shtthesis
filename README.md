@@ -21,6 +21,8 @@
 - Stable version:
   - GitHub Release: please refer to [release](https://github.com/lirundong/sht-thesis/releases) page, and download required files based on release information
   - CTAN: TODO
+
+    Note that `shtthesis` package in CTAN does not include the university logo file. Please download [`shanghaitech-logo.pdf`](shanghaitech-logo.pdf) from this repository and put it in the root of your project folder.
 - Develop version: directly clone the GitHub repo
   ```bash
   git clone https://github.com/lirundong/sht-thesis.git
@@ -45,5 +47,5 @@ After cloning or downloading this template, please
 
 ## License
 - The copyright of ShanghaiTech University logo (`shanghaitech-logo.pdf`) is owned by ShanghaiTech University
-- `shtthesis-gbt7714-plain.bst` is modified from [gbt7714](https://github.com/CTeX-org/gbt7714-bibtex-style) project and licensed under LaTeX Project Public License v1.3c, see [lppl-1.3c](https://www.latex-project.org/lppl/lppl-1-3c.txt) for details
-- The rest of `shtthesis` project is licensed under GNU Public License V3, see [LICENSE](LICENSE) for details
+- `shtthesis-gbt7714-plain.bst` is modified from [gbt7714](https://github.com/CTeX-org/gbt7714-bibtex-style) project and is licensed under LaTeX Project Public License v1.3c, see [lppl-1.3c](https://www.latex-project.org/lppl/lppl-1-3c.txt) for details
+- The rest of `shtthesis` project is licensed under GNU Public License v3, see [LICENSE](LICENSE) for details

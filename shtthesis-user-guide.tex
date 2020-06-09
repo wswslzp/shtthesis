@@ -188,6 +188,9 @@
   \end{tabular}
 \end{center}
 
+\paragraph{注意}
+为避免版权问题，上传至 CTAN 的 \shtthesis 并不包含校徽文件。如果用户直接使用 \TeX{} Live 分发的 \shtthesis，则需要至项目主页下载校徽文件\footnote{校徽文件在 GitHub 项目下的链接为 \url{https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf}}，并将 \verb|shanghaitech-logo.pdf| 与 \verb|thesis.tex| 放置在同一目录下。
+
 \section{文档编译}
 \shtthesis 支持使用 \hologo{XeLaTeX} 和 \hologo{LuaLaTeX} 编译（注意，\emph{不支持} \hologo{pdfLaTeX}）。尝试编译本文档的源代码 \texttt{\jobname.tex} 至 PDF 文件是了解 \shtthesis 编译流程最直观的方法。我们推荐在最新的 \hologo{TeX} Live 环境下，使用 \verb|latexmk| 工具进行编译。Windows 及 Linux 用户请下载安装 \hologo{TeX} Live (\url{https://www.tug.org/texlive/})，macOS 用户请下载安装 Mac\hologo{TeX} (\url{https://www.tug.org/mactex/})。不推荐在 overleaf 等在线平台编译使用 \shtthesis，项目主页不接受与 overleaf 相关的 issues。
 
@@ -486,7 +489,11 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
 《规范》要求正文中所有图形、表格标题使用中英双语。此需求可以通过 \textsf{bicaption} 宏包实现，如图~\ref{img::sht_logo} 所示。
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.5\columnwidth]{shanghaitech-logo.pdf}
+  \IfFileExists{shanghaitech-logo.pdf}{%
+    \includegraphics[width=0.5\columnwidth]{shanghaitech-logo.pdf}%
+  }{%
+    \missingfigure{\small 校徽文件 \texttt{shanghaitech-logo.pdf} 缺失}%
+  }%
   \bicaption{上海科技大学校徽}{School logo of ShanghaiTech University}
   \label{img::sht_logo}
 \end{figure}
