@@ -11,9 +11,12 @@ env:
   CTAN_URL: http://mirrors.ctan.org
   DOWNLOAD_DIR: texlive_download
   EXTRACT_DIR: texlive_extract
+  BUILD_DIR: build
+  NOTO_URL: https://noto-website-2.storage.googleapis.com/pkgs
 
 jobs:
   build-ubuntu:
+    name: Build on Ubuntu
     runs-on: ubuntu-latest
     if: "!endsWith(github.event.head_commit.message, '[ci skip]')"
     steps:
@@ -49,8 +52,14 @@ jobs:
       run: |
         export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
         sed -i '1s/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
-        latexmk -pdflua
+        latexmk -pdflua -outdir=${{ env.BUILD_DIR }}
+    - name: Archive build outputs
+      uses: actions/upload-artifact@v2
+      with:
+        name: ubuntu-build
+        path: ${{ env.BUILD_DIR }}
   build-macos:
+    name: Build on macOS
     runs-on: macos-latest
     if: "!endsWith(github.event.head_commit.message, '[ci skip]')"
     steps:
@@ -58,6 +67,11 @@ jobs:
     - name: Install utilities
       run: |
         brew install gnu-sed
+    - name: Install Noto fonts
+      run: |
+        for i in NotoSerifCJK-Regular NotoSerifCJK-Bold NotoSansCJK-Regular NotoSansCJK-Bold; do curl -O ${{ env.NOTO_URL }}/$i.ttc.zip; done
+        unzip -o "*.zip"
+        cp -vf *.ttc /Library/Fonts/
     - name: Get TeX Live hash
       id: texlive-hash
       run: |
@@ -85,7 +99,12 @@ jobs:
       run: |
         export PATH=/tmp/texlive/bin/x86_64-darwin:$PATH
         gsed -i '1s/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
-        latexmk -pdflua
+        latexmk -pdflua -outdir=${{ env.BUILD_DIR }}
+    - name: Archive build outputs
+      uses: actions/upload-artifact@v2
+      with:
+        name: macos-build
+        path: ${{ env.BUILD_DIR }}
   # Line wrap problem is difficult to resolve on windows.
   build-windows:
     runs-on: windows-latest
@@ -120,8 +139,20 @@ jobs:
         Push-Location ${{ env.EXTRACT_DIR }}
         .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive-win.profile
         Pop-Location
+    - name: Install Noto fonts
+      run: |
+        ${env:PATH} = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
+        "NotoSerifCJK-Regular", "NotoSerifCJK-Bold", "NotoSansCJK-Regular", "NotoSansCJK-Bold" | ForEach-Object -Process {Invoke-WebRequest -Uri "${{ env.NOTO_URL }}/$_.ttc.zip" -OutFile "$_.ttc.zip"}
+        Get-ChildItem *.ttc.zip | Expand-Archive -DestinationPath . -Force
+        Copy-Item *.ttc C:\Windows\Fonts
+        fc-cache -fv
     - name: Build user document
       run: |
         ${env:PATH} = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
         sed -i '1s/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
-        latexmk -pdflua
+        latexmk -pdflua -outdir=${{ env.BUILD_DIR }}
+    - name: Archive build outputs
+      uses: actions/upload-artifact@v2
+      with:
+        name: windows-build
+        path: ${{ env.BUILD_DIR }}
