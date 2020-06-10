@@ -117,7 +117,7 @@ jobs:
         choco install sed
     - name: Install Noto fonts
       run: |
-        "NotoSerifCJK-Regular", "NotoSerifCJK-Bold", "NotoSansCJK-Regular", "NotoSansCJK-Bold" | ForEach-Object -Process {Invoke-WebRequest -Uri "${{ env.NOTO_URL }}/$_.ttc.zip" -OutFile "$_.ttc.zip"}
+        "NotoSansCJK", "NotoSerifCJK" | ForEach-Object -Process {Invoke-WebRequest -Uri "${{ env.NOTO_URL }}/$_.ttc.zip" -OutFile "$_.ttc.zip"}
         Get-ChildItem *.ttc.zip | Expand-Archive -DestinationPath . -Force
         Copy-Item *.ttc C:\Windows\Fonts
     - name: Get TeX Live hash
