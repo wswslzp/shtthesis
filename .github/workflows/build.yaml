@@ -18,7 +18,7 @@ jobs:
   build-ubuntu:
     name: Build on Ubuntu
     runs-on: ubuntu-latest
-    if: "!endsWith(github.event.head_commit.message, '[ci skip]')"
+    if: ${{ contains(github.event.head_commit.message, '[ci ubuntu]') || !contains(github.event.head_commit.message, '[ci skip]') }}
     steps:
     - uses: actions/checkout@v2
     - name: Install Source Han fonts
@@ -61,7 +61,7 @@ jobs:
   build-macos:
     name: Build on macOS
     runs-on: macos-latest
-    if: "!endsWith(github.event.head_commit.message, '[ci skip]')"
+    if: ${{ contains(github.event.head_commit.message, '[ci macos]') || !contains(github.event.head_commit.message, '[ci skip]') }}
     steps:
     - uses: actions/checkout@v2
     - name: Install utilities
@@ -109,12 +109,17 @@ jobs:
   build-windows:
     runs-on: windows-latest
     name: Build on Windows
-    if: "!endsWith(github.event.head_commit.message, '[ci skip]')"
+    if: ${{ contains(github.event.head_commit.message, '[ci windows]') || !contains(github.event.head_commit.message, '[ci skip]') }}
     steps:
     - uses: actions/checkout@v2
     - name: Install utilities
       run: |
         choco install sed
+    - name: Install Noto fonts
+      run: |
+        "NotoSerifCJK-Regular", "NotoSerifCJK-Bold", "NotoSansCJK-Regular", "NotoSansCJK-Bold" | ForEach-Object -Process {Invoke-WebRequest -Uri "${{ env.NOTO_URL }}/$_.ttc.zip" -OutFile "$_.ttc.zip"}
+        Get-ChildItem *.ttc.zip | Expand-Archive -DestinationPath . -Force
+        Copy-Item *.ttc C:\Windows\Fonts
     - name: Get TeX Live hash
       id: texlive-hash
       run: |
@@ -140,13 +145,6 @@ jobs:
         Push-Location ${{ env.EXTRACT_DIR }}
         .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive-win.profile
         Pop-Location
-    - name: Install Noto fonts
-      run: |
-        ${env:PATH} = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
-        "NotoSerifCJK-Regular", "NotoSerifCJK-Bold", "NotoSansCJK-Regular", "NotoSansCJK-Bold" | ForEach-Object -Process {Invoke-WebRequest -Uri "${{ env.NOTO_URL }}/$_.ttc.zip" -OutFile "$_.ttc.zip"}
-        Get-ChildItem *.ttc.zip | Expand-Archive -DestinationPath . -Force
-        Copy-Item *.ttc C:\Windows\Fonts
-        fc-cache -fv
     - name: Build user document
       run: |
         ${env:PATH} = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
