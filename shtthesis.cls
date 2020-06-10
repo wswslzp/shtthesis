@@ -517,11 +517,7 @@
 % ------------------------------------------------------------------------------
 \ifthenelse{\equal{\sht@fontset}{windows}}{
   \def\fake@bold@factor{2.5}
-  \IfFileExists{C:/bootfont.bin}{
-    \def\windows@kaiti{KaiTi_GB2312}
-  }{
-    \def\windows@kaiti{KaiTi}
-  }
+  \def\windows@kaiti{KaiTi}
   \setCJKmainfont[
       AutoFakeBold = \fake@bold@factor,
         ItalicFont = \windows@kaiti,
@@ -565,26 +561,20 @@
   }{
     \IfFontExistsTF{Source Han Serif SC}{
       \def\unix@songti{Source Han Serif SC}
-      \def\unix@songti@bold{Source Han Serif SC Bold}
     }{
       \IfFontExistsTF{Noto Serif CJK SC}{
         \def\unix@songti{Noto Serif CJK SC}
-        \def\unix@songti@bold{Noto Serif CJK SC Bold}
       }{
-        \def\unix@songti{FandolSong-Regular.otf}
-        \def\unix@songti@bold{FandolSong-Bold.otf}
+        \def\unix@songti{FandolSong}
       }
     }
     \IfFontExistsTF{Source Han Sans SC}{
       \def\unix@heiti{Source Han Sans SC}
-      \def\unix@heiti@bold{Source Han Sans SC Bold}
     }{
       \IfFontExistsTF{Noto Sans CJK SC}{
         \def\unix@heiti{Noto Sans CJK SC}
-        \def\unix@heiti@bold{Noto Sans CJK SC Bold}
       }{
-        \def\unix@heiti{FandolHei-Regular.otf}
-        \def\unix@heiti@bold{FandolHei-Bold.otf}
+        \def\unix@heiti{FandolHei}
       }
     }
     \IfFontExistsTF{STKaiti}{
@@ -593,7 +583,7 @@
       \IfFontExistsTF{Kaiti}{
         \def\unix@kaiti{Kaiti}
       }{
-        \def\unix@kaiti{FandolKai-Regular.otf}
+        \def\unix@kaiti{FandolKai}
       }
     }
     \IfFontExistsTF{STFangsong}{
@@ -602,23 +592,14 @@
       \IfFontExistsTF{FangSong}{
         \def\unix@fangsong{FangSong}
       }{
-        \def\unix@fangsong{FandolFang-Regular.otf}
+        \def\unix@fangsong{FandolFang}
       }
     }
-    \setCJKmainfont[
-          BoldFont = \unix@songti@bold,
-        ItalicFont = \unix@kaiti,
-      ]{\unix@songti}
-    \setCJKsansfont[
-        BoldFont = \unix@heiti@bold,
-      ]{\unix@heiti}
+    \setCJKmainfont[ItalicFont=\unix@kaiti]{\unix@songti}
+    \setCJKsansfont{\unix@heiti}
     \setCJKmonofont{\unix@fangsong}
-    \setCJKfamilyfont{zhsong}[
-        BoldFont = \unix@songti@bold,
-      ]{\unix@songti}
-    \setCJKfamilyfont{zhhei}[
-        BoldFont = \unix@heiti@bold,
-      ]{\unix@heiti}
+    \setCJKfamilyfont{zhsong}{\unix@songti}
+    \setCJKfamilyfont{zhhei}{\unix@heiti}
     \setCJKfamilyfont{zhkai}{\unix@kaiti}
     \setCJKfamilyfont{zhfs}{\unix@fangsong}
     \providecommand{\songti}{\CJKfamily{zhsong}}
