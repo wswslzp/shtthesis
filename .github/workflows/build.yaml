@@ -108,6 +108,7 @@ jobs:
   # Line wrap problem is difficult to resolve on windows.
   build-windows:
     runs-on: windows-latest
+    name: Build on Windows
     if: "!endsWith(github.event.head_commit.message, '[ci skip]')"
     steps:
     - uses: actions/checkout@v2
