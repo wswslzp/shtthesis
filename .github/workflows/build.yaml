@@ -149,7 +149,7 @@ jobs:
       run: |
         ${env:PATH} = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
         sed -i 's/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
-        latexmk -pdflua -outdir=${{ env.BUILD_DIR }}
+        latexmk -pdfxe -outdir=${{ env.BUILD_DIR }}
     - name: Archive build outputs
       uses: actions/upload-artifact@v2
       with:
