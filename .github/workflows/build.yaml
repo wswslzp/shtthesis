@@ -51,7 +51,7 @@ jobs:
     - name: Build user document
       run: |
         export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
-        sed -i '1s/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
+        sed -i 's/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
         latexmk -pdflua -outdir=${{ env.BUILD_DIR }}
     - name: Archive build outputs
       uses: actions/upload-artifact@v2
@@ -98,7 +98,7 @@ jobs:
     - name: Build user document
       run: |
         export PATH=/tmp/texlive/bin/x86_64-darwin:$PATH
-        gsed -i '1s/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
+        gsed -i 's/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
         latexmk -pdflua -outdir=${{ env.BUILD_DIR }}
     - name: Archive build outputs
       uses: actions/upload-artifact@v2
@@ -150,7 +150,7 @@ jobs:
     - name: Build user document
       run: |
         ${env:PATH} = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
-        sed -i '1s/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
+        sed -i 's/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
         latexmk -pdflua -outdir=${{ env.BUILD_DIR }}
     - name: Archive build outputs
       uses: actions/upload-artifact@v2
