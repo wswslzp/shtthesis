@@ -299,6 +299,8 @@
 %   Load minimum mandatory packages
 % ------------------------------------------------------------------------------
 \LoadClass{ctexbook}
+\RequirePackage{expl3}
+\RequirePackage{xparse}
 \RequirePackage[hyperref, table]{xcolor}
 \RequirePackage{geometry}
 \RequirePackage{calc}
@@ -897,16 +899,29 @@
 % ==============================================================================
 % Cover Generation
 % ==============================================================================
-\def\ulhshift{-4em}
 \newcommand{\ulunify}[1]{\uline{#1}}
 \newcommand{\ulenhance}[2][1pt]{%
   \def\ULthickness{#1}%
   \setlength{\ULdepth}{0.3em}%
-  \expandafter\ulunify\expandafter{#2}%
+  \hspace*{0.5\ccwd}\expandafter\ulunify\expandafter{#2}%
 }
 \newcommand{\ulextend}[2][350pt]{%
-  \hbox to #1 {\hfill \hspace*{\ulhshift} #2 \hfill}%
+  \hbox to #1 {\hfill #2 \hfill}%
 }
+\ExplSyntaxOn
+\NewDocumentCommand{\sht@lines@to@tab}{O{1pt} O{350pt} m}{%
+  % convert lines into table lines, adapted from `ucasthesis'
+  \seq_set_split:NnV \l_tmpa_seq {\\} {#3}
+  \clist_set_from_seq:NN \l_tmpa_clist \l_tmpa_seq
+  \clist_clear:N \l_tmpb_clist
+  \clist_map_inline:Nn \l_tmpa_clist
+    {%
+      \clist_put_right:Nn \l_tmpb_clist 
+        { \ulenhance[#1]{\ulextend[#2]{##1}} }
+    }
+  \clist_use:Nn \l_tmpb_clist { \\ & }
+}
+\ExplSyntaxOff
 \newcommand\sht@schoollogo{%
   \IfFileExists{shanghaitech-logo.pdf}{%
     \includegraphics[width=10.48cm]{shanghaitech-logo.pdf}%
@@ -921,8 +936,8 @@
   \IfFileExists{shanghaitech-logo.pdf}{%
     \includegraphics[width=5.39cm]{shanghaitech-logo.pdf}%
   }{%
-    \missingfigure[figwidth=5.39cm, figheight=1.45cm]{%
-      \small 校徽文件缺失%
+    \missingfigure{%
+      \small 校徽文件缺失，请至\href{https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf}{项目主页}下载！%
     }%
   }%
 }
@@ -944,7 +959,11 @@
     }
   }
   \ifthenelse{\not \boolean{sht@anonymous}}{%
-    \makedeclarations%
+    \ifthenelse{\equal{\sht@degree}{doctor} \OR \equal{\sht@degree}{master}}{%
+      \makedeclarations%
+    }{%
+      \makedeclarations@undergraduate%
+    }%
   }{}
 }
 % ------------------------------------------------------------------------------
@@ -1100,7 +1119,7 @@
       \def\arraystretch{1.3}
       \begin{tabular}{cc}
         题\hspace{2\ccwd}目：&
-          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@title}} \\
+          \sht@lines@to@tab[1pt][\sht@bachelor@ulength]{\sht@title} \\
         学生姓名：&
           \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@author}} \\
         学\hspace{2\ccwd}号：&
@@ -1149,7 +1168,7 @@
       \def\arraystretch{1.3}
       \begin{tabular}{lc}
         Subject: &
-          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@title@en}} \\
+          \sht@lines@to@tab[1pt][\sht@bachelor@ulength]{\sht@title@en} \\
         Student Name: &
           \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@author@en}} \\
         Student ID: &
@@ -1157,7 +1176,7 @@
         Year of Entrance: &
           \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@entrance@year}} \\
         School: &
-          \ulenhance{\sht@institution@en} \\
+          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@institution@en}} \\
         Major: &
           \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@discipline@en}} \\
         Advisor: &
@@ -1227,6 +1246,93 @@
     \vspace{3ex}
   }
   \clearpage
+  \thispagestyle{empty}
+  \cleardoublepage
+}
+\newcommand{\makedeclarations@undergraduate}{%
+  \intobmk*{\cleardoublepage}{声明}
+  % P1: 学术诚信声明
+  \thispagestyle{empty}
+  {
+    \linespread{1.6}\zihao{4}
+
+    \vspace*{\stretch{2}}
+
+    \begin{center}
+      \zihao{-2}\bfseries\sffamily 上海科技大学\\毕业论文(设计)学术诚信声明
+    \end{center}
+
+    \vspace*{\stretch{1}}
+
+    本人郑重声明：所呈交的毕业论文（设计），是本人在导师的指导下，独立进行研究工作%
+    所取得的成果。除文中已经注明引用的内容外，本论文不包含任何其他个人或集体已经发表%
+    或撰写过的作品成果。对本文的研究做出重要贡献的个人和集体，均已在文中以明确方式%
+    标明。本人完全意识到本声明的法律结果由本人承担。
+
+    \vspace*{\stretch{3}}
+
+    \hfill{}作者签名：\hspace*{9.5\ccwd}
+
+    \vspace*{\stretch{1}}
+
+    \hfill{}日\hspace*{2\ccwd}期：%
+    \hspace*{2.5\ccwd}年%
+    \hspace*{1.5\ccwd}月%
+    \hspace*{1.5\ccwd}日%
+    \hspace*{1\ccwd}
+
+    \vspace{\stretch{6}}
+  }
+  \clearpage
+  % P2: empty
+  \thispagestyle{empty}
+  \cleardoublepage
+  % P3: 版权使用授权书
+  \thispagestyle{empty}
+  {
+    \linespread{1.6}\zihao{4}
+
+    \vspace*{\stretch{2}}
+
+    \begin{center}
+      \zihao{-2}\bfseries\sffamily 上海科技大学\\毕业论文（设计）版权使用授权书
+    \end{center}
+
+    \vspace*{\stretch{1}}
+
+    本毕业论文（设计）作者同意学校保留并向国家有关部门或机构送交论文的复印件和电子版，%
+    允许论文被查阅和借阅。本人授权上海科技大学可以将本毕业论文（设计）的全部或部分内容%
+    编入有关数据库进行检索，可以采用影印、缩印或扫描等复制手段保存和汇编本%
+    毕业论文（设计）。
+
+    \hspace*{6\ccwd}\textbf{保\hspace*{1\ccwd}密}$\square$，%
+    在\uline{\hspace*{2\ccwd}}年解密后适用本授权书。
+
+    本论文属于
+
+    \hspace*{6\ccwd}\textbf{不保密}$\square$。
+
+    （请在以上方框内打“\checkmark”）
+
+    \vspace*{\stretch{3}}
+
+    \noindent 作者签名：\hspace{12.75\ccwd}指导教师签名：
+
+    \vspace*{\stretch{1}}
+
+    \noindent 日期：%
+    \hspace*{2.5\ccwd}年%
+    \hspace*{1.5\ccwd}月%
+    \hspace*{1.5\ccwd}日%
+    \hspace*{6\ccwd} 日期：%
+    \hspace*{2.5\ccwd}年%
+    \hspace*{1.5\ccwd}月%
+    \hspace*{1.5\ccwd}日
+
+    \vspace{\stretch{4}}
+  }
+  \clearpage
+  % P4: empty
   \thispagestyle{empty}
   \cleardoublepage
 }
