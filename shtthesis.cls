@@ -175,6 +175,14 @@
     default = {Name of author},
     name    = author@en,
   },
+  author-id = {
+    default = {Id of author},
+    name    = author@id,
+  },
+  entrance-year = {
+    default = {Year of entrance},
+    name    = entrance@year,
+  },
   supervisor = {
     default = {导师姓名},
   },
@@ -229,16 +237,6 @@
     % default = {Computer Science and Technology},
     name = discipline@en,
   },
-  date = {
-    default = {\the\year~年~\the\month~月},
-  },
-  date* = {
-    default = {\monthname,~\the\year},
-    name = date@en,
-  },
-  clc,
-  udc,
-  id,
   discipline-level-1 = {
     default = {一级学科名称},
     name    = discipline@level@i,
@@ -255,6 +253,13 @@
     default = {Name of Level-two Discipline},
     name    = discipline@level@ii@en,
   },
+  date = {
+    default = {\the\year~年~\the\month~月},
+  },
+  date* = {
+    default = {\monthname,~\the\year},
+    name = date@en,
+  },
   start-date = {
     name    = start@date,
     default = {\the\year-\two@digits{\month}-\two@digits{\day}},
@@ -263,6 +268,9 @@
     name    = end@date,
     default = {\the\year-\two@digits{\month}-\two@digits{\day}},
   },
+  clc,
+  udc,
+  id,
   anonymous-str = {
     name = anonymous@str,
     default = {***},
@@ -908,6 +916,16 @@
     }%
   }%
 }
+\newcommand\sht@schoollogo@undergraduate{%
+  \noindent\hspace*{0.73cm}%
+  \IfFileExists{shanghaitech-logo.pdf}{%
+    \includegraphics[width=5.39cm]{shanghaitech-logo.pdf}%
+  }{%
+    \missingfigure[figwidth=5.39cm, figheight=1.45cm]{%
+      \small 校徽文件缺失%
+    }%
+  }%
+}
 \renewcommand{\maketitle}{%
   \ifthenelse{\equal{\sht@degree}{doctor}}{
     \sht@maketitle@graduate{博士}
@@ -917,7 +935,12 @@
       \sht@maketitle@graduate{硕士}
       \sht@maketitle@graduate@en{thesis}
     }{
-      \sht@error{Degree type `\sht@degree' is not supported yet}
+      \ifthenelse{\equal{\sht@degree}{bachelor}}{
+        \sht@maketitle@undergraduate
+        \sht@maketitle@undergraduate@en
+      }{
+        \sht@error{Degree type `\sht@degree' is not supported yet}
+      }
     }
   }
   \ifthenelse{\not \boolean{sht@anonymous}}{%
@@ -1055,6 +1078,108 @@
   \cleardoublepage
 }
 % ------------------------------------------------------------------------------
+%   Bachelor covers
+% ------------------------------------------------------------------------------
+\def\sht@bachelor@ulength{300pt}
+\newcommand{\sht@maketitle@undergraduate}{%
+  \intobmk*{\cleardoublepage}{封面}
+  \thispagestyle{empty}
+  \sht@schoollogo@undergraduate
+  \begin{center}
+    \linespread{1.6}
+
+    \vspace*{\stretch{20}}
+
+    {\zihao{2}\bfseries 本科毕业论文（设计）}
+
+    \vspace*{\stretch{54}}
+
+    {
+      \zihao{4}
+      \def\tabcolsep{1pt}
+      \def\arraystretch{1.3}
+      \begin{tabular}{cc}
+        题\hspace{2\ccwd}目：&
+          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@title}} \\
+        学生姓名：&
+          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@author}} \\
+        学\hspace{2\ccwd}号：&
+          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@author@id}} \\
+        入学年份：&
+          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@entrance@year}} \\
+        所在学院：&
+          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@institution}} \\
+        攻读专业：&
+          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@discipline}} \\
+        指导教师：&
+          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@supervisor}} \\
+      \end{tabular}
+    }
+
+    \vspace*{\stretch{70}}
+
+    {
+      \zihao{-4}
+      上海科技大学
+      \par\sht@date
+    }
+
+    \vspace{\stretch{11}}
+  \end{center}
+  \clearpage
+  \thispagestyle{empty}
+  \cleardoublepage
+}
+\newcommand{\sht@maketitle@undergraduate@en}{%
+  \intobmk*{\cleardoublepage}{Cover}
+  \thispagestyle{empty}
+  \sht@schoollogo@undergraduate
+  \begin{center}
+    \linespread{1.6}
+
+    \vspace*{\stretch{20}}
+
+    {\zihao{2}\bfseries\sffamily THESIS}
+
+    \vspace*{\stretch{54}}
+
+    {
+      \zihao{4}
+      \def\tabcolsep{1pt}
+      \def\arraystretch{1.3}
+      \begin{tabular}{lc}
+        Subject: &
+          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@title@en}} \\
+        Student Name: &
+          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@author@en}} \\
+        Student ID: &
+          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@author@id}} \\
+        Year of Entrance: &
+          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@entrance@year}} \\
+        School: &
+          \ulenhance{\sht@institution@en} \\
+        Major: &
+          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@discipline@en}} \\
+        Advisor: &
+          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@supervisor@en}} \\
+      \end{tabular}
+    }
+
+    \vspace*{\stretch{70}}
+
+    {
+      \zihao{-4}
+      ShanghaiTech University
+      \par Date: \sht@date@en
+    }
+
+    \vspace{\stretch{11}}
+  \end{center}
+  \clearpage
+  \thispagestyle{empty}
+  \cleardoublepage
+}
+% ------------------------------------------------------------------------------
 %   Declarations
 % ------------------------------------------------------------------------------
 \newcommand{\makedeclarations}{%
@@ -1066,7 +1191,7 @@
     \vspace*{2ex}
 
     \begin{center}
-      {\zihao{4}\bfseries\sffamily 上海科技大学\\研究生学位论文原创性声明}
+      \zihao{4}\bfseries\sffamily 上海科技大学\\研究生学位论文原创性声明
     \end{center}
 
     本人郑重声明:所呈交的学位论文是本人在导师的指导下独立进行研究工作所取得的成果。%
@@ -1076,14 +1201,14 @@
 
     \vspace*{3ex}
 
-    {\hfill{} {作者签名：\hspace*{14em}}}
+    {\hfill{}作者签名：\hspace*{14em}}
 
-    {\hfill{} {日\quad\quad 期：\hspace*{14em}}}
+    {\hfill{}日\hspace*{2\ccwd}期：\hspace*{14em}}
 
     \vspace*{6ex}
 
     \begin{center}
-      {\zihao{4}\bfseries\sffamily 上海科技大学\\学位论文授权使用声明}
+      \zihao{4}\bfseries\sffamily 上海科技大学\\学位论文授权使用声明
     \end{center}
 
     本人完全了解并同意遵守上海科技大学有关保存和使用学位论文的规定，即上海科技大学有权%
@@ -1095,9 +1220,9 @@
 
     \vspace*{3ex}
 
-    {\hfill{} {作者签名：\hspace*{10em} 导师签名：\hspace*{9em}}}
+    {\hfill{}作者签名：\hspace*{10em}导师签名：\hspace*{9em}}
 
-    {\hfill{} {日\quad\quad 期：\hspace*{10em} 日\quad\quad 期：\hspace*{9em}}}
+    {\hfill{}日\hspace*{2\ccwd}期：\hspace*{10em}日\hspace*{2\ccwd}期：\hspace*{9em}}
 
     \vspace{3ex}
   }
