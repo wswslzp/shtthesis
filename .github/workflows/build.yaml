@@ -53,7 +53,7 @@ jobs:
     - name: Build user document
       run: |
         export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
-        sed -i '${{ env.SED_REP }}' shtthesis-user-guide.tex
+        sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
         latexmk -pdflua -outdir=${{ env.BUILD_DIR }}
     - name: Archive build outputs
       uses: actions/upload-artifact@v2
@@ -100,7 +100,7 @@ jobs:
     - name: Build user document
       run: |
         export PATH=/tmp/texlive/bin/x86_64-darwin:$PATH
-        gsed -i '${{ env.SED_REP }}' shtthesis-user-guide.tex
+        gsed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
         latexmk -pdflua -outdir=${{ env.BUILD_DIR }}
     - name: Archive build outputs
       uses: actions/upload-artifact@v2
@@ -150,7 +150,7 @@ jobs:
     - name: Build user document
       run: |
         ${env:PATH} = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
-        sed -i '${{ env.SED_REP }}' shtthesis-user-guide.tex
+        sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
         latexmk -pdfxe -outdir=${{ env.BUILD_DIR }}
     - name: Archive build outputs
       uses: actions/upload-artifact@v2

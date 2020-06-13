@@ -319,7 +319,7 @@
 \RequirePackage{lastpage}
 \RequirePackage{tocvsec2}
 \RequirePackage{letltxmacro}
-\RequirePackage{fontspec}[2016/12/27]
+\RequirePackage{fontspec}
 \RequirePackage{caption}
 \RequirePackage{natbib}
 \RequirePackage[shortlabels, inline]{enumitem}
@@ -378,31 +378,41 @@
 % ------------------------------------------------------------------------------
 %   Geometry and layouts
 % ------------------------------------------------------------------------------
-\geometry{
-  top = 2.54cm,
-  bottom = 2.54cm,
-  headheight = 12pt, % 9bp,
-  headsep = 17.5pt, % 2.54cm - 9bp,
-  footskip = 2.54cm - 1.75cm,
-}
+\def\binding@width{0.63cm}
+\def\horizontal@margin{3.17cm}
+\def\sht@head@logo@height{1.17cm}
 \ifsht@print
-  \def\binding@width{0.63cm}
   \geometry{
-    inner = 3.17cm + \binding@width,
-    outer = 3.17cm - \binding@width,
+    inner = \horizontal@margin + \binding@width,
+    outer = \horizontal@margin - \binding@width,
   }
 \else
   \geometry{
-    inner = 3.17cm,
-    outer = 3.17cm,
+    inner = \horizontal@margin,
+    outer = \horizontal@margin,
   }
 \fi
 \setlength{\parskip}{0.5ex plus 0.25ex minus 0.25ex}
 \setlength{\parindent}{2\ccwd}
 \ifsht@undergraduate
   \linespread{1.3}
+  \geometry{
+    includeheadfoot,
+    top = 1.5cm,
+    bottom = 1.75cm,
+    headheight = \sht@head@logo@height,
+    headsep = 13.65pt, % 10.5pt (\zihao{-5}) * 1.3 (line spread)
+    footskip = 2.54cm - 1.75cm,
+  }
 \else
   \linespread{1.6}
+  \geometry{
+    top = 2.54cm,
+    bottom = 2.54cm,
+    headheight = 12pt, % 9bp,
+    headsep = 17.5pt, % 2.54cm - 9bp,
+    footskip = 2.54cm - 1.75cm,
+  }
 \fi
 \raggedbottom
 % ------------------------------------------------------------------------------
@@ -443,7 +453,7 @@
   \pagenumbering{Roman}
   \fancyhead[L]{%
     \IfFileExists{shanghaitech-logo.pdf}{%
-      \includegraphics[height=1.17cm]{shanghaitech-logo.pdf}%
+      \includegraphics[height=\sht@head@logo@height]{shanghaitech-logo.pdf}%
     }{%
       \zihao{-5}\sffamily\color{ShtRed}\school@logo@missing%
     }
@@ -457,7 +467,7 @@
   \fancyhf{}
   \fancyhead[L]{%
     \IfFileExists{shanghaitech-logo.pdf}{%
-      \includegraphics[height=1.17cm]{shanghaitech-logo.pdf}%
+      \includegraphics[height=\sht@head@logo@height]{shanghaitech-logo.pdf}%
     }{%
       \zihao{-5}\sffamily\color{ShtRed}\school@logo@missing%
     }
@@ -474,21 +484,21 @@
 \LetLtxMacro{\TmpFrontmatter}{\frontmatter}
 \renewcommand{\frontmatter}{%
   \TmpFrontmatter%
-  \ifthenelse{\equal{\sht@degree}{doctor} \OR \equal{\sht@degree}{master}}{%
-    \pagestyle{RomanNumbered}%
-  }{%
+  \ifsht@undergraduate%
     \pagestyle{RomanNumberedWithLogo}%
-  }
+  \else%
+    \pagestyle{RomanNumbered}%
+  \fi%
 }
 \providecommand{\mainmatter}{}
 \LetLtxMacro{\TmpMainmatter}{\mainmatter}
 \renewcommand{\mainmatter}{%
   \TmpMainmatter%
-  \ifthenelse{\equal{\sht@degree}{doctor} \OR \equal{\sht@degree}{master}}{%
-    \pagestyle{LRNumbered}%
-  }{%
+  \ifsht@undergraduate%
     \pagestyle{MNNumberedWithLogo}%
-  }
+  \else%
+    \pagestyle{LRNumbered}%
+  \fi%
 }
 % ------------------------------------------------------------------------------
 %   Font utilities
@@ -1441,11 +1451,11 @@
   \origin@appendix
   \intotoc*{\cleardoublepage}{\appendixname}%
   \settocdepth{part}%
-  \ifthenelse{\equal{\sht@degree}{doctor} \OR \equal{\sht@degree}{master}}{%
-    \pagestyle{LRNumberedAppendix}%
-  }{%
+  \ifsht@undergraduate%
     \pagestyle{MNNumberedWithLogo}%
-  }
+  \else%
+    \pagestyle{LRNumberedAppendix}%
+  \fi%
 }
 % ------------------------------------------------------------------------------
 %   Backmatter
@@ -1455,11 +1465,11 @@
 \renewcommand{\backmatter}{%
   \origin@backmatter%
   \settocdepth{chapter}%
-  \ifthenelse{\equal{\sht@degree}{doctor} \OR \equal{\sht@degree}{master}}{%
-    \pagestyle{LRNumbered}%
-  }{%
+  \ifsht@undergraduate%
     \pagestyle{MNNumberedWithLogo}%
-  }
+  \else%
+    \pagestyle{LRNumbered}%
+  \fi%
 }
 \newcounter{sht@resume@cnt}
 \setcounter{sht@resume@cnt}{0}

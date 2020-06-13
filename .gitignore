@@ -1,7 +1,7 @@
-.vscode
-.DS_Store
-Tmp
-_minted*
+.vscode/*
+.DS_Store/
+_minted*/
+!.vscode/settings.json
 
 # ignore latexmk temporary files
 *.gz
