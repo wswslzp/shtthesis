@@ -15,36 +15,48 @@
 % along with this program.  If not, see <https://www.gnu.org/licenses/>
 \documentclass{shtthesis}
 
+% graduate setup
+% \shtsetup{
+%   degree = {master},
+%   degree-name = {工学硕士},
+%   degree-name* = {Master~of~Science~in~Engineering},
+%   secret-level = {白给},
+%   title = {\ShtThesis~v\version~使用说明},
+%   title* = {A~User's~Guide\\to\\\ShtThesis~v\version},
+%   keywords = {上海科技大学，学位论文，\LaTeX{}},
+%   keywords* = {ShanghaiTech~University, Thesis, \LaTeX{}},
+%   author = {李润东},
+%   author* = {Li~Rundong},
+%   institution = {上海科技大学信息科学与技术学院},
+%   institution* = {School~of~Information~Science~and~Technology\\%
+%                   ShanghaiTech~University},
+%   supervisor = {范睿~副教授},
+%   supervisor* = {Professor~Fan~Rui},
+%   supervisor-institution = {上海科技大学信息科学与技术学院},
+%   discipline-level-1 = {计算机科学与技术},
+%   discipline-level-1* = {Computer~Science~and~Technology},
+% }
+
+% undergraduate setup
 \shtsetup{
   degree = {bachelor},
-  degree-name = {工学硕士},
-  degree-name* = {Master~of~Science~in~Engineering},
-  secret-level = {白给},
-  % title = {\ShtThesis~v\version~使用说明},
-  % title* = {A~User's~Guide\\to\\\ShtThesis~v\version},
-  title = {\ShtThesis~v\version~使用说明},
-  title* = {A~User's~Guide~to~\ShtThesis~v\version},
-  keywords = {上海科技大学，学位论文，\LaTeX{}},
-  keywords* = {ShanghaiTech~University, Thesis, \LaTeX{}},
+  title = {\ShtThesis~v\version\\使用说明},
+  title* = {A~User's~Guide~to\\\ShtThesis~v\version},
+  date = {2020~年~06~月},
+  date* = {06~/~2020},
   author = {李润东},
-  author* = {Li~Rundong},
+  author* = {Rundong~Li},
   author-id = {36273800},
   entrance-year = {2017},
-  % institution = {上海科技大学信息科学与技术学院},
-  % institution* = {School~of~Information~Science~and~Technology\\%
-  %                 ShanghaiTech~University},
   institution = {信息科学与技术学院},
   institution* = {School~of~Information~Science~and~Technology},
-  supervisor = {范睿~副教授},
-  supervisor* = {Professor~Fan~Rui},
-  supervisor-institution = {上海科技大学信息科学与技术学院},
+  supervisor = {范睿},
+  supervisor* = {Rui~Fan},
   discipline = {计算机科学与技术},
   discipline* = {Computer~Science~and~Technology},
-  discipline-level-1 = {计算机科学与技术},
-  discipline-level-1* = {Computer~Science~and~Technology},
 }
 
-\definecolor{shtred}{RGB}{146,46,23}
+\definecolor{ShtRed}{RGB}{146,46,23}
 % `latex' and `shell' environments are adapted from `thuthesis'
 \usepackage{listings}
 \newcommand\prompt{\textup{\$}}
@@ -85,12 +97,12 @@
 \lstdefinestyle{lstStyleShell}{%
   style=lstStyleBase,
   frame=l,
-  rulecolor=\color{shtred},
+  rulecolor=\color{ShtRed},
   language=bash}
 \lstdefinestyle{lstStyleLaTeX}{%
   style=lstStyleBase,
   frame=l,
-  rulecolor=\color{shtred},
+  rulecolor=\color{ShtRed},
   language=[LaTeX]TeX}
 \lstnewenvironment{latex}{\lstset{style=lstStyleLaTeX}}{}
 \lstnewenvironment{shell}{\lstset{style=lstStyleShell}}{}

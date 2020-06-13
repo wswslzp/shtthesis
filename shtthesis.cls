@@ -899,25 +899,40 @@
 % ==============================================================================
 % Cover Generation
 % ==============================================================================
-\newcommand{\ulunify}[1]{\uline{#1}}
-\newcommand{\ulenhance}[2][1pt]{%
+\def\ubox@right@shift{0.5\ccwd}
+\def\content@left@shift{2.75\ccwd}
+\def\cover@tab@entry@width{350pt}
+\def\cover@tab@last@entry@width{\cover@tab@entry@width - 2\ccwd - 0.5\ccwd}
+\def\cover@tab@uline@thick{1.2pt}
+\ExplSyntaxOn
+\ProvideDocumentCommand{\shifted@uline}{%
+    O{\cover@tab@uline@thick} %
+    O{\ubox@right@shift} %
+    m}{%
   \def\ULthickness{#1}%
   \setlength{\ULdepth}{0.3em}%
-  \hspace*{0.5\ccwd}\expandafter\ulunify\expandafter{#2}%
+  \hspace*{#2}%
+  \uline{#3}%
 }
-\newcommand{\ulextend}[2][350pt]{%
-  \hbox to #1 {\hfill #2 \hfill}%
+\ProvideDocumentCommand{\shifted@box}{%
+    O{\cover@tab@entry@width} %
+    O{\content@left@shift} %
+    m}{%
+  \makebox[#1][c]{\hspace*{-#2} #3 }%
 }
-\ExplSyntaxOn
-\NewDocumentCommand{\sht@lines@to@tab}{O{1pt} O{350pt} m}{%
+\ProvideDocumentCommand{\sht@lines@to@tab}{%
+    O{\cover@tab@uline@thick} %
+    O{\cover@tab@entry@width} %
+    O{\content@left@shift} %
+    m}{%
   % convert lines into table lines, adapted from `ucasthesis'
-  \seq_set_split:NnV \l_tmpa_seq {\\} {#3}
+  \seq_set_split:NnV \l_tmpa_seq {\\} {#4}
   \clist_set_from_seq:NN \l_tmpa_clist \l_tmpa_seq
   \clist_clear:N \l_tmpb_clist
   \clist_map_inline:Nn \l_tmpa_clist
     {%
       \clist_put_right:Nn \l_tmpb_clist 
-        { \ulenhance[#1]{\ulextend[#2]{##1}} }
+        { \shifted@uline[#1]{\shifted@box[#2][#3]{##1}} }
     }
   \clist_use:Nn \l_tmpb_clist { \\ & }
 }
@@ -977,9 +992,9 @@
     \hfill{}
     \ifdefempty{\sht@secret@level}{}{%
       密级：%
-      \ulenhance{%
-        \ulextend[50pt]{%
-          \hspace*{-\ulhshift} \zihao{5} \sht@secret@level%
+      \shifted@uline[1pt][0pt]{%
+        \shifted@box[50pt][0pt]{%
+          \zihao{5} \sht@secret@level%
         }%
       }%
     }
@@ -994,7 +1009,7 @@
 
     \vspace*{\stretch{3}}
 
-    {\zihao{-3}\heiti \ulenhance[1.5pt]{\sht@title}}
+    {\zihao{-3}\heiti \shifted@uline[1.5pt][0pt]{\sht@title}}
 
     \vspace*{\stretch{3}}
 
@@ -1004,7 +1019,7 @@
       \def\arraystretch{1.3}
       \begin{tabular}{llc}
         作者姓名：&
-          \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{%
+          \multicolumn{2}{c}{\shifted@uline{\shifted@box{%
             \ifsht@anonymous%
               \sht@anonymous@str%
             \else%
@@ -1012,7 +1027,7 @@
             \fi%
           }}} \\
         指导教师：&
-          \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{%
+          \multicolumn{2}{c}{\shifted@uline{\shifted@box{%
             \ifsht@anonymous%
               \sht@anonymous@str%
             \else%
@@ -1020,14 +1035,14 @@
             \fi%
           }}} \\
         \ifdefempty{\sht@supervisor@institution}{}{ &
-          \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{\sht@supervisor@institution}}} \\
+          \multicolumn{2}{c}{\shifted@uline{\shifted@box{\sht@supervisor@institution}}} \\
         }
         学位类别：&
-          \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{\sht@degree@name}}} \\
+          \multicolumn{2}{c}{\shifted@uline{\shifted@box{\sht@degree@name}}} \\
         一级学科：&
-          \multicolumn{2}{c}{\ulenhance[1.2pt]{\ulextend{\sht@discipline@level@i}}} \\
+          \multicolumn{2}{c}{\shifted@uline{\shifted@box{\sht@discipline@level@i}}} \\
         \multicolumn{2}{l}{学校/学院名称：} &
-          \ulenhance[1.2pt]{\ulextend[318pt]{\sht@institution}} \\
+          \shifted@uline{\shifted@box[\cover@tab@last@entry@width]{\sht@institution}} \\
       \end{tabular}
     }
 
@@ -1050,7 +1065,7 @@
 
     \vspace*{50pt}
 
-    {\zihao{-3}\bfseries \ulenhance[1.5pt]{\sht@title@en}}
+    {\zihao{-3}\bfseries \shifted@uline[1.5pt][0pt]{\sht@title@en}}
 
     \vspace*{\stretch{3}}
 
@@ -1099,7 +1114,9 @@
 % ------------------------------------------------------------------------------
 %   Bachelor covers
 % ------------------------------------------------------------------------------
-\def\sht@bachelor@ulength{300pt}
+\def\cover@tab@entry@width@undergraduate{300pt}
+\def\cover@tab@uline@thick@undergraduate{1pt}
+\def\content@left@shift@en{2.5\ccwd}
 \newcommand{\sht@maketitle@undergraduate}{%
   \intobmk*{\cleardoublepage}{封面}
   \thispagestyle{empty}
@@ -1119,19 +1136,26 @@
       \def\arraystretch{1.3}
       \begin{tabular}{cc}
         题\hspace{2\ccwd}目：&
-          \sht@lines@to@tab[1pt][\sht@bachelor@ulength]{\sht@title} \\
+          \sht@lines@to@tab[\cover@tab@uline@thick@undergraduate]%
+            [\cover@tab@entry@width@undergraduate]{\sht@title} \\
         学生姓名：&
-          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@author}} \\
+          \shifted@uline[\cover@tab@uline@thick@undergraduate]%
+            {\shifted@box[\cover@tab@entry@width@undergraduate]{\sht@author}} \\
         学\hspace{2\ccwd}号：&
-          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@author@id}} \\
+          \shifted@uline[\cover@tab@uline@thick@undergraduate]%
+            {\shifted@box[\cover@tab@entry@width@undergraduate]{\sht@author@id}} \\
         入学年份：&
-          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@entrance@year}} \\
+          \shifted@uline[\cover@tab@uline@thick@undergraduate]%
+            {\shifted@box[\cover@tab@entry@width@undergraduate]{\sht@entrance@year}} \\
         所在学院：&
-          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@institution}} \\
+          \shifted@uline[\cover@tab@uline@thick@undergraduate]%
+            {\shifted@box[\cover@tab@entry@width@undergraduate]{\sht@institution}} \\
         攻读专业：&
-          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@discipline}} \\
+          \shifted@uline[\cover@tab@uline@thick@undergraduate]%
+            {\shifted@box[\cover@tab@entry@width@undergraduate]{\sht@discipline}} \\
         指导教师：&
-          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@supervisor}} \\
+          \shifted@uline[\cover@tab@uline@thick@undergraduate]%
+            {\shifted@box[\cover@tab@entry@width@undergraduate]{\sht@supervisor}} \\
       \end{tabular}
     }
 
@@ -1168,19 +1192,26 @@
       \def\arraystretch{1.3}
       \begin{tabular}{lc}
         Subject: &
-          \sht@lines@to@tab[1pt][\sht@bachelor@ulength]{\sht@title@en} \\
+          \sht@lines@to@tab[\cover@tab@uline@thick@undergraduate]%
+            [\cover@tab@entry@width@undergraduate][\content@left@shift@en]{\sht@title@en} \\
         Student Name: &
-          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@author@en}} \\
+          \shifted@uline[\cover@tab@uline@thick@undergraduate]%
+            {\shifted@box[\cover@tab@entry@width@undergraduate][\content@left@shift@en]{\sht@author@en}} \\
         Student ID: &
-          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@author@id}} \\
+          \shifted@uline[\cover@tab@uline@thick@undergraduate]%
+            {\shifted@box[\cover@tab@entry@width@undergraduate][\content@left@shift@en]{\sht@author@id}} \\
         Year of Entrance: &
-          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@entrance@year}} \\
+          \shifted@uline[\cover@tab@uline@thick@undergraduate]%
+            {\shifted@box[\cover@tab@entry@width@undergraduate][\content@left@shift@en]{\sht@entrance@year}} \\
         School: &
-          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@institution@en}} \\
+          \shifted@uline[\cover@tab@uline@thick@undergraduate]%
+            {\shifted@box[\cover@tab@entry@width@undergraduate][\content@left@shift@en]{\sht@institution@en}} \\
         Major: &
-          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@discipline@en}} \\
+          \shifted@uline[\cover@tab@uline@thick@undergraduate]%
+            {\shifted@box[\cover@tab@entry@width@undergraduate][\content@left@shift@en]{\sht@discipline@en}} \\
         Advisor: &
-          \ulenhance{\ulextend[\sht@bachelor@ulength]{\sht@supervisor@en}} \\
+          \shifted@uline[\cover@tab@uline@thick@undergraduate]%
+            {\shifted@box[\cover@tab@entry@width@undergraduate][\content@left@shift@en]{\sht@supervisor@en}} \\
       \end{tabular}
     }
 
