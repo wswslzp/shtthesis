@@ -291,10 +291,14 @@
   family = sht,
   prefix = sht@,
 }
+\DeclareBoolOption[false]{undergraduate}
 \DeclareBoolOption[false]{anonymous}
 \DeclareBoolOption[false]{print}
 \DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{ctexbook}}
 \ProcessKeyvalOptions*
+\ifsht@undergraduate
+  \PassOptionsToClass{zihao = 5}{ctexbook}
+\fi
 % ------------------------------------------------------------------------------
 %   Load minimum mandatory packages
 % ------------------------------------------------------------------------------
@@ -312,6 +316,7 @@
 \RequirePackage{indentfirst}
 \RequirePackage[normalem]{ulem}
 \RequirePackage{fancyhdr}
+\RequirePackage{lastpage}
 \RequirePackage{tocvsec2}
 \RequirePackage{letltxmacro}
 \RequirePackage{fontspec}[2016/12/27]
@@ -368,6 +373,8 @@
 \def\figurename{图}
 \def\bibetal{等}
 \def\biband{和}
+\definecolor{ShtRed}{RGB}{146,46,23}
+\def\school@logo@missing{校徽文件缺失，请至\href{https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf}{项目主页}下载！}
 % ------------------------------------------------------------------------------
 %   Geometry and layouts
 % ------------------------------------------------------------------------------
@@ -392,103 +399,96 @@
 \fi
 \setlength{\parskip}{0.5ex plus 0.25ex minus 0.25ex}
 \setlength{\parindent}{2\ccwd}
-\linespread{1.6}
+\ifsht@undergraduate
+  \linespread{1.3}
+\else
+  \linespread{1.6}
+\fi
 \raggedbottom
 % ------------------------------------------------------------------------------
 %   Headers and footers
 % ------------------------------------------------------------------------------
+\def\sht@flat@title{\renewcommand\\{ } \@title}
 \pagestyle{fancy}
-\fancypagestyle{CenteralPageNumbered}{
+\fancypagestyle{Plain}{}
+\fancypagestyle{RomanNumbered}{
   \fancyhf{}
   \pagenumbering{Roman}
-  \fancyhead[C]{
-    \footnotesize
-    \ifnumodd{\value{page}}{
-      \nouppercase\leftmark
-    }{
-      \nouppercase\@title
+  \fancyhead[OC]{\footnotesize\nouppercase\leftmark}
+  \fancyhead[EC]{\footnotesize\nouppercase\sht@flat@title}
+  \fancyfoot[C]{\footnotesize\thepage}
+  \renewcommand{\headrulewidth}{0.8pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+\fancypagestyle{LRNumbered}{
+  \fancyhf{}
+  \fancyhead[OC]{\footnotesize\nouppercase\leftmark}
+  \fancyhead[EC]{\footnotesize\nouppercase\sht@flat@title}
+  \fancyfoot[OR]{\footnotesize\thepage}
+  \fancyfoot[EL]{\footnotesize\thepage}
+  \renewcommand{\headrulewidth}{0.8pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+\fancypagestyle{LRNumberedAppendix}{
+  \fancyhf{}
+  \fancyhead[OC]{\footnotesize 附\hspace*{1\ccwd}录}
+  \fancyhead[EC]{\footnotesize\nouppercase\sht@flat@title}
+  \fancyfoot[OR]{\footnotesize\thepage}
+  \fancyfoot[EL]{\footnotesize\thepage}
+  \renewcommand{\headrulewidth}{0.8pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+\fancypagestyle{RomanNumberedWithLogo}{
+  \fancyhf{}
+  \pagenumbering{Roman}
+  \fancyhead[L]{%
+    \IfFileExists{shanghaitech-logo.pdf}{%
+      \includegraphics[height=1.17cm]{shanghaitech-logo.pdf}%
+    }{%
+      \zihao{-5}\sffamily\color{ShtRed}\school@logo@missing%
     }
   }
-  \fancyfoot[C]{
-    \footnotesize
-    \thepage
+  \fancyhead[R]{\zihao{-5}\sffamily\sht@flat@title}
+  \fancyfoot[C]{\footnotesize\thepage}
+  \renewcommand{\headrulewidth}{0.8pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+\fancypagestyle{MNNumberedWithLogo}{
+  \fancyhf{}
+  \fancyhead[L]{%
+    \IfFileExists{shanghaitech-logo.pdf}{%
+      \includegraphics[height=1.17cm]{shanghaitech-logo.pdf}%
+    }{%
+      \zihao{-5}\sffamily\color{ShtRed}\school@logo@missing%
+    }
+  }
+  \fancyhead[R]{\zihao{-5}\sffamily\sht@flat@title}
+  \fancyfoot[C]{%
+    \footnotesize%
+    第~\thepage~页\hspace*{1\ccwd}共~\pageref{LastPage}~页%
   }
   \renewcommand{\headrulewidth}{0.8pt}
   \renewcommand{\footrulewidth}{0pt}
 }
-\fancypagestyle{LRPageNumbered}{
-  \fancyhf{}
-  \fancyhead[C]{
-    \footnotesize
-    \ifnumodd{\value{page}}{
-      \nouppercase\leftmark
-    }{
-      \nouppercase\@title
-    }
-  }
-  \fancyfoot[C]{
-    \footnotesize
-    \ifnumodd{\value{page}}{
-      \hspace*{\fill}
-      \thepage
-    }{
-      \thepage
-      \hspace*{\fill}
-    }
-  }
-  \renewcommand{\headrulewidth}{0.8pt}
-  \renewcommand{\footrulewidth}{0pt}
-}
-\fancypagestyle{LRPageNumberedAppendix}{
-  \fancyhf{}
-  \fancyhead[C]{
-    \footnotesize
-    \ifnumodd{\value{page}}{%
-      附\hspace{1\ccwd}录%
-    }{
-      \nouppercase\@title
-    }
-  }
-  \fancyfoot[C]{
-    \footnotesize
-    \ifnumodd{\value{page}}{
-      \hspace*{\fill}
-      \thepage
-    }{
-      \thepage
-      \hspace*{\fill}
-    }
-  }
-  \renewcommand{\headrulewidth}{0.8pt}
-  \renewcommand{\footrulewidth}{0pt}
-}
-\fancypagestyle{LRPageNumberedWithoutHead}{
-  \fancyhf{}
-  \fancyfoot[C]{
-    \footnotesize
-    \ifnumodd{\value{page}}{
-      \hspace*{\fill}
-      \thepage
-    }{
-      \thepage
-      \hspace*{\fill}
-    }
-  }
-  \renewcommand{\headrulewidth}{0pt}
-  \renewcommand{\footrulewidth}{0pt}
-}
-\fancypagestyle{Plain}{}
 \providecommand{\frontmatter}{}
 \LetLtxMacro{\TmpFrontmatter}{\frontmatter}
 \renewcommand{\frontmatter}{%
   \TmpFrontmatter%
-  \pagestyle{CenteralPageNumbered}%
+  \ifthenelse{\equal{\sht@degree}{doctor} \OR \equal{\sht@degree}{master}}{%
+    \pagestyle{RomanNumbered}%
+  }{%
+    \pagestyle{RomanNumberedWithLogo}%
+  }
 }
 \providecommand{\mainmatter}{}
 \LetLtxMacro{\TmpMainmatter}{\mainmatter}
 \renewcommand{\mainmatter}{%
   \TmpMainmatter%
-  \pagestyle{LRPageNumbered}%
+  \ifthenelse{\equal{\sht@degree}{doctor} \OR \equal{\sht@degree}{master}}{%
+    \pagestyle{LRNumbered}%
+  }{%
+    \pagestyle{MNNumberedWithLogo}%
+  }
 }
 % ------------------------------------------------------------------------------
 %   Font utilities
@@ -527,10 +527,9 @@
 % ------------------------------------------------------------------------------
 \ifthenelse{\equal{\sht@fontset}{windows}}{
   \def\fake@bold@factor{2.5}
-  \def\windows@kaiti{KaiTi}
   \setCJKmainfont[
       AutoFakeBold = \fake@bold@factor,
-        ItalicFont = \windows@kaiti,
+        ItalicFont = KaiTi,
     ]{SimSun}
   \setCJKsansfont[
       AutoFakeBold = \fake@bold@factor,
@@ -543,7 +542,7 @@
     ]{SimHei}
   \setCJKfamilyfont{zhkai}[
       AutoFakeBold = \fake@bold@factor,
-    ]{\windows@kaiti}
+    ]{KaiTi}
 }{
   \ifthenelse{\equal{\sht@fontset}{mac}}{
     \setCJKmainfont[
@@ -653,9 +652,12 @@
   \renewcommand\checkmark{\ensuremath{✓}}%
 }
 \allowdisplaybreaks[4]
-\newtagform{dots}{\ldots\ (}{)}
-\usetagform{dots}
-\renewcommand{\eqref}[1]{\textup{(\ref{#1})}}
+\ifsht@undergraduate
+\else
+  \newtagform{dots}{\ldots\ (}{)}
+  \usetagform{dots}
+  \renewcommand{\eqref}[1]{\textup{(\ref{#1})}}
+\fi
 % ------------------------------------------------------------------------------
 %   Math fonts
 % ------------------------------------------------------------------------------
@@ -753,10 +755,18 @@
 \captionsetup{
   format = plain,
   hangindent = 2.0em,
-  skip = 8pt,
   labelsep = quad,
   font = {wuhaocuti},
 }
+\ifsht@undergraduate
+  \captionsetup{
+    skip = 6pt,
+  }
+\else
+  \captionsetup{
+    skip = 8pt,
+  }
+\fi
 \def\@dotsep{1.5mu}
 \def\@pnumwidth{2em}
 \def\@tocrmarg{2em}
@@ -947,38 +957,36 @@
   }%
 }
 \newcommand\sht@schoollogo@undergraduate{%
-  \noindent\hspace*{0.73cm}%
+  \noindent% \hspace*{0.73cm}%
   \IfFileExists{shanghaitech-logo.pdf}{%
     \includegraphics[width=5.39cm]{shanghaitech-logo.pdf}%
   }{%
-    \missingfigure{%
-      \small 校徽文件缺失，请至\href{https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf}{项目主页}下载！%
-    }%
+    \missingfigure{\small\school@logo@missing}%
   }%
 }
 \renewcommand{\maketitle}{%
-  \ifthenelse{\equal{\sht@degree}{doctor}}{
-    \sht@maketitle@graduate{博士}
-    \sht@maketitle@graduate@en{dissertation}
-  }{
-    \ifthenelse{\equal{\sht@degree}{master}}{
-      \sht@maketitle@graduate{硕士}
-      \sht@maketitle@graduate@en{thesis}
+  \ifsht@undergraduate
+    \sht@maketitle@undergraduate
+    \sht@maketitle@undergraduate@en
+  \else
+    \ifthenelse{\equal{\sht@degree}{doctor}}{
+      \sht@maketitle@graduate{博士}
+      \sht@maketitle@graduate@en{dissertation}
     }{
-      \ifthenelse{\equal{\sht@degree}{bachelor}}{
-        \sht@maketitle@undergraduate
-        \sht@maketitle@undergraduate@en
+      \ifthenelse{\equal{\sht@degree}{master}}{
+        \sht@maketitle@graduate{硕士}
+        \sht@maketitle@graduate@en{thesis}
       }{
         \sht@error{Degree type `\sht@degree' is not supported yet}
       }
     }
-  }
+  \fi
   \ifthenelse{\not \boolean{sht@anonymous}}{%
-    \ifthenelse{\equal{\sht@degree}{doctor} \OR \equal{\sht@degree}{master}}{%
-      \makedeclarations%
-    }{%
+    \ifsht@undergraduate%
       \makedeclarations@undergraduate%
-    }%
+    \else%
+      \makedeclarations%
+    \fi
   }{}
 }
 % ------------------------------------------------------------------------------
@@ -1433,7 +1441,11 @@
   \origin@appendix
   \intotoc*{\cleardoublepage}{\appendixname}%
   \settocdepth{part}%
-  \pagestyle{LRPageNumberedAppendix}%
+  \ifthenelse{\equal{\sht@degree}{doctor} \OR \equal{\sht@degree}{master}}{%
+    \pagestyle{LRNumberedAppendix}%
+  }{%
+    \pagestyle{MNNumberedWithLogo}%
+  }
 }
 % ------------------------------------------------------------------------------
 %   Backmatter
@@ -1443,7 +1455,11 @@
 \renewcommand{\backmatter}{%
   \origin@backmatter%
   \settocdepth{chapter}%
-  \pagestyle{LRPageNumbered}%
+  \ifthenelse{\equal{\sht@degree}{doctor} \OR \equal{\sht@degree}{master}}{%
+    \pagestyle{LRNumbered}%
+  }{%
+    \pagestyle{MNNumberedWithLogo}%
+  }
 }
 \newcounter{sht@resume@cnt}
 \setcounter{sht@resume@cnt}{0}

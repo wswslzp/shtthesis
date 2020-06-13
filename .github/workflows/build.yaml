@@ -13,6 +13,8 @@ env:
   EXTRACT_DIR: texlive_extract
   BUILD_DIR: build
   NOTO_URL: https://noto-website-2.storage.googleapis.com/pkgs
+  SED_REP: s/\\documentclass/\\documentclass\[fontset=none\]/
+  SED_REP_WITH_CLS_ARGS: s/\\documentclass\[\(.*\)\]/\\documentclass\[\1, fontset=none\]/
 
 jobs:
   build-ubuntu:
@@ -51,7 +53,7 @@ jobs:
     - name: Build user document
       run: |
         export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
-        sed -i 's/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
+        sed -i '${{ env.SED_REP }}' shtthesis-user-guide.tex
         latexmk -pdflua -outdir=${{ env.BUILD_DIR }}
     - name: Archive build outputs
       uses: actions/upload-artifact@v2
@@ -98,7 +100,7 @@ jobs:
     - name: Build user document
       run: |
         export PATH=/tmp/texlive/bin/x86_64-darwin:$PATH
-        gsed -i 's/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
+        gsed -i '${{ env.SED_REP }}' shtthesis-user-guide.tex
         latexmk -pdflua -outdir=${{ env.BUILD_DIR }}
     - name: Archive build outputs
       uses: actions/upload-artifact@v2
@@ -148,7 +150,7 @@ jobs:
     - name: Build user document
       run: |
         ${env:PATH} = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
-        sed -i 's/\\documentclass/\\documentclass\[fontset=none\]/' shtthesis-user-guide.tex
+        sed -i '${{ env.SED_REP }}' shtthesis-user-guide.tex
         latexmk -pdfxe -outdir=${{ env.BUILD_DIR }}
     - name: Archive build outputs
       uses: actions/upload-artifact@v2

@@ -13,7 +13,7 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>
-\documentclass{shtthesis}
+\documentclass[undergraduate]{shtthesis}
 
 % graduate setup
 % \shtsetup{
@@ -42,6 +42,8 @@
   degree = {bachelor},
   title = {\ShtThesis~v\version\\使用说明},
   title* = {A~User's~Guide~to\\\ShtThesis~v\version},
+  keywords = {上海科技大学，学位论文，\LaTeX{}},
+  keywords* = {ShanghaiTech~University, Thesis, \LaTeX{}},
   date = {2020~年~06~月},
   date* = {06~/~2020},
   author = {李润东},
@@ -202,32 +204,32 @@
 \chapter{模板介绍}
 \shtthesis (\textbf{S}hang\textbf{h}ai\textbf{T}ech University \textbf{THESIS}) 是根据《上海科技大学研究生学位论文撰写规范（初稿）》（下文简称《规范》）编写的、适用于上海科技大学学位论文写作的\emph{非官方} \LaTeX 模板。目前版本（v\version）提供了博士、硕士学位论文排版选项，且能够自动生成用于盲审的匿名版以及最终提交的打印版论文。
 
-这篇文档将尽量详细地阐释 \shtthesis 的使用方法和技巧。由于这篇文档直接使用 \shtthesis 排版，所以其源代码文件 \texttt{\jobname.tex} 也可以作为一个实际样例以供读者参考使用。
+这篇文档将尽量详细地阐释 \shtthesis 的使用方法和技巧。由于这篇文档直接使用 \shtthesis 排版，所以其源代码文件 \jobname.tex 也可以作为一个实际样例以供读者参考使用。
 
-我们计划在 \shtthesis 后续版本中加入本科学位论文的排版选项，因此亟需有上海科技大学本科论文排版经验的同学参与到 \shtthesis 项目中。我们也计划将该使用说明和模板文件 \verb|shtthesis.cls| 统一重构为 \verb|.dtx| 文件。同时，我们也非常希望得到用户宝贵的反馈和建议。若您有意为 \shtthesis 贡献 issues 和 pull requests，请移步至项目主页 \url{https://github.com/lirundong/sht-thesis}。
+我们计划在 \shtthesis 后续版本中加入本科学位论文的排版选项，因此亟需有上海科技大学本科论文排版经验的同学参与到 \shtthesis 项目中。我们也计划将该使用说明和模板文件 shtthesis.cls 统一重构为 .dtx 文件。同时，我们也非常希望得到用户宝贵的反馈和建议。若您有意为 \shtthesis 贡献 issues 和 pull requests，请移步至项目主页 \url{https://github.com/lirundong/sht-thesis}。
 
 \chapter{模板使用}
 \section{模板安装}
-\shtthesis 提供的文档类型文件为 \verb|shtthesis.cls|，封面所需的上海科技大学校徽文件为 \verb|shanghaitech-logo.pdf|，参考文献 GBT-7714 格式文件为 \verb|shtthesis-gbt7714-plain.bst|，用户仅需将这三个文件拷贝至自己论文的工作目录下即可完成安装。假设用户的论文文件为 \verb|thesis.tex|，则工作目录中必要的文件包括：
+\shtthesis 提供的文档类型文件为 shtthesis.cls，封面所需的上海科技大学校徽文件为 shanghaitech-logo.pdf，参考文献 GBT-7714 格式文件为 shtthesis-gbt7714-plain.bst，用户仅需将这三个文件拷贝至自己论文的工作目录下即可完成安装。假设用户的论文文件为 thesis.tex，则工作目录中必要的文件包括：
 \begin{center}
   \begin{tabular}{ll}
     \toprule
     文件名称 & 说明 \\
     \midrule 
-    \verb|shtthesis.cls| & 模板文档类文件 \\
-    \verb|shanghaitech-logo.pdf| & 上海科技大学校徽 \\
-    \verb|shtthesis-gbt7714-plain.bst| & 参考文献格式文件 \\
-    \verb|thesis.tex| & 论文文件 \\
-    \verb|reference.bib| & 参考文献默认文件名 \\
+    shtthesis.cls & 模板文档类文件 \\
+    shanghaitech-logo.pdf & 上海科技大学校徽 \\
+    shtthesis-gbt7714-plain.bst & 参考文献格式文件 \\
+    thesis.tex & 论文文件 \\
+    reference.bib & 参考文献默认文件名 \\
     \bottomrule
   \end{tabular}
 \end{center}
 
 \paragraph{注意}
-为避免版权问题，上传至 CTAN 的 \shtthesis 并不包含校徽文件。如果用户直接使用 \TeX{} Live 分发的 \shtthesis，则需要至项目主页下载校徽文件\footnote{校徽文件在 GitHub 项目下的链接为 \url{https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf}}，并将 \verb|shanghaitech-logo.pdf| 与 \verb|thesis.tex| 放置在同一目录下。
+为避免版权问题，上传至 CTAN 的 \shtthesis 并不包含校徽文件。如果用户直接使用 \TeX{} Live 分发的 \shtthesis，则需要至项目主页下载校徽文件\footnote{\url{https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf}}，并将 shanghaitech-logo.pdf 与 thesis.tex 放置在同一目录下。
 
 \section{文档编译}
-\shtthesis 支持使用 \hologo{XeLaTeX} 和 \hologo{LuaLaTeX} 编译（注意，\emph{不支持} \hologo{pdfLaTeX}）。尝试编译本文档的源代码 \texttt{\jobname.tex} 至 PDF 文件是了解 \shtthesis 编译流程最直观的方法。我们推荐在最新的 \hologo{TeX} Live 环境下，使用 \verb|latexmk| 工具进行编译。Windows 及 Linux 用户请下载安装 \hologo{TeX} Live (\url{https://www.tug.org/texlive/})，macOS 用户请下载安装 Mac\hologo{TeX} (\url{https://www.tug.org/mactex/})。不推荐在 overleaf 等在线平台编译使用 \shtthesis，项目主页不接受与 overleaf 相关的 issues。
+\shtthesis 支持使用 \hologo{XeLaTeX} 和 \hologo{LuaLaTeX} 编译（注意，\emph{不支持} \hologo{pdfLaTeX}）。尝试编译本文档的源代码 \jobname.tex 至 PDF 是了解 \shtthesis 编译流程最直观的方法。我们推荐在最新的 \hologo{TeX} Live 环境下，使用 \verb|latexmk| 工具进行编译。Windows 及 Linux 用户请下载安装 \hologo{TeX} Live (\url{https://www.tug.org/texlive/})，macOS 用户请下载安装 Mac\hologo{TeX} (\url{https://www.tug.org/mactex/})。不推荐在 overleaf 等在线平台编译使用 \shtthesis，项目主页不接受与 overleaf 相关的 issues。
 
 在完成环境配置后，即可使用 \verb|latexmk| 工具完成编译。使用 \hologo{XeLaTeX} 引擎进行编译的命令为：
 \begin{shell}
@@ -243,7 +245,7 @@
 \end{shell}
 
 \section{载入模板类}
-模板安装完成后，在论文文件 \verb|thesis.tex| 开头使用
+模板安装完成后，在论文文件 thesis.tex 开头使用
 \begin{latex}
 \documentclass{shtthesis}
 \end{latex}
@@ -254,7 +256,7 @@
 \begin{latex}
 \documentclass[anonymous]{shtthesis}
 \end{latex}
-\shtthesis 默认的匿名字符串为连续的三个英文星号“***”，该字符串可使通过 \verb|\shtsetup| 的 anonymous-str 选项修改：
+\shtthesis 默认的匿名字符串为连续的三个英文星号“***”，该字符串可使通过 \verb|\shtsetup| 的 \verb|anonymous-str| 选项修改：
 \begin{latex}
 \shtsetup{
   anonymous-str = XXX, % 作者、导师姓名在匿名环境下显示为 XXX
@@ -269,7 +271,7 @@
 \end{latex}
 
 \subsection{传递给 \textsf{ctexbook} 的其他选项}
-\shtthesis 实际使用 \CTeX 宏包提供的 \textsf{ctexbook} 文档类排版，除 \verb|anonymous| 和 \verb|print| 外的其余类参数会传递给 \textsf{ctexbook}。其中需要注意的选项为 fontset，即设定论文所用的字体集。\CTeX 宏包自身能够根据编译平台选择合适的字体集，但有时会出现平台识别失败从而回退至 \TeX Live 提供的最基础的 Fandol 字体集导致缺字的情况。此时可以手动设置相应的 fontset，例如在 Windows 平台下设置 \verb|fontset=windows|，在 macOS 平台下设置 \verb|fontset=mac|：
+\shtthesis 实际使用 \CTeX 宏包提供的 \textsf{ctexbook} 文档类排版，除 \verb|anonymous| 和 \verb|print| 外的其余类参数会传递给 \textsf{ctexbook}。其中需要注意的选项为 \verb|fontset|，即设定论文所用的字体集。\CTeX 宏包自身能够根据编译平台选择合适的字体集，但有时会出现平台识别失败从而回退至 \TeX Live 提供的最基础的 Fandol 字体集导致缺字的情况。此时可以手动设置相应的 fontset，例如在 Windows 平台下设置 \verb|fontset=windows|，在 macOS 平台下设置 \verb|fontset=mac|：
 \begin{latex}
 \documentclass[fontset=windows]{shtthesis}
 \end{latex}
@@ -419,7 +421,7 @@
 《规范》规定论文前言部分应包含论文原创性声明和授权使用声明、中英文摘要、目录及图形、表格列表。若有需要，可加入符号列表。\shtthesis 会自动生成目录和图表列表，在不设置 \verb|anonymous| 选项时会自动生成声明页。\shtthesis 提供了摘要和符号列表环境，以便于用户生成中英文摘要和符号列表。
 
 \subsection{论文摘要及关键词}
-论文中英文摘要在正文部分 \verb|\frontmatter| 之后、\verb|\makeindices| 之前，分别在 \verb|abstract| 和 \verb|abstract*| 环境中输入。摘要环境对内容没有限制。
+论文中英文摘要在正文部分 \verb|\frontmatter| 之后、\verb|\makeindices| 之前，分别在 abstract 和 abstract* 环境中输入。摘要环境对内容没有限制。
 \begin{latex}
 \begin{abstract}
   中文摘要内容...
@@ -447,7 +449,7 @@
 \end{figure}
 \end{latex}
 
-\shtthesis 提供了 \verb|nomenclatures| 环境用于生成符号列表，使用方法为：
+\shtthesis 提供了 nomenclatures 环境用于生成符号列表，使用方法为：
 \begin{latex}
 \begin{nomenclatures}[`\emph{caption}']
   \head[`\emph{unitCap}']{`\emph{symbCap}'}{`\emph{descriptionCap}'}
@@ -455,7 +457,7 @@
   % ...
 \end{nomenclatures}
 \end{latex}
-每次 \verb|nomenclatures| 调用会分别生成一组符号列表，每一 \verb|\item| 会生成一行符号描述。若 caption 不为空则会为当前组生成一个不编号的 section 级的标题。\verb|\head| 为可选指令，会为当前组生成一个“表头”，但必须在 \verb|\item| 之前列出。\verb|\item| 接受一个可选参数 unit 作为符号的单位，若其不为空则在当前行右对齐出现。\verb|nomenclatures| 的使用样例可以参考 \texttt{\jobname.tex} 中“符号列表”部分。注意在 \shtthesis v\version 中 \verb|\item| 的 description 折行后会出现排版错误，故暂时不支持较长的符号描述。
+每次 nomenclatures 调用会分别生成一组符号列表，每一 \verb|\item| 会生成一行符号描述。若 caption 不为空则会为当前组生成一个不编号的 section 级的标题。\verb|\head| 为可选指令，会为当前组生成一个“表头”，但必须在 \verb|\item| 之前列出。\verb|\item| 接受一个可选参数 unit 作为符号的单位，若其不为空则在当前行右对齐出现。nomenclatures 的使用样例可以参考 \jobname.tex 中“符号列表”部分。注意在 \shtthesis v\version 中 \verb|\item| 的 description 折行后会出现排版错误，故暂时不支持较长的符号描述。
 
 \section{正文部分}
 \shtthesis 正文部分的书写与一般 \LaTeX 项目无异。为保证兼容性，\shtthesis 除修改公式编号格式以符合《规范》要求外，不提供证明、定理等任何额外环境。文献引用目前只支持“著者——出版年”格式。
@@ -490,7 +492,7 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
 \end{latex}
 
 \subsection{列表环境}
-\shtthesis 微调了编号列表（\verb|enumerate|）和非编号列表（\verb|itemize|）环境，以适应中文排版惯例。编号列表默认使用数字编号：
+\shtthesis 微调了编号列表（enumerate）和非编号列表（itemize）环境，以适应中文排版惯例。编号列表默认使用数字编号：
 \begin{enumerate}
   \item 起来，饥寒交迫的奴隶！
   \item 起来，全世界受苦的人！
@@ -512,7 +514,7 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
   \item 就一定要实现！
 \end{enumerate}
 
-关键字（\verb|description|）环境在每一条目关键字后增加了加粗全角冒号“\textbf{：}”以适应中文排版惯例。例如：《中华人民共和国劳动法》
+关键字（description）环境在每一条目关键字后增加了加粗全角冒号“\textbf{：}”以适应中文排版惯例。例如：《中华人民共和国劳动法》
 \begin{description}
   \item[第一章第三条] 劳动者享有平等就业和选择职业的权利、取得劳动报酬的权利、休息休假的权利、获得劳动安全卫生保护的权利、接受职业技能培训的权利、享受社会保险和福利的权利、提请劳动争议处理的权利以及法律规定的其他劳动权利。
   \item[第四章第三十六条] 国家实行劳动者每日工作时间不超过八小时、平均每周工作时间不超过四十四小时的工时制度。
@@ -548,10 +550,10 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
 % ...
 \end{latex}
 
-《规范》要求在文末依此列出致谢、作者简历、攻读学位期间发表的论文与研究成果。用户可使用 \shtthesis 提供的相应环境 \verb|acknowledgement|、\verb|resume|、\verb|publications|、\verb|patterns| 和 \verb|projects| 进行排版。同时为了生成符合盲审要求的论文，\shtthesis 也提供了对应的\emph{匿名环境} \verb|publications*|、\verb|patterns*| 和 \verb|projects*|。在打开 \verb|anonymous| 选项（第~\ref{sec::option_anonymous} 节）后，论文中不出现“致谢”一节，作者简历内容替换为匿名字符串，其他小节使用匿名环境内容排版。注意在第一次使用任一上述环境前，需要使用 \verb|\backmatter| 切换至后记模式。
+《规范》要求在文末依此列出致谢、作者简历、攻读学位期间发表的论文与研究成果。用户可使用 \shtthesis 提供的相应环境 acknowledgement、resume、publications、patterns 和 projects 进行排版。同时为了生成符合盲审要求的论文，\shtthesis 也提供了对应的\emph{匿名环境} publications*、patterns* 和 projects*。在打开 \verb|anonymous| 选项（第~\ref{sec::option_anonymous} 节）后，论文中不出现“致谢”一节，作者简历内容替换为匿名字符串，其他小节使用匿名环境内容排版。注意在第一次使用任一上述环境前，需要使用 \verb|\backmatter| 切换至后记模式。
 
 \subsection{致谢}
-在 \verb|acknowledgement| 环境内书写致谢，致谢内容在匿名模式下不显示。
+在 acknowledgement 环境内书写致谢，致谢内容在匿名模式下不显示。
 \begin{latex}
 \begin{acknowledgement}
   致谢信息……
@@ -559,7 +561,7 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
 \end{latex}
 
 \subsection{简历及科研成果}
-此部分需要依此书写个人简历（\verb|resume| 环境）、已发表（或正式接受）的学术论文（\verb|publications| 和 \verb|publications*| 环境）、申请或已获得的专利（\verb|patterns| 和 \verb|patterns*| 环境）、参加的研究项目及获奖情况（\verb|projects| 和 \verb|projects*|）。根据是否匿名分别显示非匿名环境内容和匿名环境内容。
+此部分需要依此书写个人简历（resume 环境）、已发表（或正式接受）的学术论文（publications 和 publications* 环境）、申请或已获得的专利（patterns 和 patterns* 环境）、参加的研究项目及获奖情况（projects 和 projects*）。根据是否匿名分别显示非匿名环境内容和匿名环境内容。
 \begin{latex}
 \begin{resume}
   个人简历…… （仅非匿名环境显示）

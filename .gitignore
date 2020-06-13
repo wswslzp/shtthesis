@@ -20,7 +20,7 @@ _minted*
 *-converted-to.pdf
 *.thm
 *.lof
-build/
+build*/
 
 # ignore compiled docuemnt within root
 *.pdf
