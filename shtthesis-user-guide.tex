@@ -13,9 +13,9 @@
 %
 % You should have received a copy of the GNU General Public License
 % along with this program.  If not, see <https://www.gnu.org/licenses/>
-\documentclass[undergraduate]{shtthesis}
 
 % graduate setup
+% \documentclass{shtthesis}
 % \shtsetup{
 %   degree = {master},
 %   degree-name = {工学硕士},
@@ -38,6 +38,7 @@
 % }
 
 % undergraduate setup
+\documentclass[undergraduate]{shtthesis}
 \shtsetup{
   degree = {bachelor},
   title = {\ShtThesis~v\version\\使用说明},
@@ -145,7 +146,7 @@
 
 \usepackage{subcaption}
 \usepackage{ctable}
-\usepackage{bicaption}
+\usepackage[list=off]{bicaption}
 \captionsetup[figure][bi-second]{name=Figure}
 \captionsetup[table][bi-second]{name=Table}
 
@@ -200,7 +201,7 @@
 
 这篇文档将尽量详细地阐释 \shtthesis 的使用方法和技巧。由于这篇文档直接使用 \shtthesis 排版，所以其源代码文件 \jobname.tex 也可以作为一个实际样例以供读者参考使用。
 
-我们计划在 \shtthesis 后续版本中加入本科学位论文的排版选项，因此亟需有上海科技大学本科论文排版经验的同学参与到 \shtthesis 项目中。我们也计划将该使用说明和模板文件 shtthesis.cls 统一重构为 .dtx 文件。同时，我们也非常希望得到用户宝贵的反馈和建议。若您有意为 \shtthesis 贡献 issues 和 pull requests，请移步至项目主页 \url{https://github.com/lirundong/sht-thesis}。
+我们计划在 \shtthesis 后续版本中加入本科学位论文的排版选项，因此亟需有上海科技大学本科论文排版经验的同学参与到 \shtthesis 项目中。我们也计划将该使用说明和模板文件 shtthesis.cls 统一重构为 .dtx 文件。同时，我们也非常希望得到用户宝贵的反馈和建议。若您有意为 \shtthesis 贡献 issues 和 pull requests，请移步至项目主页 \url{https://github.com/lirundong/shtthesis}。
 
 \chapter{模板使用}
 \section{模板安装}
@@ -307,7 +308,7 @@
   \end{subtable}
 \end{table}
 
-用户可以在不显著违反《规范》的前提下按照自身需求自定义字符集（例如在排版正文英文字体时，{\rmfamily \TeX{} Gyre Termes}、{\xitsfamily XITS} 和 {\timesnewroman Times New Roman} 几种字体几乎没有明显区别，见表~\ref{tab::serif_fonts}），或通过其他设置调整 \textsf{ctexbook} 的排版行为。\textsf{ctexbook} 使用方法详见 \CTeX 文档。\footnote{\url{http://mirrors.ctan.org/language/chinese/ctex/ctex.pdf}}
+用户可以在不显著违反《规范》的前提下按照自身需求自定义字符集（例如在排版正文英文字体时，{\rmfamily \TeX{} Gyre Termes}、{\xitsfamily XITS} 和 {\timesnewroman Times New Roman} 几种字体几乎没有明显区别，见表~\ref{tab::serif_fonts}），或通过其他设置调整 \textsf{ctexbook} 的排版行为。\textsf{ctexbook} 使用方法详见 \CTeX 文档\footnote{\url{http://mirrors.ctan.org/language/chinese/ctex/ctex.pdf}}。
 
 \begin{table}[htb]
   \centering
@@ -530,7 +531,7 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
 
 由于在排版较长的、自包含的图表标题时，使用双语图表标题会导致可读性下降，\shtthesis 默认不载入 \textsf{bicaption} 宏包。（ \shtthesis 作者在 2020 年学位申请时并未使用双语标题。）若确实需要双语标题，可在导言区内手动载入并设定 \textsf{bicaption}：
 \begin{latex}
-\usepackage{bicaption}
+\usepackage[list=off]{bicaption}
 \captionsetup[figure][bi-second]{name=Figure}
 \captionsetup[table][bi-second]{name=Table}
 \end{latex}
@@ -619,7 +620,7 @@ Ordinary math: $A,F,L,2,3,5,\sigma$. \verb|\mathrm|: $\mathrm{A,F,L,2,3,5,\sigma
 
 \backmatter
 \begin{acknowledgement}
-\shtthesis 派生于中国科学院大学论文模板 \textsf{ucasthesis}\footnote{\url{https://github.com/mohuangrui/ucasthesis}，使用 GPLv3 许可证分发。}，v0.2.0 开发过程中参考了清华大学论文模板 \textsf{thuthesis}\footnote{\url{https://github.com/tuna/thuthesis}，使用 LPPL-1.3c 许可证分发}，特别是 \verb|\thusetup| 命令的设计和实现。这些项目中流淌的智慧，以及项目作者们的专业态度和共享精神使得 \shtthesis 的开发及完善成为可能。
+\shtthesis 派生于中国科学院大学论文模板 \textsf{ucasthesis}\footnote{\url{https://github.com/mohuangrui/ucasthesis}，使用 GPLv3 许可证分发。}，v0.2.0 开发过程中参考了清华大学论文模板 \textsf{thuthesis}\footnote{\url{https://github.com/tuna/thuthesis}，使用 LPPL-1.3c 许可证分发。}，特别是 \verb|\thusetup| 命令的设计和实现。这些项目中流淌的智慧，以及项目作者们的专业态度和共享精神使得 \shtthesis 的开发及完善成为可能。
 \end{acknowledgement}
 
 \begin{resume}

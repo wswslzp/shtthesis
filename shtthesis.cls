@@ -773,10 +773,14 @@
   \captionsetup{
     skip = 6pt,
   }
+  \def\sht@toc@chapter@fmt{\zihao{5}\rmfamily}
+  \def\sht@toc@section@fmt{\zihao{5}\rmfamily}
 \else
   \captionsetup{
     skip = 8pt,
   }
+  \def\sht@toc@chapter@fmt{\zihao{4}\heiti}
+  \def\sht@toc@section@fmt{\zihao{-4}\heiti}
 \fi
 \def\@dotsep{1.5mu}
 \def\@pnumwidth{2em}
@@ -789,7 +793,7 @@
     {\leftskip #2\relax \rightskip \@tocrmarg \parfillskip -\rightskip
     \parindent #2\relax\@afterindenttrue
     \interlinepenalty\@M
-    \leavevmode \zihao{-4}\heiti
+    \leavevmode \sht@toc@section@fmt
     \@tempdima #3\relax
     \advance\leftskip \@tempdima \null\nobreak\hskip -\leftskip
     {#4}\nobreak
@@ -809,7 +813,7 @@
       \parindent \z@ \rightskip \@pnumwidth
       \parfillskip -\@pnumwidth
       {\leavevmode
-      \zihao{4}\heiti #1
+      \sht@toc@chapter@fmt #1
       \leaders\hbox{$\m@th\mkern \@dotsep \cdot\mkern \@dotsep$}
       \hfil \hb@xt@\@pnumwidth{\hss #2}}\par
       \nobreak
@@ -822,12 +826,15 @@
 \renewcommand*{\l@chapter}[2]{
   \ifnum \c@tocdepth >\m@ne
     \addpenalty{-\@highpenalty}%
-    \vskip \@chaptervspace \@plus\p@
+    \ifsht@undergraduate%
+    \else%
+      \vskip \@chaptervspace \@plus\p@%
+    \fi%
     \setlength\@tempdima{1.5em}%
     \begingroup
       \parindent \z@ \rightskip \@pnumwidth
       \parfillskip -\@pnumwidth
-      \leavevmode \zihao{4}\heiti
+      \leavevmode \sht@toc@chapter@fmt
       \advance\leftskip\@tempdima
       \hskip -\leftskip
       #1\nobreak
@@ -868,7 +875,7 @@
     titleformat = {},
     name = {第, 章},
     number = \arabic{chapter},
-    aftername = \hspace{1\ccwd},
+    aftername = \hspace{0.75\ccwd},
     beforeskip = {7pt},
     afterskip = {18pt},
     pagestyle = Plain,
@@ -878,7 +885,7 @@
     nameformat = {},
     numberformat = \rmfamily,
     titleformat = {},
-    aftername = \hspace{1\ccwd},
+    aftername = \hspace{0.75\ccwd},
     beforeskip = {24pt},
     afterskip = {6pt},
   },
@@ -887,20 +894,22 @@
     nameformat = {},
     numberformat = \rmfamily,
     titleformat = {},
-    aftername = \hspace{1\ccwd},
+    aftername = \hspace{0.75\ccwd},
     beforeskip = {12pt},
     afterskip = {6pt},
   },
   paragraph = {
     indent = 2\ccwd,
     beforeskip = {0pt},
-    afterskip = {1\ccwd},
+    afterskip = {0.75\ccwd},
   },
   punct = quanjiao,
   space = auto,
   autoindent = true,
 }
 \ifsht@undergraduate
+  \newlength{\sht@section@indent}
+  \setlength{\sht@section@indent}{2\ccwd}
   \ctexset{
     chapter = {
       format = \bfseries\sffamily\zihao{3}\linespread{1.0}\centering,
@@ -910,13 +919,13 @@
     section = {
       format = \sffamily\zihao{4}\linespread{1.0}\raggedright,
       numberformat = {},
-      indent = 2\ccwd,
-      beforeskip = {12pt},
+      indent = \sht@section@indent,
+      beforeskip = {18pt},
     },
     subsection = {
       format = \rmfamily\zihao{-4}\linespread{1.0}\raggedright,
       numberformat = {},
-      indent = 2\ccwd,
+      indent = \sht@section@indent,
     }
   }
 \fi
@@ -1424,7 +1433,7 @@
 }{%
   \vspace{\baselineskip}%
   \ifsht@undergraduate%
-    \par\noindent{\zihao{-4}\bfseries\sffamily 关键词：} \sht@keywords@en%
+    \par\noindent{\zihao{-4}\bfseries\sffamily 关键词：} \sht@keywords%
   \else%
     \par\noindent{\bfseries 关键词：} \sht@keywords%
   \fi%
@@ -1461,10 +1470,17 @@
     \intobmk\chapter*{符号列表}%
   \fi
   \stepcounter{sht@nomenclature@cnt}
-  \ifthenelse{\not \equal{#1}{\sht@null@arg}}{
-    \section*{#1}
+  \ifthenelse{\not \equal{#1}{\sht@null@arg}}{%
+    \ifsht@undergraduate%
+      \ctexset{section/format += \zihao{-4}, section/indent = 0pt}%
+    \fi%
+    \section*{#1}%
   }{
-    \par\vspace{24pt}
+    \ifsht@undergraduate%
+      \par\vspace{18pt}%
+    \else%
+      \par\vspace{24pt}%
+    \fi%
   }
   \renewcommand{\item}[3][\sht@null@arg]{
     \ifthenelse{\not \equal{##1}{\sht@null@arg}}{
@@ -1516,6 +1532,9 @@
     \pagestyle{MNNumberedWithLogo}%
   \else%
     \pagestyle{LRNumbered}%
+  \fi%
+  \ifsht@undergraduate%
+    \ctexset{section/format += \zihao{-4}, section/indent = 0pt}%
   \fi%
 }
 \newcounter{sht@resume@cnt}
