@@ -419,6 +419,7 @@
 %   Headers and footers
 % ------------------------------------------------------------------------------
 \def\sht@flat@title{\renewcommand\\{ } \@title}
+\def\sht@flat@title@en{\renewcommand\\{ } \sht@title@en}
 \pagestyle{fancy}
 \fancypagestyle{Plain}{}
 \fancypagestyle{RomanNumbered}{
@@ -899,6 +900,26 @@
   space = auto,
   autoindent = true,
 }
+\ifsht@undergraduate
+  \ctexset{
+    chapter = {
+      format = \bfseries\sffamily\zihao{3}\linespread{1.0}\centering,
+      number = \chinese{chapter},
+      numberformat = {},
+    },
+    section = {
+      format = \sffamily\zihao{4}\linespread{1.0}\raggedright,
+      numberformat = {},
+      indent = 2\ccwd,
+      beforeskip = {12pt},
+    },
+    subsection = {
+      format = \rmfamily\zihao{-4}\linespread{1.0}\raggedright,
+      numberformat = {},
+      indent = 2\ccwd,
+    }
+  }
+\fi
 % ------------------------------------------------------------------------------
 %   List environments
 % ------------------------------------------------------------------------------
@@ -1365,7 +1386,7 @@
 
     \vspace*{\stretch{3}}
 
-    \noindent 作者签名：\hspace{12.75\ccwd}指导教师签名：
+    \noindent 作者签名：\hspace{12.5\ccwd}指导教师签名：
 
     \vspace*{\stretch{1}}
 
@@ -1373,7 +1394,7 @@
     \hspace*{2.5\ccwd}年%
     \hspace*{1.5\ccwd}月%
     \hspace*{1.5\ccwd}日%
-    \hspace*{6\ccwd} 日期：%
+    \hspace*{6\ccwd}日期：%
     \hspace*{2.5\ccwd}年%
     \hspace*{1.5\ccwd}月%
     \hspace*{1.5\ccwd}日
@@ -1390,17 +1411,43 @@
 % ------------------------------------------------------------------------------
 \newenvironment{abstract}{%
   \cleardoublepage%
+  \ifsht@undergraduate
+    \let\clearpage\relax%
+    \vspace*{\baselineskip}%
+    \begin{center}%
+      \zihao{3}\bfseries\sffamily\sht@flat@title%
+    \end{center}%
+    \vspace*{\baselineskip}%
+    \ctexset{chapter/format += \zihao{4}, chapter/beforeskip = 0pt}%
+  \fi
   \intobmk\chapter*{摘\hspace{1\ccwd}要}%
 }{%
   \vspace{\baselineskip}%
-  \par\noindent{\bfseries 关键词：} \sht@keywords%
+  \ifsht@undergraduate%
+    \par\noindent{\zihao{-4}\bfseries\sffamily 关键词：} \sht@keywords@en%
+  \else%
+    \par\noindent{\bfseries 关键词：} \sht@keywords%
+  \fi%
 }
 \newenvironment{abstract*}{%
   \cleardoublepage%
+  \ifsht@undergraduate
+    \let\clearpage\relax%
+    \vspace*{\baselineskip}%
+    \begin{center}%
+      \zihao{3}\bfseries\sht@flat@title@en%
+    \end{center}%
+    \vspace*{\baselineskip}%
+    \ctexset{chapter/format += \zihao{4}\rmfamily, chapter/beforeskip = 0pt}%
+  \fi
   \intobmk\chapter*{Abstract}%
 }{%
   \vspace{\baselineskip}%
-  \par\noindent{\bfseries Key Words:} \sht@keywords@en%
+  \ifsht@undergraduate%
+    \par\noindent{\zihao{-4}\bfseries Key words:} \sht@keywords@en%
+  \else%
+    \par\noindent{\bfseries Key Words:} \sht@keywords@en%
+  \fi%
 }
 % ------------------------------------------------------------------------------
 %   Nomenclatures

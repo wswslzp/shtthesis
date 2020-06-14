@@ -58,7 +58,6 @@
   discipline* = {Computer~Science~and~Technology},
 }
 
-\definecolor{ShtRed}{RGB}{146,46,23}
 % `latex' and `shell' environments are adapted from `thuthesis'
 \usepackage{listings}
 \newcommand\prompt{\textup{\$}}
@@ -138,13 +137,8 @@
 }{
   \providecommand{\timesnewroman}{\emph{Times New Roman missing}}
 }
-\IfFontExistsTF{Times}{
-  \providefontfamily\timesfamily{Times}
-}{
-  \providecommand{\timesfamily}{\emph{Times missing}}
-}
-\IfFontExistsTF{XITS-Regular.otf}{
-  \providefontfamily\xitsfamily{XITS-Regular.otf}
+\IfFontExistsTF{XITS}{
+  \providefontfamily\xitsfamily{XITS}
 }{
   \providecommand{\xitsfamily}{\emph{XITS missing}}
 }
@@ -239,7 +233,7 @@
 \begin{shell}
 `\prompt' latexmk -pdflua
 \end{shell}
-一般来说，\hologo{XeLaTeX} 引擎的编译速度较快且占用资源较少，而 \hologo{LuaLaTeX} 引擎的编译结果似乎有更好的跨平台规范性。在 \shtthesis 开发过程中，曾出现过在 macOS 下 \hologo{XeLaTeX} 编译的 PDF 在 Windows 下无法打开，而 \hologo{LuaLaTeX} 编译结果正常的情况。若使用 LuaHB\hologo{TeX} 引擎编译，还可进一步使用 emoji 等特殊功能。例如：\emoji{ 👴🏻👴🏼👴🏽👴🏾👴🏿👴👨🏻‍🦳🎅🏻🦹🏻‍♂️🕵🏼‍♂️👨🏼‍⚕️👨🏼‍🌾👨🏼‍🍳👨🏼‍💼👨🏼‍🔧👨🏼‍🔬👨🏼‍🎨👨🏼‍🚒👨🏼‍✈️👨🏼‍⚖️🧔🏼🤵🏼🧙🏻‍♂️🧖🏼‍♂️👨🏼‍🌾👮🏼‍♂️👨🏼‍🏫👨🏼‍🚀}。LuaHB\hologo{TeX} 引擎是 \hologo{TeX} Live 2020 中 \hologo{LuaLaTeX} 的默认实现，在 \hologo{TeX} Live 2019 下使用 LuaHB\hologo{TeX} 的方法为：
+一般来说，\hologo{XeLaTeX} 引擎的编译速度较快且占用资源较少，而 \hologo{LuaLaTeX} 引擎的编译结果似乎有更好的跨平台规范性。在 \shtthesis 开发过程中，曾出现过在 macOS 下 \hologo{XeLaTeX} 编译的 PDF 在 Windows 下无法打开，而 \hologo{LuaLaTeX} 编译结果正常的情况。若使用 LuaHB\hologo{TeX} 引擎编译，还可进一步使用 Emoji 等特殊功能。例如：\emoji{🌶️🍐🔟💉💧🐮🍺}。LuaHB\hologo{TeX} 引擎是 \hologo{TeX} Live 2020 中 \hologo{LuaLaTeX} 的默认实现，在 \hologo{TeX} Live 2019 下使用 LuaHB\hologo{TeX} 的方法为：
 \begin{shell}
 `\prompt' latexmk -pdflua -pdflualatex=lualatex-dev
 \end{shell}
@@ -313,7 +307,7 @@
   \end{subtable}
 \end{table}
 
-用户可以在不显著违反《规范》的前提下按照自身需求自定义字符集（例如在排版正文英文字体时，{\rmfamily \TeX{} Gyre Termes}、{\xitsfamily XITS}、{\timesfamily Times} 和 {\timesnewroman Times New Roman} 几种字体几乎没有明显区别，见表~\ref{tab::serif_fonts}），或通过其他设置调整 \textsf{ctexbook} 的排版行为。\textsf{ctexbook} 使用方法详见 \CTeX 文档。\footnote{\url{http://mirrors.ctan.org/language/chinese/ctex/ctex.pdf}}
+用户可以在不显著违反《规范》的前提下按照自身需求自定义字符集（例如在排版正文英文字体时，{\rmfamily \TeX{} Gyre Termes}、{\xitsfamily XITS} 和 {\timesnewroman Times New Roman} 几种字体几乎没有明显区别，见表~\ref{tab::serif_fonts}），或通过其他设置调整 \textsf{ctexbook} 的排版行为。\textsf{ctexbook} 使用方法详见 \CTeX 文档。\footnote{\url{http://mirrors.ctan.org/language/chinese/ctex/ctex.pdf}}
 
 \begin{table}[htb]
   \centering
@@ -323,10 +317,9 @@
     \toprule
     Font Name & Content \\
     \midrule
+    \timesnewroman Times New Roman & \timesnewroman The quick brown fox jumps over the lazy dog. \\
     \rmfamily \TeX{} Gyre Termes & \rmfamily The quick brown fox jumps over the lazy dog. \\
     \xitsfamily XITS & \xitsfamily The quick brown fox jumps over the lazy dog. \\
-    \timesfamily Times & \timesfamily The quick brown fox jumps over the lazy dog. \\
-    \timesnewroman Times New Roman & \timesnewroman The quick brown fox jumps over the lazy dog. \\
     \bottomrule
   \end{tabular}
 \end{table}
