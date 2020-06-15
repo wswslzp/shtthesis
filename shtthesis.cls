@@ -315,7 +315,7 @@
 \RequirePackage{indentfirst}
 \RequirePackage[normalem]{ulem}
 \RequirePackage{fancyhdr}
-\RequirePackage{lastpage}
+\RequirePackage{pageslts}
 \RequirePackage{tocvsec2}
 \RequirePackage{letltxmacro}
 \RequirePackage{fontspec}
@@ -472,7 +472,7 @@
   \fancyhead[R]{\zihao{-5}\sffamily\sht@flat@title}
   \fancyfoot[C]{%
     \footnotesize%
-    第~\thepage~页\hspace*{1\ccwd}共~\pageref{LastPage}~页%
+    第~\thepage~页\hspace*{1\ccwd}共~\lastpageref{VeryLastPage}~页%
   }
   \renewcommand{\headrulewidth}{0.8pt}
   \renewcommand{\footrulewidth}{0pt}
@@ -496,6 +496,11 @@
   \else%
     \pagestyle{LRNumbered}%
   \fi%
+  \pagenumbering{arabic}%
+  \setcounter{page}{1}%
+}
+\AtBeginDocument{%
+  \pagenumbering{arabic}%
 }
 % ------------------------------------------------------------------------------
 %   Font utilities
@@ -755,6 +760,15 @@
   \markboth{\MakeUppercase{#3}}{}%
 }
 \newcommand{\intobmk}{\@ifstar{\intobmkstar}{\intobmknostar}}
+% \cleardoublepage only works on graduate or undergraduate print mode
+\LetLtxMacro{\OriginCleardoublepage}{\cleardoublepage}
+\renewcommand{\cleardoublepage}{%
+  \ifthenelse{\boolean{sht@undergraduate} \AND \NOT\boolean{sht@print}}{%
+    \relax\clearpage%
+  }{%
+    \OriginCleardoublepage%
+  }%
+}
 % ------------------------------------------------------------------------------
 %   Table of contents, figures and tables
 % ------------------------------------------------------------------------------
@@ -854,10 +868,13 @@
   \linespread{1.2}%
   \intobmk*{\cleardoublepage}{\contentsname}%
   \tableofcontents%
-  \intobmk*{\cleardoublepage}{\listfigurename}%
-  \listoffigures%
-  \intobmk*{\cleardoublepage}{\listtablename}%
-  \listoftables%
+  \ifsht@undergraduate%
+  \else%
+    \intobmk*{\cleardoublepage}{\listfigurename}%
+    \listoffigures%
+    \intobmk*{\cleardoublepage}{\listtablename}%
+    \listoftables%
+  \fi%
   \endgroup%
 }
 % ------------------------------------------------------------------------------
@@ -1272,7 +1289,7 @@
     {
       \zihao{-4}
       ShanghaiTech University
-      \par Date: \sht@date@en
+      \par Date:~\sht@date@en
     }
 
     \vspace{\stretch{11}}
@@ -1339,7 +1356,7 @@
   {
     \linespread{1.6}\zihao{4}
 
-    \vspace*{\stretch{2}}
+    \vspace*{\stretch{1}}
 
     \begin{center}
       \zihao{-2}\bfseries\sffamily 上海科技大学\\毕业论文(设计)学术诚信声明
@@ -1375,7 +1392,7 @@
   {
     \linespread{1.6}\zihao{4}
 
-    \vspace*{\stretch{2}}
+    \vspace*{\stretch{1}}
 
     \begin{center}
       \zihao{-2}\bfseries\sffamily 上海科技大学\\毕业论文（设计）版权使用授权书
@@ -1422,13 +1439,18 @@
 % ------------------------------------------------------------------------------
 %   Abstract
 % ------------------------------------------------------------------------------
-\newenvironment{abstract}{%
+\newenvironment{abstract}[1][\sht@null@arg]{%
   \cleardoublepage%
+  \ifthenelse{\equal{#1}{flattitle}}{%
+    \def\sht@abs@title{\sht@flat@title}%
+  }{%
+    \def\sht@abs@title{\sht@title}%
+  }%
   \ifsht@undergraduate
     \let\clearpage\relax%
     \vspace*{\baselineskip}%
     \begin{center}%
-      \zihao{3}\bfseries\sffamily\sht@flat@title%
+      \zihao{3}\bfseries\sffamily\sht@abs@title%
     \end{center}%
     \vspace*{\baselineskip}%
     \ctexset{chapter/format += \zihao{4}, chapter/beforeskip = 0pt}%
@@ -1442,13 +1464,18 @@
     \par\noindent{\bfseries 关键词：} \sht@keywords%
   \fi%
 }
-\newenvironment{abstract*}{%
+\newenvironment{abstract*}[1][\sht@null@arg]{%
   \cleardoublepage%
+  \ifthenelse{\equal{#1}{flattitle}}{%
+    \def\sht@abs@title@en{\sht@flat@title@en}%
+  }{%
+    \def\sht@abs@title@en{\sht@title@en}%
+  }%
   \ifsht@undergraduate
     \let\clearpage\relax%
     \vspace*{\baselineskip}%
     \begin{center}%
-      \zihao{3}\bfseries\sht@flat@title@en%
+      \zihao{3}\bfseries\sht@abs@title@en%
     \end{center}%
     \vspace*{\baselineskip}%
     \ctexset{chapter/format += \zihao{4}\rmfamily, chapter/beforeskip = 0pt}%

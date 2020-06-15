@@ -58,6 +58,10 @@
   discipline* = {Computer~Science~and~Technology},
 }
 
+\makeatletter
+  \def\ifundergraduate{\ifsht@undergraduate}
+\makeatother
+
 % `latex' and `shell' environments are adapted from `thuthesis'
 \usepackage{listings}
 \newcommand\prompt{\textup{\$}}
@@ -154,13 +158,13 @@
 \maketitle
 
 \frontmatter
-\begin{abstract}
+\begin{abstract}[flattitle]
   本文档阐述 \shtthesis 的使用方法，包括其编译方式、文档类选项、文档类提供的功能及其他便于用户（\emph{也就是正在阅读这篇文档的您}）快速撰写符合上海科技大学要求的学位论文的技术要点。
 
   \shtthesis 旨在以最简实现和最小依赖完整覆盖《上海科技大学研究生学位论文撰写规范（初稿）》的所有格式要求，且不为用户额外设限。从 v\version 起，仅需指定 documentclass 为 \shtthesis 即可满足基本排版要求。文档通过 \verb|\shtsetup| 命令统一设定学位论文信息，且仅提供满足格式需求的最少额外命令以保证兼容性。用户可根据自身撰文习惯，引入额外的宏包和命令完成学位论文撰写。
 \end{abstract}
 
-\begin{abstract*}
+\begin{abstract*}[flattitle]
   We elaborate on the usage of document class \shtthesis, including its compiling process, class options, provided functionalities, and other technical points to facilitate the user (that is, \emph{you}) to quickly develop their thesis to meet the format requirements of ShanghaiTech University. 
 
   \shtthesis is intended to cover all requirements in 《上海科技大学研究生学位论文撰写规范(初稿)》with minimal function set and introduce no restriction to the user. Beginning with v\version, specifying documentclass to \shtthesis is suﬀicient for the basic thesis typesetting requirements. This document class uses \verb|\shtsetup| to uniformly set up thesis information and only provides minimum auxiliary commands to meet all format requirements. The user can import other packages and functionalities according to their writing habits. 
@@ -168,6 +172,8 @@
 
 \makeindices
 
+\ifundergraduate
+\else
 \begin{nomenclatures}
   \header[单位]{符号}{说明}
   \item[${m^{2} \cdot s^{-2} \cdot K^{-1}}$]{$R$}{the gas constant}
@@ -193,6 +199,7 @@
   \item{$\nabla$}{gradient operator}
   \item{$\delta^{\pm}$}{upwind-biased interpolation scheme}
 \end{nomenclatures}
+\fi
 
 \mainmatter
 \chapter{模板介绍}
@@ -626,6 +633,8 @@ Ordinary math: $A,F,L,2,3,5,\sigma$. \verb|\mathrm|: $\mathrm{A,F,L,2,3,5,\sigma
 \shtthesis 派生于中国科学院大学论文模板 \textsf{ucasthesis}\footnote{\url{https://github.com/mohuangrui/ucasthesis}，使用 GPLv3 许可证分发。}，v0.2.0 开发过程中参考了清华大学论文模板 \textsf{thuthesis}\footnote{\url{https://github.com/tuna/thuthesis}，使用 LPPL-1.3c 许可证分发。}，特别是 \verb|\thusetup| 命令的设计和实现。这些项目中流淌的智慧，以及项目作者们的专业态度和共享精神使得 \shtthesis 的开发及完善成为可能。
 \end{acknowledgement}
 
+\ifundergraduate
+\else
 \begin{resume}
   李润东，\shtthesis 项目初版作者及维护者，热爱摸鱼。
 \end{resume}
@@ -649,5 +658,6 @@ Ordinary math: $A,F,L,2,3,5,\sigma$. \verb|\mathrm|: $\mathrm{A,F,L,2,3,5,\sigma
 \begin{projects}
   个人参与的科研项目、获奖情况…… （仅非匿名环境显示）
 \end{projects}
+\fi
 
 \end{document}
