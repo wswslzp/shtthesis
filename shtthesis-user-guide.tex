@@ -40,7 +40,6 @@
 % undergraduate setup
 \documentclass[undergraduate]{shtthesis}
 \shtsetup{
-  degree = {bachelor},
   title = {\ShtThesis~v\version\\使用说明},
   title* = {A~User's~Guide~to\\\ShtThesis~v\version},
   keywords = {上海科技大学，学位论文，\LaTeX{}},
@@ -205,7 +204,7 @@
 
 \chapter{模板使用}
 \section{模板安装}
-\shtthesis 提供的文档类型文件为 shtthesis.cls，封面所需的上海科技大学校徽文件为 shanghaitech-logo.pdf，参考文献 GBT-7714 格式文件为 shtthesis-gbt7714-plain.bst，用户仅需将这三个文件拷贝至自己论文的工作目录下即可完成安装。假设用户的论文文件为 thesis.tex，则工作目录中必要的文件包括：
+\shtthesis 提供的文档类型文件为 shtthesis.cls，封面所需的上海科技大学校徽文件为 shanghaitech-logo.pdf，用户仅需将这两个文件拷贝至自己论文的工作目录下即可完成安装。假设用户的论文文件为 thesis.tex，参考文献文件为 reference.bib，则工作目录中必要的文件包括：
 \begin{center}
   \begin{tabular}{ll}
     \toprule
@@ -213,9 +212,8 @@
     \midrule 
     shtthesis.cls & 模板文档类文件 \\
     shanghaitech-logo.pdf & 上海科技大学校徽 \\
-    shtthesis-gbt7714-plain.bst & 参考文献格式文件 \\
     thesis.tex & 论文文件 \\
-    reference.bib & 参考文献默认文件名 \\
+    reference.bib & 默认参考文献文件 \\
     \bottomrule
   \end{tabular}
 \end{center}
@@ -464,9 +462,9 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
 同时重载了 \verb|\eqref|，使得公式编号格式修改后，其引用仍与 \textsf{amsmath} 无异：贝叶斯定理~\eqref{eq::bayesian}。
 
 \subsection{文献引用} \label{sec::citation}
-\shtthesis 目前仅通过 \textsf{natbib} 支持“著者——出版年”格式的引用，可以使用 \verb|\citet| 进行文本形式的引用 \citet{Bohan1928}，使用 \verb|\citep| 进行括号形式的引用 \citep{yuan2012lanc}，以及使用 \verb|\citeyear| 进行年份引用 \citeyear{walls2013drought}。当引用内容是组成正文的一部分时，应使用文本形式的引用，否则使用括号形式的引用。一个实用的区分技巧是，如果你在做口头介绍时会说出引用内容，就应使用文本形式的引用，否则使用括号形式的引用。
+\shtthesis 目前仅通过 \textsf{natbib} 支持“著者——出版年”格式的引用，可以使用 \verb|\citet| 进行文本形式的引用 \citet{Bohan1928}，使用 \verb|\citep| 进行括号形式的引用 \citep{yuan2012lanc}，使用 \verb|\citeauthor| 进行作者引用 \citeauthor{niu2013zonghe}，以及使用 \verb|\citeyear| 进行年份引用 \citeyear{walls2013drought}。当引用内容是组成正文的一部分时，应使用文本形式的引用，否则使用括号形式的引用。一个实用的区分技巧是，如果你在做口头介绍时会说出引用内容，就应使用文本形式的引用，否则使用括号形式的引用。
 
-\shtthesis 默认使用的参考文献文件为 reference.bib，若使用其他文件则需在 \verb|\makebiblio| 命令后指明
+\shtthesis 默认的参考文献文件为 reference.bib，若使用其他文件则需在 \verb|\makebiblio| 命令后指明
 \begin{latex}
 \makebiblio[mybiblio] % 读取 mybiblio.bib 文件
 \end{latex}
@@ -523,7 +521,12 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
   \IfFileExists{shanghaitech-logo.pdf}{%
     \includegraphics[width=0.5\columnwidth]{shanghaitech-logo.pdf}%
   }{%
-    \missingfigure{\small 校徽文件 \texttt{shanghaitech-logo.pdf} 缺失}%
+    \fbox{%
+      \begin{minipage}[b][2.5cm][c]{0.75\columnwidth}%
+        \centering\zihao{-5}\bfseries\sffamily\color{ShtRed}%
+        校徽文件 \texttt{shanghaitech-logo.pdf} 缺失%
+      \end{minipage}%
+    }%
   }%
   \bicaption{上海科技大学校徽}{School logo of ShanghaiTech University}
   \label{img::sht_logo}

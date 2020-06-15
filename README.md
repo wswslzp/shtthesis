@@ -53,5 +53,4 @@ After cloning or downloading this template, please
 
 ## License
 - The copyright of ShanghaiTech University logo (`shanghaitech-logo.pdf`) is owned by ShanghaiTech University
-- `shtthesis-gbt7714-plain.bst` is modified from [gbt7714](https://github.com/CTeX-org/gbt7714-bibtex-style) project and is licensed under LaTeX Project Public License v1.3c, see [lppl-1.3c](https://www.latex-project.org/lppl/lppl-1-3c.txt) for details
 - The rest of `shtthesis` project is licensed under GNU Public License v3, see [LICENSE](LICENSE) for details

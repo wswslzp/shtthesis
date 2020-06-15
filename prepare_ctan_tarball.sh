@@ -21,7 +21,6 @@ PKG_CONTENT="\
   shtthesis.cls \
   shtthesis-user-guide.tex \
   shtthesis-user-guide.pdf \
-  shtthesis-gbt7714-plain.bst \
   reference.bib \
   README.md \
   LICENSE \

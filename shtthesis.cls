@@ -312,7 +312,6 @@
 \RequirePackage{etoolbox}
 \RequirePackage{ifthen}
 \RequirePackage{graphicx}
-\RequirePackage{todonotes}
 \RequirePackage{indentfirst}
 \RequirePackage[normalem]{ulem}
 \RequirePackage{fancyhdr}
@@ -321,7 +320,7 @@
 \RequirePackage{letltxmacro}
 \RequirePackage{fontspec}
 \RequirePackage{caption}
-\RequirePackage{natbib}
+\RequirePackage{gbt7714}
 \RequirePackage[shortlabels, inline]{enumitem}
 \RequirePackage{amsmath}
 \RequirePackage{mathtools}
@@ -371,8 +370,6 @@
 \def\bibname{参考文献}
 \def\tablename{表}
 \def\figurename{图}
-\def\bibetal{等}
-\def\biband{和}
 \definecolor{ShtRed}{RGB}{146,46,23}
 \def\school@logo@missing{校徽文件缺失，请至\href{https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf}{项目主页}下载！}
 % ------------------------------------------------------------------------------
@@ -420,6 +417,17 @@
 % ------------------------------------------------------------------------------
 \def\sht@flat@title{\renewcommand\\{ } \@title}
 \def\sht@flat@title@en{\renewcommand\\{ } \sht@title@en}
+\newcommand\sht@head@logo{%
+  \IfFileExists{shanghaitech-logo.pdf}{%
+    \includegraphics[height=\sht@head@logo@height]{shanghaitech-logo.pdf}%
+  }{%
+    \fbox{%
+      \begin{minipage}[b][\sht@head@logo@height][c]{0.4\columnwidth}%
+        \zihao{-5}\bfseries\sffamily\color{ShtRed} \school@logo@missing%
+      \end{minipage}%
+    }%
+  }
+}
 \pagestyle{fancy}
 \fancypagestyle{Plain}{}
 \fancypagestyle{RomanNumbered}{
@@ -452,13 +460,7 @@
 \fancypagestyle{RomanNumberedWithLogo}{
   \fancyhf{}
   \pagenumbering{Roman}
-  \fancyhead[L]{%
-    \IfFileExists{shanghaitech-logo.pdf}{%
-      \includegraphics[height=\sht@head@logo@height]{shanghaitech-logo.pdf}%
-    }{%
-      \zihao{-5}\sffamily\color{ShtRed}\school@logo@missing%
-    }
-  }
+  \fancyhead[L]{\sht@head@logo}
   \fancyhead[R]{\zihao{-5}\sffamily\sht@flat@title}
   \fancyfoot[C]{\footnotesize\thepage}
   \renewcommand{\headrulewidth}{0.8pt}
@@ -466,13 +468,7 @@
 }
 \fancypagestyle{MNNumberedWithLogo}{
   \fancyhf{}
-  \fancyhead[L]{%
-    \IfFileExists{shanghaitech-logo.pdf}{%
-      \includegraphics[height=\sht@head@logo@height]{shanghaitech-logo.pdf}%
-    }{%
-      \zihao{-5}\sffamily\color{ShtRed}\school@logo@missing%
-    }
-  }
+  \fancyhead[L]{\sht@head@logo}
   \fancyhead[R]{\zihao{-5}\sffamily\sht@flat@title}
   \fancyfoot[C]{%
     \footnotesize%
@@ -991,17 +987,25 @@
   \IfFileExists{shanghaitech-logo.pdf}{%
     \includegraphics[width=10.48cm]{shanghaitech-logo.pdf}%
   }{%
-    \missingfigure[figwidth=10.48cm, figheight=2.79cm]{%
-      \small 校徽文件 \texttt{shanghaitech-logo.pdf} 缺失，请至\href{https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf}{项目主页}下载！%
-    }%
+    \begin{center}%
+      \fbox{%
+        \begin{minipage}[t][2.79cm][c]{10.48cm}%
+          \centering\bfseries\color{ShtRed} \school@logo@missing%
+        \end{minipage}%
+      }%
+    \end{center}%
   }%
 }
 \newcommand\sht@schoollogo@undergraduate{%
-  \noindent% \hspace*{0.73cm}%
+  \noindent%
   \IfFileExists{shanghaitech-logo.pdf}{%
     \includegraphics[width=5.39cm]{shanghaitech-logo.pdf}%
   }{%
-    \missingfigure{\small\school@logo@missing}%
+    \fbox{%
+      \begin{minipage}[t][1.45cm][c]{0.75\columnwidth}%
+        \bfseries\color{ShtRed} \school@logo@missing%
+      \end{minipage}%
+    }%
   }%
 }
 \renewcommand{\maketitle}{%
@@ -1497,11 +1501,15 @@
 % ------------------------------------------------------------------------------
 %   Bibliography
 % ------------------------------------------------------------------------------
-\providecommand{\bibstyle@authoryear}{\bibpunct{(}{)}{;}{a}{,}{,}}
-\citestyle{authoryear}
-\bibliographystyle{shtthesis-gbt7714-plain}
+\ifsht@undergraduate
+  \bibliographystyle{gbt7714-numerical}
+  \citestyle{super}
+\else
+  \bibliographystyle{gbt7714-author-year}
+  \citestyle{authoryear}
+  \renewcommand*{\bibfont}{\small}
+\fi
 \setlength{\bibsep}{0.0ex plus 0.2ex minus 0.2ex}
-\renewcommand*{\bibfont}{\small}
 \providecommand{\makebiblio}[1][reference]{%
   \intotoc*{\cleardoublepage}{\bibname}%
   \bibliography{#1}%
