@@ -35,6 +35,7 @@
 %   supervisor-institution = {上海科技大学信息科学与技术学院},
 %   discipline-level-1 = {计算机科学与技术},
 %   discipline-level-1* = {Computer~Science~and~Technology},
+%   bib-resource = {reference.bib},
 % }
 
 % undergraduate setup
@@ -56,6 +57,7 @@
   supervisor* = {Rui~Fan},
   discipline = {计算机科学与技术},
   discipline* = {Computer~Science~and~Technology},
+  bib-resource = {reference.bib},
 }
 
 \makeatletter
@@ -141,8 +143,8 @@
 }{
   \providecommand{\timesnewroman}{\emph{Times New Roman missing}}
 }
-\IfFontExistsTF{XITS}{
-  \providefontfamily\xitsfamily{XITS}
+\IfFontExistsTF{XITS-Regular.otf}{
+  \providefontfamily\xitsfamily{XITS-Regular.otf}
 }{
   \providecommand{\xitsfamily}{\emph{XITS missing}}
 }
