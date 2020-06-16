@@ -30,7 +30,7 @@ jobs:
         unzip -o "*.zip"
         mkdir -p ${{ env.UBUNTU_FONTS_DIR }}
         cp -vf *.ttc ${{ env.UBUNTU_FONTS_DIR }}
-        pushd ${{ env.UBUNTU_FONTS_DIR }} && mkfontdir && mkfontscale && popd
+        pushd ${{ env.UBUNTU_FONTS_DIR }} && mkfontscale && popd
         fc-cache -fv
     - name: Get TeX Live hash
       id: texlive-hash
