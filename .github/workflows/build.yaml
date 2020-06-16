@@ -71,7 +71,7 @@ jobs:
         brew install gnu-sed
     - name: Install Noto fonts
       run: |
-        for i in NotoSerifCJK-Regular NotoSerifCJK-Bold NotoSansCJK-Regular NotoSansCJK-Bold; do curl -O ${{ env.NOTO_URL }}/$i.ttc.zip; done
+        for i in NotoSerifCJK NotoSansCJK; do curl -O ${{ env.NOTO_URL }}/$i.ttc.zip; done
         unzip -o "*.zip"
         cp -vf *.ttc /Library/Fonts/
     - name: Get TeX Live hash

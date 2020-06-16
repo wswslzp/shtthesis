@@ -43,11 +43,6 @@
 %   thuthesis (https://github.com/xueruini/thuthesis) is licensed under the
 %   conditions of the LaTeX Project Public License, either version 1.3. 
 % ------------------------------------------------------------------------------
-\SetupKeyvalOptions{
-  family = sht,
-  prefix = {sht@},
-  setkeys = \kvsetkeys,
-}
 \newcommand\sht@error[1]{%
   \ClassError{shtthesis}{#1}{}%
 }
@@ -121,22 +116,6 @@
 %   Options for \shtsetup
 % ------------------------------------------------------------------------------
 \sht@define@key{
-  degree = {
-    choices = {
-      bachelor,
-      master,
-      doctor,
-      postdoc,
-    },
-    default = doctor,
-  },
-  degree-type = {
-    choices = {
-      academic,
-      professional,
-    },
-    name = degree@type,
-  },
   degree-name = {
     default = {工学博士},
     name    = degree@name,
@@ -196,30 +175,6 @@
   supervisor-institution* = {
     name = supervisor@institution@en,
   },
-  associate-supervisor = {
-    name = associate@supervisor,
-  },
-  associate-supervisor* = {
-    name = associate@supervisor@en,
-  },
-  associate-supervisor-institution = {
-    name = associate@supervisor@institution,
-  },
-  associate-supervisor-institution* = {
-    name = associate@supervisor@institution@en,
-  },
-  joint-supervisor = {
-    name = joint@supervisor,
-  },
-  joint-supervisor* = {
-    name = joint@supervisor@en,
-  },
-  joint-supervisor-institution = {
-    name = joint@supervisor@institution,
-  },
-  joint-supervisor-institution* = {
-    name = joint@supervisor@institution@en,
-  },
   institution = {
     % default = {上海科技大学信息科学与技术学院},
   },
@@ -260,14 +215,6 @@
     default = {\monthname,~\the\year},
     name = date@en,
   },
-  start-date = {
-    name    = start@date,
-    default = {\the\year-\two@digits{\month}-\two@digits{\day}},
-  },
-  end-date = {
-    name    = end@date,
-    default = {\the\year-\two@digits{\month}-\two@digits{\day}},
-  },
   clc,
   udc,
   id,
@@ -282,23 +229,48 @@
 % ------------------------------------------------------------------------------
 %   Class options
 % ------------------------------------------------------------------------------
-\PassOptionsToClass{
-  UTF8,
-  a4paper,
-  twoside, 
-  openany, 
-  zihao = -4, 
-  scheme = plain,
-}{ctexbook}
 \SetupKeyvalOptions{
   family = sht,
   prefix = sht@,
 }
-\DeclareBoolOption[false]{undergraduate}
-\DeclareBoolOption[false]{anonymous}
-\DeclareBoolOption[false]{print}
+\newif\ifsht@undergraduate
+\newif\ifsht@graduate
+\newif\ifsht@degree@set
+\sht@degree@setfalse
+\newcommand\sht@check@degree@set{%
+  \ifsht@degree@set%
+    \sht@error{you can only set degree once}%
+  \else%
+    \sht@degree@settrue%
+  \fi%
+}
+\DeclareVoidOption{bachelor}{%
+  \sht@check@degree@set%
+  \sht@undergraduatetrue%
+  \sht@graduatefalse%
+  \def\sht@degree{bachelor}%
+}
+\DeclareVoidOption{master}{%
+  \sht@check@degree@set%
+  \sht@undergraduatefalse%
+  \sht@graduatetrue%
+  \def\sht@degree{master}%
+}
+\DeclareVoidOption{doctor}{%
+  \sht@check@degree@set%
+  \sht@undergraduatefalse%
+  \sht@graduatetrue%
+  \def\sht@degree{doctor}%
+}
+\DeclareBoolOption{anonymous}
+\DeclareBoolOption{print}
+\DeclareBoolOption{comfort}
 \DeclareDefaultOption{\PassOptionsToClass{\CurrentOption}{ctexbook}}
 \ProcessKeyvalOptions*
+\ifsht@degree@set%
+\else%
+  \sht@error{you have not set degree (bachelor, master or doctor) yet}%
+\fi%
 % ------------------------------------------------------------------------------
 %   Load minimum mandatory packages
 % ------------------------------------------------------------------------------
@@ -306,8 +278,16 @@
   \PassOptionsToClass{zihao = 5}{ctexbook}
   \PassOptionsToPackage{style = gb7714-2015}{biblatex}
 \else
+  \PassOptionsToClass{zihao = -4}{ctexbook}
   \PassOptionsToPackage{style = gb7714-2015ay}{biblatex}
 \fi
+\PassOptionsToClass{
+  UTF8,
+  a4paper,
+  twoside, 
+  openany, 
+  scheme = plain,
+}{ctexbook}
 \PassOptionsToPackage{
   natbib = true,
   backend = biber,
@@ -357,11 +337,23 @@
       colorlinks = false,
     }
   \else
+    % `default' color scheme from `fduthesis'
+    \definecolor{fdu@link}{HTML}{990000}
+    \definecolor{fdu@url}{HTML}{0000B2}
+    \definecolor{fdu@cite}{HTML}{007F00}
+    % `classic' color scheme from `fduthesis'
+    \definecolor{classic@link}{HTML}{FF0000}
+    \definecolor{classic@url}{HTML}{0000FF}
+    \definecolor{classic@cite}{HTML}{00FF00}
+    % `science' color scheme from `fduthesis'
+    \definecolor{science@link}{HTML}{CA0619}
+    \definecolor{science@url}{HTML}{389F9D}
+    \definecolor{science@cite}{HTML}{FF8920}
     \hypersetup{
       colorlinks = true,
-      linkcolor = black,
-      citecolor = blue,
-      urlcolor = blue,
+      linkcolor = fdu@link,
+      urlcolor = fdu@url,
+      citecolor = fdu@cite,
     }
   \fi
   \urlstyle{tt}
@@ -412,7 +404,7 @@
     top = 1.5cm,
     bottom = 1.75cm,
     headheight = \sht@head@logo@height,
-    headsep = 13.65pt, % 10.5pt (\zihao{-5}) * 1.3 (line spread)
+    headsep = \baselineskip,
     footskip = 2.54cm - 1.75cm,
   }
 \else
@@ -420,8 +412,8 @@
   \geometry{
     top = 2.54cm,
     bottom = 2.54cm,
-    headheight = 12pt, % 9bp,
-    headsep = 17.5pt, % 2.54cm - 9bp,
+    headheight = 12pt,
+    headsep = 17.5pt,
     footskip = 2.54cm - 1.75cm,
   }
 \fi
@@ -486,7 +478,7 @@
   \fancyhead[R]{\zihao{-5}\sffamily\sht@flat@title}
   \fancyfoot[C]{%
     \footnotesize%
-    第~\thepage~页\hspace*{1\ccwd}共~\lastpageref{VeryLastPage}~页%
+    第~\thepage~页\hspace*{1\ccwd}共~\lastpageref*{VeryLastPage}~页%
   }
   \renewcommand{\headrulewidth}{0.8pt}
   \renewcommand{\footrulewidth}{0pt}
@@ -605,11 +597,14 @@
     }
     \IfFontExistsTF{Source Han Sans SC}{
       \def\unix@heiti{Source Han Sans SC}
+      \def\unix@heiti@bold{Source Han Sans SC Medium}
     }{
       \IfFontExistsTF{Noto Sans CJK SC}{
         \def\unix@heiti{Noto Sans CJK SC}
+        \def\unix@heiti@bold{Noto Sans CJK SC Medium}
       }{
         \def\unix@heiti{FandolHei}
+        \def\unix@heiti@bold{FandolHei Bold}
       }
     }
     \IfFontExistsTF{STKaiti}{
@@ -631,7 +626,7 @@
       }
     }
     \setCJKmainfont[ItalicFont=\unix@kaiti]{\unix@songti}
-    \setCJKsansfont{\unix@heiti}
+    \setCJKsansfont[BoldFont=\unix@heiti@bold]{\unix@heiti}
     \setCJKmonofont{\unix@fangsong}
     \setCJKfamilyfont{zhsong}{\unix@songti}
     \setCJKfamilyfont{zhhei}{\unix@heiti}
@@ -678,8 +673,7 @@
   \renewcommand\checkmark{\ensuremath{✓}}%
 }
 \allowdisplaybreaks[4]
-\ifsht@undergraduate
-\else
+\ifsht@graduate
   \newtagform{dots}{\ldots\ (}{)}
   \usetagform{dots}
   \renewcommand{\eqref}[1]{\textup{(\ref{#1})}}
@@ -880,10 +874,10 @@
 \newcommand{\makeindices}{%
   \begingroup%
   \linespread{1.2}%
+  \hypersetup{linkcolor=black}%
   \intobmk*{\cleardoublepage}{\contentsname}%
   \tableofcontents%
-  \ifsht@undergraduate%
-  \else%
+  \ifsht@graduate%
     \intobmk*{\cleardoublepage}{\listfigurename}%
     \listoffigures%
     \intobmk*{\cleardoublepage}{\listtablename}%
@@ -936,21 +930,31 @@
 }
 \ifsht@undergraduate
   \newlength{\sht@section@indent}
-  \setlength{\sht@section@indent}{2\ccwd}
+  \ifsht@comfort
+    \def\sht@chapter@fmt{\bfseries\sffamily\zihao{4}\linespread{1.0}\centering}
+    \def\sht@section@fmt{\sffamily\zihao{-4}\linespread{1.0}\raggedright}
+    \def\sht@subsection@fmt{\sffamily\zihao{5}\linespread{1.0}\raggedright}
+    \setlength{\sht@section@indent}{0pt}
+  \else
+    \def\sht@chapter@fmt{\bfseries\sffamily\zihao{3}\linespread{1.0}\centering}
+    \def\sht@section@fmt{\sffamily\zihao{4}\linespread{1.0}\raggedright}
+    \def\sht@subsection@fmt{\rmfamily\zihao{-4}\linespread{1.0}\raggedright}
+    \setlength{\sht@section@indent}{2\ccwd}
+  \fi
   \ctexset{
     chapter = {
-      format = \bfseries\sffamily\zihao{3}\linespread{1.0}\centering,
+      format = \sht@chapter@fmt,
       number = \chinese{chapter},
       numberformat = {},
     },
     section = {
-      format = \sffamily\zihao{4}\linespread{1.0}\raggedright,
+      format = \sht@section@fmt,
       numberformat = {},
       indent = \sht@section@indent,
       beforeskip = {18pt},
     },
     subsection = {
-      format = \rmfamily\zihao{-4}\linespread{1.0}\raggedright,
+      format = \sht@subsection@fmt,
       numberformat = {},
       indent = \sht@section@indent,
     }
@@ -1473,7 +1477,11 @@
 }{%
   \vspace{\baselineskip}%
   \ifsht@undergraduate%
-    \par\noindent{\zihao{-4}\bfseries\sffamily 关键词：} \sht@keywords%
+    \ifsht@comfort%
+      \par\noindent{\bfseries\sffamily 关键词：} \sht@keywords%
+    \else%
+      \par\noindent{\zihao{-4}\bfseries\sffamily 关键词：} \sht@keywords%
+    \fi%
   \else%
     \par\noindent{\bfseries 关键词：} \sht@keywords%
   \fi%
@@ -1498,7 +1506,11 @@
 }{%
   \vspace{\baselineskip}%
   \ifsht@undergraduate%
-    \par\noindent{\zihao{-4}\bfseries Key words:} \sht@keywords@en%
+    \ifsht@comfort%
+      \par\noindent{\bfseries Key words:} \sht@keywords@en%
+    \else%
+      \par\noindent{\zihao{-4}\bfseries Key words:} \sht@keywords@en%
+    \fi%
   \else%
     \par\noindent{\bfseries Key Words:} \sht@keywords@en%
   \fi%
@@ -1543,7 +1555,7 @@
 %   Bibliography
 % ------------------------------------------------------------------------------
 \providecommand{\makebiblio}{%
-  \renewcommand{\bibfont}{\zihao{5}}
+  \renewcommand{\bibfont}{\zihao{5}}%
   \intotoc*{\cleardoublepage}{\bibname}%
   \printbibliography%
 }
@@ -1552,7 +1564,7 @@
 % ------------------------------------------------------------------------------
 \LetLtxMacro{\origin@appendix}{\appendix}
 \renewcommand{\appendix}{%
-  \origin@appendix
+  \origin@appendix%
   \intotoc*{\cleardoublepage}{\appendixname}%
   \settocdepth{part}%
   \ifsht@undergraduate%
