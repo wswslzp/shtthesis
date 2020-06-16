@@ -15,6 +15,7 @@ env:
   NOTO_URL: https://noto-website-2.storage.googleapis.com/pkgs
   SED_REP: s/\\documentclass/\\documentclass\[fontset=none\]/
   SED_REP_WITH_CLS_ARGS: s/\\documentclass\[\(.*\)\]/\\documentclass\[\1, fontset=none\]/
+  UBUNTU_FONTS_DIR: $HOME/.local/share/fonts/
 
 jobs:
   build-ubuntu:
@@ -23,10 +24,14 @@ jobs:
     if: ${{ contains(github.event.head_commit.message, '[ci ubuntu]') || !contains(github.event.head_commit.message, '[ci skip]') }}
     steps:
     - uses: actions/checkout@v2
-    - name: Install Source Han fonts
+    - name: Install Noto fonts
       run: |
-        sudo apt-get update
-        sudo apt-get install --yes fonts-noto-cjk
+        for i in NotoSerifCJK NotoSansCJK; do curl -O ${{ env.NOTO_URL }}/$i.ttc.zip; done
+        unzip -o "*.zip"
+        mkdir -p ${{ env.UBUNTU_FONTS_DIR }}
+        cp -vf *.ttc ${{ env.UBUNTU_FONTS_DIR }}
+        pushd ${{ env.UBUNTU_FONTS_DIR }} && mkfontdir && mkfontscale && popd
+        fc-cache -fv
     - name: Get TeX Live hash
       id: texlive-hash
       run: |
