@@ -24,13 +24,16 @@ jobs:
     if: ${{ contains(github.event.head_commit.message, '[ci ubuntu]') || !contains(github.event.head_commit.message, '[ci skip]') }}
     steps:
     - uses: actions/checkout@v2
-    - name: Install Noto fonts
+    - name: Install Noto and Times fonts
       run: |
         for i in NotoSerifCJK NotoSansCJK; do curl -O ${{ env.NOTO_URL }}/$i.ttc.zip; done
         unzip -o "*.zip"
         mkdir -p ${{ env.UBUNTU_FONTS_DIR }}
         cp -vf *.ttc ${{ env.UBUNTU_FONTS_DIR }}
         pushd ${{ env.UBUNTU_FONTS_DIR }} && mkfontscale && popd
+        sudo apt-get update
+        echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
+        sudo apt-get install ttf-mscorefonts-installer
         fc-cache -fv
     - name: Get TeX Live hash
       id: texlive-hash

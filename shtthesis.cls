@@ -607,8 +607,8 @@
         \def\unix@heiti@bold{FandolHei Bold}
       }
     }
-    \IfFontExistsTF{STKaiti}{
-      \def\unix@kaiti{STKaiti}
+    \IfFontExistsTF{FZKai-Z03}{
+      \def\unix@kaiti{FZKai-Z03}
     }{
       \IfFontExistsTF{Kaiti}{
         \def\unix@kaiti{Kaiti}
@@ -616,8 +616,8 @@
         \def\unix@kaiti{FandolKai}
       }
     }
-    \IfFontExistsTF{STFangsong}{
-      \def\unix@fangsong{STFangsong}
+    \IfFontExistsTF{FZFangSong-Z02}{
+      \def\unix@fangsong{FZFangSong-Z02}
     }{
       \IfFontExistsTF{FangSong}{
         \def\unix@fangsong{FangSong}

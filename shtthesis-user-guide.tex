@@ -61,6 +61,7 @@
 
 \makeatletter
   \def\ifundergraduate{\ifsht@undergraduate}
+  \def\ifgraduate{\ifsht@graduate}
 \makeatother
 
 % `latex' and `shell' environments are adapted from `thuthesis'
@@ -116,27 +117,10 @@
 \usepackage{hologo}
 \usepackage{ifluatex}
 \ifluatex
-  \ifthenelse{\equal{\currentfontset}{windows}}{
-    \newfontface\EmojiFont{Segoe UI Emoji}[Renderer=HarfBuzz]
-  }{
-    \ifthenelse{\equal{\currentfontset}{mac}}{
-      \newfontface\EmojiFont{Apple Color Emoji}[Renderer=HarfBuzz]
-    }{
-      \newfontface\EmojiFont{Noto Color Emoji}[Renderer=HarfBuzz]
-    }
-  }
+  \usepackage{emoji}
 \else
-  \providecommand{\EmojiFont}{\emph{Current \LaTeX{} engine does not support Emoji}}
+  \providecommand{\emoji}[1]{ \fbox{\emph{#1}} }
 \fi
-\providecommand{\emoji}[1]{%
-  \begingroup%
-  \ifluatex%
-    \EmojiFont #1%
-  \else%
-    \EmojiFont%
-  \fi%
-  \endgroup%
-}
 \IfFontExistsTF{Times New Roman}{
   \providefontfamily\timesnewroman{Times New Roman}
 }{
@@ -173,8 +157,7 @@
 
 \makeindices
 
-\ifundergraduate
-\else
+\ifgraduate
 \begin{nomenclatures}
   \header[单位]{符号}{说明}
   \item[${m^{2} \cdot s^{-2} \cdot K^{-1}}$]{$R$}{the gas constant}
@@ -212,16 +195,16 @@
 
 \chapter{模板使用}
 \section{模板安装}
-\shtthesis 提供的文档类型文件为 shtthesis.cls，封面所需的上海科技大学校徽文件为 shanghaitech-logo.pdf，用户仅需将这两个文件拷贝至自己论文的工作目录下即可完成安装。假设用户的论文文件为 thesis.tex，参考文献文件为 reference.bib，则工作目录中必要的文件包括：
+\shtthesis 提供的文档类型文件为 shtthesis.cls，封面及本科生页眉所需的上海科技大学校徽文件为 shanghaitech-logo.pdf，用户仅需将这两个文件拷贝至自己论文的工作目录下即可完成安装。假设用户的论文文档为 thesis.tex，参考文献数据库为 reference.bib，则工作目录中必要的文件包括：
 \begin{center}
   \begin{tabular}{ll}
     \toprule
     文件名称 & 说明 \\
     \midrule 
-    shtthesis.cls & 模板文档类文件 \\
+    shtthesis.cls & 模板文档类 \\
     shanghaitech-logo.pdf & 上海科技大学校徽 \\
-    thesis.tex & 论文文件 \\
-    reference.bib & 默认参考文献文件 \\
+    thesis.tex & 论文文档 \\
+    reference.bib & 参考文献数据库 \\
     \bottomrule
   \end{tabular}
 \end{center}
@@ -230,7 +213,7 @@
 为避免版权问题，上传至 CTAN 的 \shtthesis 并不包含校徽文件。如果用户直接使用 \TeX{} Live 分发的 \shtthesis，则需要至项目主页下载校徽文件\footnote{\url{https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf}}，并将 shanghaitech-logo.pdf 与 thesis.tex 放置在同一目录下。
 
 \section{文档编译}
-\shtthesis 支持使用 \hologo{XeLaTeX} 和 \hologo{LuaLaTeX} 编译（注意，\emph{不支持} \hologo{pdfLaTeX}）。尝试编译本文档的源代码 \jobname.tex 至 PDF 是了解 \shtthesis 编译流程最直观的方法。我们推荐在最新的 \hologo{TeX} Live 环境下，使用 \verb|latexmk| 工具进行编译。Windows 及 Linux 用户请下载安装 \hologo{TeX} Live (\url{https://www.tug.org/texlive/})，macOS 用户请下载安装 Mac\hologo{TeX} (\url{https://www.tug.org/mactex/})。不推荐在 overleaf 等在线平台编译使用 \shtthesis，项目主页不接受与 overleaf 相关的 issues。
+\shtthesis 支持使用 \hologo{XeLaTeX} 和 \hologo{LuaLaTeX} 编译（注意，\emph{不支持} \hologo{pdfLaTeX}）。尝试编译本文档的源代码 \jobname.tex 至 PDF 是了解 \shtthesis 编译流程最直观的方法。我们推荐在最新的 \hologo{TeX} Live 环境下，使用 \verb|latexmk| 工具进行编译。Windows 及 Linux 用户请下载安装 \hologo{TeX} Live (\url{https://www.tug.org/texlive/})，macOS 用户请下载安装 Mac\hologo{TeX} (\url{https://www.tug.org/mactex/})。\emph{非常不推荐}使用 $\mathbb{C}$\TeX 发行版\footnote{大人，时代变了\emoji{unamused}}，也不推荐在 overleaf 等在线平台编译使用 \shtthesis。项目主页不接受与 $\mathbb{C}$\TeX、overleaf 相关的 issues。
 
 在完成环境配置后，即可使用 \verb|latexmk| 工具完成编译。使用 \hologo{XeLaTeX} 引擎进行编译的命令为：
 \begin{shell}
@@ -240,7 +223,7 @@
 \begin{shell}
 `\prompt' latexmk -pdflua
 \end{shell}
-一般来说，\hologo{XeLaTeX} 引擎的编译速度较快且占用资源较少，而 \hologo{LuaLaTeX} 引擎的编译结果似乎有更好的跨平台规范性。在 \shtthesis 开发过程中，曾出现过在 macOS 下 \hologo{XeLaTeX} 编译的 PDF 在 Windows 下无法打开，而 \hologo{LuaLaTeX} 编译结果正常的情况。若使用 LuaHB\hologo{TeX} 引擎编译，还可进一步使用 Emoji 等特殊功能。例如：\emoji{🌶️🍐🔟💉💧🐮🍺}。LuaHB\hologo{TeX} 引擎是 \hologo{TeX} Live 2020 中 \hologo{LuaLaTeX} 的默认实现，在 \hologo{TeX} Live 2019 下使用 LuaHB\hologo{TeX} 的方法为：
+一般来说，\hologo{XeLaTeX} 引擎的编译速度较快且占用资源较少，而 \hologo{LuaLaTeX} 引擎的编译结果似乎有更好的跨平台规范性。在 \shtthesis 开发过程中，曾出现过在 macOS 下 \hologo{XeLaTeX} 编译的 PDF 在 Windows 下无法打开，而 \hologo{LuaLaTeX} 编译结果正常的情况。若使用 LuaHB\hologo{TeX} 引擎编译，还可进一步使用 Emoji 等特殊功能。例如：\emoji{hot-pepper}\emoji{pear}\emoji{keycap-ten}\emoji{syringe}\emoji{sweat-drops}\emoji{cow-face}\emoji{beer-mug}。LuaHB\hologo{TeX} 引擎是 \hologo{TeX} Live 2020 中 \hologo{LuaLaTeX} 的默认实现，在 \hologo{TeX} Live 2019 下使用 LuaHB\hologo{TeX} 的方法为：
 \begin{shell}
 `\prompt' latexmk -pdflua -pdflualatex=lualatex-dev
 \end{shell}
@@ -250,7 +233,7 @@
 \begin{latex}
 \documentclass{shtthesis}
 \end{latex}
-即可载入模板。\shtthesis 接受的类参数包括：用于生成盲审论文的 \verb|anonymous| 选项，用于生成打印版论文的 \verb|print| 选项，以及传递给 \textsf{cexbook} 的其他选项。
+即可载入模板。\shtthesis 接受的类参数包括：指定学位类型的 \verb!{bachelor | master | doctor}! 选项、用于生成盲审论文的 \verb|anonymous| 选项，用于生成打印版论文的 \verb|print| 选项，以及传递给 \textsf{cexbook} 的其他选项。
 
 \subsection{\texttt{anonymous} 选项} \label{sec::option_anonymous}
 为方便生成盲审所需的匿名版论文，在文档类传入 \verb|anonymous| 即可将论文中英文封面的作者信息、导师信息，以及附录中的作者简历替换为匿名字符串，将作者论文发表、专利申请记录替换为匿名版本，并隐去文末的致谢部分：
@@ -634,8 +617,7 @@ Ordinary math: $A,F,L,2,3,5,\sigma$. \verb|\mathrm|: $\mathrm{A,F,L,2,3,5,\sigma
 \shtthesis 派生于中国科学院大学论文模板 \textsf{ucasthesis}\footnote{\url{https://github.com/mohuangrui/ucasthesis}，使用 GPLv3 许可证分发。}，v0.2.0 开发过程中参考了清华大学论文模板 \textsf{thuthesis}\footnote{\url{https://github.com/tuna/thuthesis}，使用 LPPL-1.3c 许可证分发。}，特别是 \verb|\thusetup| 命令的设计和实现。这些项目中流淌的智慧，以及项目作者们的专业态度和共享精神使得 \shtthesis 的开发及完善成为可能。
 \end{acknowledgement}
 
-\ifundergraduate
-\else
+\ifgraduate
 \begin{resume}
   李润东，\shtthesis 项目初版作者及维护者，热爱摸鱼。
 \end{resume}
