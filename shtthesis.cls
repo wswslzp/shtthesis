@@ -19,16 +19,15 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{shtthesis}[%
   2020/06/05 %
-  v0.2.0 %
+  v0.3.0-dev %
   An Unofficial Thesis Template for ShanghaiTech University%
 ]
 \hyphenation{sht-thesis}
 \hyphenation{Sht-Thesis}
-\RequirePackage{xspace}
-\newcommand\shtthesis{\textup{\sffamily shtthesis}\xspace}
-\newcommand\ShtThesis{\textup{\sffamily ShtThesis}\xspace}
-\newcommand\version{0.2.0\xspace}
-\newcommand\versiondate{2020/06/05\xspace}
+\newcommand\shtthesis{\textup{\sffamily shtthesis}}
+\newcommand\ShtThesis{\textup{\sffamily ShtThesis}}
+\newcommand\version{0.3.0-dev}
+\newcommand\versiondate{2020/06/05}
 % ==============================================================================
 % Options and Declarations
 % ==============================================================================
