@@ -59,11 +59,6 @@
   bib-resource = {reference.bib},
 }
 
-\makeatletter
-  \def\ifundergraduate{\ifsht@undergraduate}
-  \def\ifgraduate{\ifsht@graduate}
-\makeatother
-
 % `latex' and `shell' environments are adapted from `thuthesis'
 \usepackage{listings}
 \newcommand\prompt{\textup{\$}}
@@ -95,6 +90,8 @@
   framesep=3pt,
   rulesep=1pt,
   framerule=1pt,
+  frame=l,
+  rulecolor=\color{ShtRed},
   backgroundcolor=\color{gray!5},
   stringstyle=\color{green!40!black!100},
   keywordstyle=\bfseries\color{blue!50!black},
@@ -103,40 +100,30 @@
 }
 \lstdefinestyle{lstStyleShell}{%
   style=lstStyleBase,
-  frame=l,
-  rulecolor=\color{ShtRed},
   language=bash}
 \lstdefinestyle{lstStyleLaTeX}{%
   style=lstStyleBase,
-  frame=l,
-  rulecolor=\color{ShtRed},
   language=[LaTeX]TeX}
 \lstnewenvironment{latex}{\lstset{style=lstStyleLaTeX}}{}
 \lstnewenvironment{shell}{\lstset{style=lstStyleShell}}{}
 
 \usepackage{hologo}
-\usepackage{ifluatex}
-\ifluatex
+\ifluahbtex
   \usepackage{emoji}
 \else
   \providecommand{\emoji}[1]{ \fbox{\emph{#1}} }
 \fi
-\IfFontExistsTF{Times New Roman}{
-  \providefontfamily\timesnewroman{Times New Roman}
-}{
-  \providecommand{\timesnewroman}{\emph{Times New Roman missing}}
-}
-\IfFontExistsTF{XITS-Regular.otf}{
-  \providefontfamily\xitsfamily{XITS-Regular.otf}
-}{
-  \providecommand{\xitsfamily}{\emph{XITS missing}}
-}
 
 \usepackage{subcaption}
 \usepackage{ctable}
 \usepackage[list=off]{bicaption}
 \captionsetup[figure][bi-second]{name=Figure}
 \captionsetup[table][bi-second]{name=Table}
+
+\makeatletter
+  \def\ifundergraduate{\ifsht@undergraduate}
+  \def\ifgraduate{\ifsht@graduate}
+\makeatother
 
 \begin{document}
 
@@ -291,7 +278,7 @@
 \begin{latex}
 \documentclass[fontset=windows]{shtthesis}
 \end{latex}
-不同字体集所用字体见表~\ref{tab::fonts}。在 Linux/UNIX 环境下对于宋体和黑体，会首先检测思源宋体/黑体（Source Han 字体或 Noto CJK 字体）是否安装，若未检测到则回退至 Fandol 宋体/黑体；对于楷体和仿宋，则会依次检测方正楷体/仿宋-GBK、中易楷体/仿宋是否安装，若未检测到则退回至 Fandol 楷体/仿宋。
+不同字体集所用字体见表~\ref{tab::fonts}。在 Linux/UNIX 环境下对于宋体和黑体，会首先检测思源宋体/黑体（Source Han 字体或 Noto CJK 字体）是否安装，若未检测到则回退至 Fandol 宋体/黑体；对于楷体和仿宋，则会依次检测方正楷体/仿宋-GBK 是否安装，若未检测到则退回至 Fandol 楷体/仿宋。
 
 \begin{table}[htb]
   \centering
@@ -303,7 +290,7 @@
     \label{tab::chs_fonts}
     \begin{tabular}{l *{3}{c}}
       \toprule
-       & Windows & Mac & 其他 \\
+       & Windows & macOS & Linux/UNIX \\
       \midrule
       \songti   宋体 & \songti   中易宋体 & \songti   华文宋体简体 & \songti   思源宋体 $\to$ Fandol 宋体 \\
       \heiti    黑体 & \heiti    中易黑体 & \heiti    华文黑体简体 & \heiti    思源黑体 $\to$ Fandol 黑体 \\
@@ -404,21 +391,40 @@
 设定论文中英文标题和涉密等级。中文标题（title）和英文标题（title*）中可以包含换行符。研究生学位论文的涉密等级（secret-level）会以“密级：\uline{XXX}”显示在中文封面右上角，未设定涉密等级则不显示相关信息。
 
 \subsection{作者信息}
-需要设定的作者信息包括：作者中英文姓名（author 和 author*）、一级学科中英文名称（discipline-level-1 和 discipline-level-1*）和学校/学院中英文名称（institution 和 institution*）。注意《规范》要求以姓氏拼音在前、名字拼音在后、中间以半角空格分隔的格式书写英文姓名。
+需要设定的作者信息包括：作者中英文姓名（author 和 author*）和学校/学院中英文名称（institution 和 institution*），研究生需要设定一级学科中英文名称（discipline-level-1 和 discipline-level-1*），本科生需要设定攻读专业中英文名称（discipline 和 discipline*）。
+
+特别注意研究生和本科生的英文名格式要求不一致：研究生要求以姓氏拼音在前、名字拼音在后、中间以半角空格分隔的格式书写英文姓名：
 \begin{latex}
 \shtsetup{
+  % 研究生中英文姓名格式要求
   author = 李润东,
   author* = {Li~Rundong}, % 正确写法
   % author* = {Rundong~Li}, % 错误写法
 }
 \end{latex}
+而本科生要求以名字拼音在前、姓氏拼音在后、中间以半角空格分隔的格式书写英文姓名：
+\begin{latex}
+\shtsetup{
+  % 本科生中英文姓名格式要求
+  author = 李润东,
+  author* = {Rundong~Li}, % 正确写法
+  % author* = {Li~Rundong}, % 错误写法
+}
+\end{latex}
 
-在设定学校/学院名称时，中文名称（institution）不可带换行符，英文名称（institution*）应在学院、学校名称间加入换行符，否则封面排版会出现错误。
+研究生需要设定完整的学校、学院名称，中文名称（institution）不可带换行符，英文名称（institution*）应在学院、学校名称间加入换行符，否则封面排版会出现错误：
 \begin{latex}
 \shtsetup{
   institution = 上海科技大学信息科学与技术学院,
   institution* = {School~of~Information~Science~and~Technology\\%
                   ShanghaiTech~University},
+}
+\end{latex}
+本科生则不必包含学校名称，直接设定学院名称即可，注意中英文名称中均不能包含换行符：
+\begin{latex}
+\shtsetup{
+  institution = 信息科学与技术学院,
+  institution* = {School~of~Information~Science~and~Technology},
 }
 \end{latex}
 
@@ -433,19 +439,26 @@
 \end{latex}
 
 \subsection{成文日期}
-通过 date 和 date* 分别设置中英文成文日期，日期内容请参考《规范》，日期格式为：
+通过 date 和 date* 分别设置中英文成文日期，日期内容应按照申请学位的时间节点填写，具体请参考当年《规范》。研究生成文日期格式为：
 \begin{latex}
 \shtsetup{
   date = {2020~年~6~月},
   date* = {June,~2020},
 }
 \end{latex}
+本科生成文日期格式为：
+\begin{latex}
+\shtsetup{
+  date = {2020~年~06~月},
+  date* = {06~/~2020},
+}
+\end{latex}
 
 \section{前言部分}
-《规范》规定论文前言部分应包含论文原创性声明和授权使用声明、中英文摘要、目录及图形、表格列表。若有需要，可加入符号列表。\shtthesis{} 会自动生成目录和图表列表，在不设置 \verb|anonymous| 选项时会自动生成声明页。\shtthesis{} 提供了摘要和符号列表环境，以便于用户生成中英文摘要和符号列表。
+《规范》规定论文前言部分应包含论文原创性声明和授权使用声明、中英文摘要、目录，研究生论文还需包含图形、表格列表。若有需要，可加入符号列表。\shtthesis{} 会自动生成目录和图表列表，在不设置 \verb|anonymous| 选项时会自动生成声明页。\shtthesis{} 提供了摘要和符号列表环境，以便于用户生成中英文摘要和符号列表。
 
 \subsection{论文摘要及关键词}
-论文中英文摘要在正文部分 \verb|\frontmatter| 之后、\verb|\makeindices| 之前，分别在 abstract 和 abstract* 环境中输入。摘要环境对内容没有限制。
+论文中英文摘要在正文部分 \verb|\frontmatter| 之后、\verb|\makeindices| 之前，分别在 abstract 和 abstract* 环境中输入。摘要环境对内容没有限制：
 \begin{latex}
 \begin{abstract}
   中文摘要内容...
@@ -456,7 +469,15 @@
 \end{abstract*}
 \end{latex}
 
-论文中英文关键词在 \verb|\shtsetup| 命令中分别以 keywords 和 keywords* 设定。注意 \shtthesis{} v\version{} 中尚未实现分词处理，此处输入的 value 会不经任何预处理，直接插入至正文中排版。因此，中文关键词（keywords）之间应该以中文逗号“，”隔开且不包含空格；英文关键词（keywords*）之间应该以半角逗号“,”隔开，并在每一半角逗号后跟随一个半角空格。
+需要注意，本科生论文要求在中英文摘要中包含论文标题。默认情况下，\shtthesis 的 abstract 和 abstract* 环境会按照 \verb|\shtsetup| 中指定的标题及其中的换行符进行排版。如果希望在摘要中显示的标题不换行，则可以向摘要环境传入 \verb|flattitle| 选项，排版时会将 title 和 title* 中的换行符替换为空格：
+\begin{latex}
+\begin{abstract}[flattitle]
+  % 摘要标题排版时不换行
+  中文摘要内容...
+\end{abstract}
+\end{latex}
+
+论文中英文关键词在 \verb|\shtsetup| 命令中分别以 keywords 和 keywords* 设定。注意 \shtthesis{} v\version{} 中尚未实现分词处理，此处输入的 value 将不经任何预处理，直接插入至正文中排版。因此，中文关键词（keywords）之间应该以中文逗号“，”隔开且不包含空格；英文关键词（keywords*）之间应该以半角逗号“,”隔开，并在每一半角逗号后跟随一个半角空格。
 \begin{latex}
 \shtsetup{
   keywords = {上海科技大学，学位论文，\LaTeX{}},
@@ -473,33 +494,46 @@
 \end{figure}
 \end{latex}
 
-\shtthesis{} 提供了 nomenclatures 环境用于生成符号列表，使用方法为：
+\shtthesis{} 提供了 nomenclatures 环境用于在研究生论文中生成符号列表，其使用方法为：
 \begin{latex}
-\begin{nomenclatures}[`\emph{caption}']
-  \head[`\emph{unitCap}']{`\emph{symbCap}'}{`\emph{descriptionCap}'}
-  \item[`\emph{unit}']{`\emph{symb}'}{`\emph{description}'}
+\begin{nomenclatures}[<标题>]
+  \head[<单位表头>]{<符号表头>}{<描述表头>}
+  \item[<单位>]{<符号>}{<描述>}
   % ...
 \end{nomenclatures}
 \end{latex}
-每次 nomenclatures 调用会分别生成一组符号列表，每一 \verb|\item| 会生成一行符号描述。若 caption 不为空则会为当前组生成一个不编号的 section 级的标题。\verb|\head| 为可选指令，会为当前组生成一个“表头”，但必须在 \verb|\item| 之前列出。\verb|\item| 接受一个可选参数 unit 作为符号的单位，若其不为空则在当前行右对齐出现。nomenclatures 的使用样例可以参考 \jobname.tex 中“符号列表”部分。注意在 \shtthesis{} v\version{} 中 \verb|\item| 的 description 折行后会出现排版错误，故暂时不支持较长的符号描述。
+每次 nomenclatures 调用会分别生成一组符号列表，每一 \verb|\item| 会生成一行符号描述。若 \verb|<标题>| 不为空则会为当前组生成一个不编号的 section 级的标题。\verb|\head| 为可选指令，会为当前组生成一个“表头”，但必须在 \verb|\item| 之前列出。\verb|\item| 接受一个可选参数 \verb|<单位>| 作为符号的单位，若其不为空则在当前行右对齐出现。nomenclatures 的使用样例可以参考 \jobname.tex 中“符号列表”部分。注意在 \shtthesis{} v\version{} 中各 \verb|\item| 的 \verb|<描述>| 在折行后会出现排版错误，故暂时不支持较长的符号描述。
 
 \section{正文部分}
-\shtthesis{} 正文部分的书写与一般 \LaTeX 项目无异。为保证兼容性，\shtthesis{} 除修改公式编号格式以符合《规范》要求外，不提供证明、定理等任何额外环境。文献引用目前只支持“著者——出版年”格式。
+\shtthesis{} 正文部分的书写与一般 \LaTeX 项目无异。为保证兼容性，\shtthesis{} 除为研究生论文修改公式编号格式以符合《规范》要求外，暂不提供证明、定理等任何额外环境。文献引用遵循 GB/T 7714-2015 《信息与文献　参考文献著录规则》标准，其中本科论文使用顺序编码制，研究生论文使用“著者-出版年”制。
 
 \subsection{编号公式}
-\shtthesis{} 通过 \textsf{mathtools} 宏包在公式编号前添加 $\ldots$ 以符合《规范》对公式编号的格式要求，如：
+在排版研究生论文时，\shtthesis{} 通过 \textsf{mathtools} 宏包在公式编号前添加 $\ldots$ 以符合《规范》对公式编号的格式要求，如：
 \begin{align}
 P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
 \end{align}
-同时重载了 \verb|\eqref|，使得公式编号格式修改后，其引用仍与 \textsf{amsmath} 无异：贝叶斯定理~\eqref{eq::bayesian}。
+同时重载了 \verb|\eqref|，使得公式编号格式修改后，其引用格式仍与 \textsf{amsmath} 无异：贝叶斯定理~\eqref{eq::bayesian}。排版本科生论文时不修改公式编号格式。
 
 \subsection{文献引用} \label{sec::citation}
-\shtthesis{} 目前仅通过 \textsf{natbib} 支持“著者——出版年”格式的引用，可以使用 \verb|\citet| 进行文本形式的引用 \citet{Bohan1928}，使用 \verb|\citep| 进行括号形式的引用 \citep{yuan2012lanc}，使用 \verb|\citeauthor| 进行作者引用 \citeauthor{niu2013zonghe}，以及使用 \verb|\citeyear| 进行年份引用 \citeyear{walls2013drought}。当引用内容是组成正文的一部分时，应使用文本形式的引用，否则使用括号形式的引用。一个实用的区分技巧是，如果你在做口头介绍时会说出引用内容，就应使用文本形式的引用，否则使用括号形式的引用。
+\shtthesis{} 通过 \textsf{biblatex} 宏包及 \textsf{biblatex-gb7714-2015} 格式支持符合 GB/T 7714-2015 标准的文献引用。本科生论文使用顺序编码制，研究生论文使用“著者-出版年”制。
 
-\shtthesis{} 默认的参考文献文件为 reference.bib，若使用其他文件则需在 \verb|\makebiblio| 命令后指明
+\paragraph{顺序编码制}
+使用一般引用 \verb|\cite| 的编码显示为上标，例如~\cite{stamerjohanns2009mathml, yuan2012lanc}。也可以使用行内引用 \verb|\inlinecite| 将引用编码排版至正文，例如 \inlinecite{Bohan1928}。参考文献列表按照各条目在正文中被引用顺序排列。
+
+\paragraph{“著者-出版年”制}
+使用 \verb|\citet| 进行文本形式的引用 \citet{Bohan1928}，使用 \verb|\citep| 进行括号形式的引用 \citep{yuan2012lanc}，使用 \verb|\citeauthor| 进行作者引用 \citeauthor{niu2013zonghe}，以及使用 \verb|\citeyear| 进行年份引用 \citeyear{walls2013drought}。参考文献列表各条目按照语言分组后，按照字母序排列。
+
+\shtthesis{} 通过 \verb|\shtsetup| 的 bib-resource 选项指定参考文献数据库，例如载入 reference.bib 文件：
 \begin{latex}
-\makebiblio[mybiblio] % 读取 mybiblio.bib 文件
+\shtsetup{
+  bib-resource = {reference.bib},
+}
+% ...
+\begin{document}
+  % ...
+  \makebiblio
 \end{latex}
+
 需要注意若文献条目的作者姓名非英文，则需额外增加 key 字段指定作者英文姓名，并在姓氏拼英后加注音调，以确保文献条目在文末的参考文献中正确排列。例如 \citet{bravo1990comparative} 无需额外处理，而 \citet{chen1980zhongguo} 对应的 bib 条目需修改为
 \begin{latex}
 @incollection{chen1980zhongguo,
@@ -564,7 +598,7 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
   \label{img::sht_logo}
 \end{figure}
 
-由于在排版较长的、自包含的图表标题时，使用双语图表标题会导致可读性下降，\shtthesis{} 默认不载入 \textsf{bicaption} 宏包。（ \shtthesis{} 作者在 2020 年学位申请时并未使用双语标题。）若确实需要双语标题，可在导言区内手动载入并设定 \textsf{bicaption}：
+由于在排版较长的、自包含的图表标题时，使用双语图表标题会导致可读性下降，\shtthesis{} 默认不载入 \textsf{bicaption} 宏包。（ \shtthesis{} 作者在 2020 年学位申请时并未使用双语标题。）若确实需要双语标题，可在导言区内手动载入 \textsf{bicaption}。注意需要设定 \verb|list=off| 以确保英文标题不出现在图表列表中：
 \begin{latex}
 \usepackage[list=off]{bicaption}
 \captionsetup[figure][bi-second]{name=Figure}

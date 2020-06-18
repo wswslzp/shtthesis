@@ -17,17 +17,26 @@
 % Identification
 % ==============================================================================
 \NeedsTeXFormat{LaTeX2e}
+\newcommand\version{0.3.0-dev}
+\newcommand\versiondate{2020/06/05}
 \ProvidesClass{shtthesis}[%
-  2020/06/05 %
-  v0.3.0-dev %
+  \versiondate\space%
+  v\version\space%
   An Unofficial Thesis Template for ShanghaiTech University%
 ]
 \hyphenation{sht-thesis}
 \hyphenation{Sht-Thesis}
 \newcommand\shtthesis{\textup{\sffamily shtthesis}}
 \newcommand\ShtThesis{\textup{\sffamily ShtThesis}}
-\newcommand\version{0.3.0-dev}
-\newcommand\versiondate{2020/06/05}
+\def\sht@compile@err@help{%
+  Pass `-pdflua' or `-pdfxe' option to `latexmk' on compilation.%
+}
+\newcommand\sht@error[2][\sht@compile@err@help]{\ClassError{shtthesis}{#2}{#1}}
+\newcommand\sht@warning[1]{\ClassWarning{shtthesis}{#1}}
+\RequirePackage{iftex}
+\ifluatex\else\ifxetex\else%
+  \sht@error{shtthesis only works with LuaLaTeX or XeLaTeX}%
+\fi\fi
 % ==============================================================================
 % Options and Declarations
 % ==============================================================================
@@ -42,9 +51,6 @@
 %   thuthesis (https://github.com/xueruini/thuthesis) is licensed under the
 %   conditions of the LaTeX Project Public License, either version 1.3. 
 % ------------------------------------------------------------------------------
-\newcommand\sht@error[1]{%
-  \ClassError{shtthesis}{#1}{}%
-}
 \newcommand\shtsetup{%
   \kvsetkeys{sht}%
 }
@@ -312,7 +318,6 @@
 \RequirePackage{fontspec}
 \RequirePackage{caption}
 \RequirePackage[shortlabels, inline]{enumitem}
-\RequirePackage{amsmath}
 \RequirePackage{mathtools}
 \RequirePackage[
   mathrm = sym,
@@ -420,8 +425,8 @@
 % ------------------------------------------------------------------------------
 %   Headers and footers
 % ------------------------------------------------------------------------------
-\def\sht@flat@title{\renewcommand\\{ } \@title}
-\def\sht@flat@title@en{\renewcommand\\{ } \sht@title@en}
+\def\sht@flat@title{\renewcommand\\{\space} \@title}
+\def\sht@flat@title@en{\renewcommand\\{\space} \sht@title@en}
 \newcommand\sht@head@logo{%
   \IfFileExists{shanghaitech-logo.pdf}{%
     \includegraphics[height=\sht@head@logo@height]{shanghaitech-logo.pdf}%
@@ -596,33 +601,29 @@
     }
     \IfFontExistsTF{Source Han Sans SC}{
       \def\unix@heiti{Source Han Sans SC}
-      \def\unix@heiti@bold{Source Han Sans SC Medium}
     }{
       \IfFontExistsTF{Noto Sans CJK SC}{
         \def\unix@heiti{Noto Sans CJK SC}
-        \def\unix@heiti@bold{Noto Sans CJK SC Medium}
       }{
         \def\unix@heiti{FandolHei}
-        \def\unix@heiti@bold{FandolHei Bold}
       }
+    }
+    \edef\unix@heiti@medium@impl{\unix@heiti\space Medium}
+    \edef\unix@heiti@bold@impl{\unix@heiti\space Bold}
+    \IfFontExistsTF{\unix@heiti@medium@impl}{
+      \def\unix@heiti@bold{\unix@heiti@medium@impl}
+    }{
+      \def\unix@heiti@bold{\unix@heiti@bold@impl}
     }
     \IfFontExistsTF{FZKai-Z03}{
       \def\unix@kaiti{FZKai-Z03}
     }{
-      \IfFontExistsTF{Kaiti}{
-        \def\unix@kaiti{Kaiti}
-      }{
-        \def\unix@kaiti{FandolKai}
-      }
+      \def\unix@kaiti{FandolKai}
     }
     \IfFontExistsTF{FZFangSong-Z02}{
       \def\unix@fangsong{FZFangSong-Z02}
     }{
-      \IfFontExistsTF{FangSong}{
-        \def\unix@fangsong{FangSong}
-      }{
-        \def\unix@fangsong{FandolFang}
-      }
+      \def\unix@fangsong{FandolFang}
     }
     \setCJKmainfont[ItalicFont=\unix@kaiti]{\unix@songti}
     \setCJKsansfont[BoldFont=\unix@heiti@bold]{\unix@heiti}

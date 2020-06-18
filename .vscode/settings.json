@@ -6,7 +6,7 @@
       "command": "latexmk",
       "args": [
         "-synctex=1",
-        "-interaction=nonstopmode",
+        "-halt-on-error",
         "-file-line-error",
         "-pdfxe",
         "-outdir=%OUTDIR%",
@@ -18,7 +18,7 @@
       "command": "latexmk",
       "args": [
         "-synctex=1",
-        "-interaction=nonstopmode",
+        "-halt-on-error",
         "-file-line-error",
         "-pdflua",
         "-outdir=%OUTDIR%",
