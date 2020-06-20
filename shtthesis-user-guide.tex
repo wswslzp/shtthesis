@@ -505,7 +505,7 @@
 每次 nomenclatures 调用会分别生成一组符号列表，每一 \verb|\item| 会生成一行符号描述。若 \verb|<标题>| 不为空则会为当前组生成一个不编号的 section 级的标题。\verb|\head| 为可选指令，会为当前组生成一个“表头”，但必须在 \verb|\item| 之前列出。\verb|\item| 接受一个可选参数 \verb|<单位>| 作为符号的单位，若其不为空则在当前行右对齐出现。nomenclatures 的使用样例可以参考 \jobname.tex 中“符号列表”部分。注意在 \shtthesis{} v\version{} 中各 \verb|\item| 的 \verb|<描述>| 在折行后会出现排版错误，故暂时不支持较长的符号描述。
 
 \section{正文部分}
-\shtthesis{} 正文部分的书写与一般 \LaTeX 项目无异。为保证兼容性，\shtthesis{} 除为研究生论文修改公式编号格式以符合《规范》要求外，暂不提供证明、定理等任何额外环境。文献引用遵循 GB/T 7714-2015 《信息与文献　参考文献著录规则》标准，其中本科论文使用顺序编码制，研究生论文使用“著者-出版年”制。
+\shtthesis{} 正文部分的书写与一般 \LaTeX 项目无异。\shtthesis{} 为研究生论文修改公式编号格式以符合《规范》要求，并提供编号定理、证明等常用数学环境。文献引用遵循 GB/T 7714-2015 《信息与文献　参考文献著录规则》标准，其中本科论文使用顺序编码制，研究生论文使用“著者-出版年”制。
 
 \subsection{编号公式}
 在排版研究生论文时，\shtthesis{} 通过 \textsf{mathtools} 宏包在公式编号前添加 $\ldots$ 以符合《规范》对公式编号的格式要求，如：
@@ -513,6 +513,55 @@
 P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
 \end{align}
 同时重载了 \verb|\eqref|，使得公式编号格式修改后，其引用格式仍与 \textsf{amsmath} 无异：贝叶斯定理~\eqref{eq::bayesian}。排版本科生论文时不修改公式编号格式。
+
+\subsection{数学环境}
+\shtthesis 通过 \textsf{amsthm} 宏包定义了常用的数学环境和证明环境，如表~\ref{tab::math_envs} 所列。其中，英文表示 tex 文档内调用的环境名称，中文表示排版后论文中显示的环境名称。
+
+\begin{table}[htb]
+\centering
+\caption{\shtthesis 提供的数学环境}
+\label{tab::math_envs}
+\begin{tabular}{*{5}{c}}
+  \toprule
+  theorem & lemma & corollary & proposition & conjecture \\
+  定理    & 引理  & 推论       & 命题        & 猜想       \\
+  \midrule
+  definition & axiom & example & problem & exercise \\
+  定义       & 公理  & 例       & 问题    & 练习     \\
+  \midrule
+  remark & & & & \\
+  注 & & & & \\
+  \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{theorem}[Unicode-CJK 覆盖定理]
+  Unicode 能够编码绝大多数东亚文字和符号。
+\end{theorem}
+
+\begin{corollary}
+  Unicode 能够编码我国《汉字内码扩展规范》中的所有字符。
+\end{corollary}
+
+\begin{corollary}
+  Unicode 也能够编码韩文和日文字符。
+\end{corollary}
+
+\begin{example}
+  “你好”在 Unicode 中的编码 (codepoints) 为 \verb|U+4F60| 和 \verb|U+597D|。
+\end{example}
+
+\begin{example}
+  「こんにちは」在 Unicode 中的编码 (codepoints) 为 \verb|U+3053|、 \verb|U+3093|、 \verb|U+306B|、 \verb|U+3061| 和 \verb|U+306F|。
+\end{example}
+
+\begin{proof}
+  留作练习。
+\end{proof}
+
+\begin{remark}
+  有兴趣的读者可以查阅 Unicode 规范 (\url{https://home.unicode.org/})。
+\end{remark}
 
 \subsection{文献引用} \label{sec::citation}
 \shtthesis{} 通过 \textsf{biblatex} 宏包及 \textsf{biblatex-gb7714-2015} 格式支持符合 GB/T 7714-2015 标准的文献引用。本科生论文使用顺序编码制，研究生论文使用“著者-出版年”制。

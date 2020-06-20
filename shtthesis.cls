@@ -319,6 +319,7 @@
 \RequirePackage{caption}
 \RequirePackage[shortlabels, inline]{enumitem}
 \RequirePackage{mathtools}
+\RequirePackage{amsthm}
 \RequirePackage[
   mathrm = sym,
   mathit = sym,
@@ -713,6 +714,25 @@
 \IfFontExistsTF{FiraMath-Regular.otf}{
   \setmathfontface\mathsf{FiraMath-Regular.otf}
 }{}
+% ------------------------------------------------------------------------------
+%   Math environmrnts
+% ------------------------------------------------------------------------------
+\theoremstyle{plain}
+\newtheorem{theorem}{定理}[chapter]
+\newtheorem{lemma}{引理}[chapter]
+\newtheorem{corollary}{推论}[theorem]
+\newtheorem{proposition}{命题}[chapter]
+\newtheorem{conjecture}{猜想}[chapter]
+\theoremstyle{definition}
+\newtheorem{definition}{定义}[chapter]
+\newtheorem{axiom}{公理}[chapter]
+\newtheorem{example}{例}[chapter]
+\newtheorem{exercise}{练习}[chapter]
+\newtheorem{problem}{问题}[chapter]
+\theoremstyle{remark}
+\newtheorem{remark}{注}[chapter]
+\renewcommand*{\proofname}{证明}
+\expandafter\patchcmd\csname\string\proof\endcsname{\@addpunct{.}}{\@addpunct{\emph{：}}}{}{}
 % ------------------------------------------------------------------------------
 %   Utility functions for ToC and bookmarks
 % ------------------------------------------------------------------------------
