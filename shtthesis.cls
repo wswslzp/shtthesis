@@ -997,6 +997,13 @@
   labelsep = 0em,
   format = \normalfont\textbf@with@colon,
 }
+% ------------------------------------------------------------------------------
+%   Quotation environments
+% ------------------------------------------------------------------------------
+\ExplSyntaxOn
+\ctex_patch_cmd:Nnn \quotation { 1.5em } { 2 \ccwd }
+\ExplSyntaxOff
+\AtBeginEnvironment{quotation}{\fangsong}
 % ==============================================================================
 % Cover Generation
 % ==============================================================================

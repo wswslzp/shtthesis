@@ -228,7 +228,7 @@
 `\prompt' latexmk -pdflua
 \end{shell}
 
-一般来说，\hologo{XeLaTeX} 引擎的编译速度较快且占用资源较少，而 \hologo{LuaLaTeX} 引擎的编译结果似乎有更好的跨平台规范性。在 \shtthesis{} 开发过程中，曾出现过在 macOS 下 \hologo{XeLaTeX} 编译的 PDF 在 Windows 下无法打开，而 \hologo{LuaLaTeX} 编译结果正常的情况。若使用 LuaHB\hologo{TeX} 引擎编译，还可进一步使用 Emoji 等功能。例如：\emoji{hot-pepper}\emoji{pear}\emoji{keycap-ten}\emoji{syringe}\emoji{sweat-drops}\emoji{cow-face}\emoji{beer-mug}。LuaHB\hologo{TeX} 引擎是 \hologo{TeX} Live 2020 中 \hologo{LuaLaTeX} 的默认实现，在 \hologo{TeX} Live 2019 下使用 LuaHB\hologo{TeX} 的方法为：
+一般来说，\hologo{XeLaTeX} 引擎的编译速度较快且占用资源较少，而 \hologo{LuaLaTeX} 引擎的编译结果似乎有更好的跨平台规范性。在 \shtthesis{} 开发过程中，曾出现过在 macOS 下 \hologo{XeLaTeX} 编译的 PDF 在 Windows 下无法打开，而 \hologo{LuaLaTeX} 编译结果正常的情况。若使用 LuaHB\hologo{TeX} 引擎编译，还可进一步使用 Emoji 等功能。例如：\emoji{hot-pepper}\emoji{pear}\emoji{keycap-ten}\emoji{syringe}\emoji{sweat-drops}\emoji{cow-face}\emoji{beer-mug}\footnote{如果使用非 LuaHB\hologo{TeX} 引擎编译，您只能看到一堆方框……}。LuaHB\hologo{TeX} 引擎是 \hologo{TeX} Live 2020 中 \hologo{LuaLaTeX} 的默认实现，在 \hologo{TeX} Live 2019 下使用 LuaHB\hologo{TeX} 的方法为：
 \begin{shell}
 `\prompt' latexmk -pdflua -pdflualatex=lualatex-dev
 \end{shell}
@@ -247,7 +247,7 @@
 
 2020 年学位申请时，本科生收到过包含下述内容的通知：
 \begin{quotation}
-\fangsong “如果是使用Latex版模板，保证封面与学校的word版要求完全一致，正文中的格式不要求在字号等细节方面与Word版要求严格一致，但要做到自己的论文自统一并且符合常用规范。”
+“如果是使用Latex版模板，保证封面与学校的word版要求完全一致，正文中的格式不要求在字号等细节方面与Word版要求严格一致，但要做到自己的论文自统一并且符合常用规范。”
 \end{quotation}
 因此 \shtthesis{} 为本科生论文额外提供了 \verb|comfort| 选项，在保证封面符合规范的同时优化正文的排版细节，使最终论文视觉上更为舒适统一且正式。推荐排版本科论文时使用：
 \begin{latex}
@@ -288,14 +288,14 @@
     \centering
     \caption{\shtthesis{} 所用中文字体}
     \label{tab::chs_fonts}
-    \begin{tabular}{l *{3}{c}}
+    \begin{tabular}{*{3}{c}}
       \toprule
-       & Windows & macOS & Linux/UNIX \\
+      Windows & macOS & Linux/UNIX \\
       \midrule
-      \songti   宋体 & \songti   中易宋体 & \songti   华文宋体简体 & \songti   思源宋体 $\to$ Fandol 宋体 \\
-      \heiti    黑体 & \heiti    中易黑体 & \heiti    华文黑体简体 & \heiti    思源黑体 $\to$ Fandol 黑体 \\
-      \kaishu   楷书 & \kaishu   中易楷体 & \kaishu   华文楷体简体 & \kaishu   方正楷体-GBK $\to$ Fandol 楷体 \\
-      \fangsong 仿宋 & \fangsong 中易仿宋 & \fangsong 华文仿宋简体 & \fangsong 方正仿宋-GBK $\to$ Fandol 仿宋 \\
+      \songti   中易宋体 & \songti   华文宋体简体 & \songti   思源宋体 $\to$ Fandol 宋体 \\
+      \heiti    中易黑体 & \heiti    华文黑体简体 & \heiti    思源黑体 $\to$ Fandol 黑体 \\
+      \kaishu   中易楷体 & \kaishu   华文楷体简体 & \kaishu   方正楷体-GBK $\to$ Fandol 楷体 \\
+      \fangsong 中易仿宋 & \fangsong 华文仿宋简体 & \fangsong 方正仿宋-GBK $\to$ Fandol 仿宋 \\
       \bottomrule
     \end{tabular}
   \end{subtable}
