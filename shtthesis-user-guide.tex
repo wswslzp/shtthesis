@@ -15,49 +15,49 @@
 % along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 % graduate setup
-% \documentclass[master]{shtthesis}
-% \shtsetup{
-%   degree-name = {工学硕士},
-%   degree-name* = {Master~of~Science~in~Engineering},
-%   secret-level = {白给},
-%   title = {\ShtThesis{}~v\version{}~使用说明},
-%   title* = {A~User's~Guide\\to\\\ShtThesis{}~v\version{}},
-%   keywords = {上海科技大学，学位论文，\LaTeX{}},
-%   keywords* = {ShanghaiTech~University, Thesis, \LaTeX{}},
-%   author = {李润东},
-%   author* = {Li~Rundong},
-%   institution = {上海科技大学信息科学与技术学院},
-%   institution* = {School~of~Information~Science~and~Technology\\%
-%                   ShanghaiTech~University},
-%   supervisor = {范睿~副教授},
-%   supervisor* = {Professor~Fan~Rui},
-%   supervisor-institution = {上海科技大学信息科学与技术学院},
-%   discipline-level-1 = {计算机科学与技术},
-%   discipline-level-1* = {Computer~Science~and~Technology},
-%   bib-resource = {reference.bib},
-% }
-
-% undergraduate setup
-\documentclass[bachelor, comfort]{shtthesis}
+\documentclass[master]{shtthesis}
 \shtsetup{
-  title = {\ShtThesis{}~v\version{}\\使用说明},
-  title* = {A~User's~Guide~to\\\ShtThesis{}~v\version{}},
+  degree-name = {工学硕士},
+  degree-name* = {Master~of~Science~in~Engineering},
+  secret-level = {白给},
+  title = {\ShtThesis{}~v\version{}~使用说明},
+  title* = {A~User's~Guide\\to\\\ShtThesis{}~v\version{}},
   keywords = {上海科技大学，学位论文，\LaTeX{}},
   keywords* = {ShanghaiTech~University, Thesis, \LaTeX{}},
-  date = {2020~年~06~月},
-  date* = {06~/~2020},
   author = {李润东},
-  author* = {Rundong~Li},
-  author-id = {36273800},
-  entrance-year = {2017},
-  institution = {信息科学与技术学院},
-  institution* = {School~of~Information~Science~and~Technology},
-  supervisor = {范睿},
-  supervisor* = {Rui~Fan},
-  discipline = {计算机科学与技术},
-  discipline* = {Computer~Science~and~Technology},
+  author* = {Li~Rundong},
+  institution = {上海科技大学信息科学与技术学院},
+  institution* = {School~of~Information~Science~and~Technology\\%
+                  ShanghaiTech~University},
+  supervisor = {范睿~副教授},
+  supervisor* = {Professor~Fan~Rui},
+  supervisor-institution = {上海科技大学信息科学与技术学院},
+  discipline-level-1 = {计算机科学与技术},
+  discipline-level-1* = {Computer~Science~and~Technology},
   bib-resource = {reference.bib},
 }
+
+% undergraduate setup
+% \documentclass[bachelor, comfort]{shtthesis}
+% \shtsetup{
+%   title = {\ShtThesis{}~v\version{}\\使用说明},
+%   title* = {A~User's~Guide~to\\\ShtThesis{}~v\version{}},
+%   keywords = {上海科技大学，学位论文，\LaTeX{}},
+%   keywords* = {ShanghaiTech~University, Thesis, \LaTeX{}},
+%   date = {2020~年~06~月},
+%   date* = {06~/~2020},
+%   author = {李润东},
+%   author* = {Rundong~Li},
+%   author-id = {36273800},
+%   entrance-year = {2017},
+%   institution = {信息科学与技术学院},
+%   institution* = {School~of~Information~Science~and~Technology},
+%   supervisor = {范睿},
+%   supervisor* = {Rui~Fan},
+%   discipline = {计算机科学与技术},
+%   discipline* = {Computer~Science~and~Technology},
+%   bib-resource = {reference.bib},
+% }
 
 % `latex' and `shell' environments are adapted from `thuthesis'
 \usepackage{listings}
@@ -125,21 +125,104 @@
   \def\ifgraduate{\ifsht@graduate}
 \makeatother
 
+\begin{filecontents}{reference.bib}
+@article{stamerjohanns2009mathml,
+    title={{MathML}-aware article conversion from {LaTeX}},
+    author={Stamerjohanns, Heinrich and Ginev, Deyan and David, Catalin and Misev, Dimitar and Zamdzhiev, Vladimir and Kohlhase, Michael},
+    journal={Towards a Digital Mathematics Library},
+    volume={16},
+    number={2},
+    pages={109--120},
+    year={2009},
+    publisher={Masaryk University Press}
+}
+@article{bravo1990comparative,
+    title={Comparative study of visual inter and intrahemispheric cortico-cortical connections in five native Chilean rodents},
+    author={Bravo, Hermes and Olavarria, Jaime},
+    journal={Anatomy and embryology},
+    volume={181},
+    number={1},
+    pages={67--73},
+    year={1990},
+    publisher={Springer}
+}
+@proceedings{niu2013zonghe,
+    editor       = {牛志明 and 斯温兰德 and 雷光春},
+    key          = {Niu Zhi Ming Siwenlande Lei Guang Chun},
+    title        = {综合湿地管理国际研讨会论文集},
+    address      = {北京},
+    publisher    = {海洋出版社},
+    year         = {2013},
+}
+@incollection{chen1980zhongguo,
+    author       = {陈晋镳 and 张惠民 and 朱士兴 and 赵震 and 王振刚},
+    key          = {Chen Jing Ao Zhang Hui Ming Zhu Shi Xing Zhao Zhen Wang Zhen Gang},
+    title        = {蓟县震旦亚界研究},
+    editor       = {中国地质科学院天津地质矿产研究所},
+    booktitle    = {中国震旦亚界},
+    address      = {天津},
+    publisher    = {天津科学技术出版社},
+    year         = {1980},
+    pages        = {56--114},
+}
+@article{yuan2012lana,
+    author       = {袁训来 and 陈哲 and 肖书海},
+    key          = {Yuan xun lai Chen zhe Xiao shu Hai},
+    title        = {蓝田生物群: 一个认识多细胞生物起源和早期演化的新窗口 -- 篇一},
+    journal      = {科学通报},
+    year         = {2012},
+    volume       = {57},
+    number       = {34},
+    pages        = {3219},
+}
+@article{walls2013drought,
+    author       = {Walls, Susan C. and Barichivich, William J. and Brown, Mary E.},
+    title        = {Drought, deluge and declines: the impact of precipitation extremes on amphibians in a changin climate},
+    journal      = {Biology},
+    year         = {2013},
+    volume       = {2},
+    number       = {1},
+    pages        = {399--418},
+    urldate      = {2013-11-04},
+    url          = {http://www.mdpi.com/2079-7737/2/1/399},
+    doi          = {10.3390/biology2010399},
+}
+@article{Bohan1928,
+    author = { ボハン, デ},
+    title = { 過去及び現在に於ける英国と会 },
+    journal = { 日本時報 },
+    year = { 1928 },
+    volume = { 17 },
+    pages = { 5-9 },
+    edition = { 9 },
+    hyphenation = { japanese },
+    language = { japanese }
+}
+@online{bachelor2019,
+  author = {上海科技大学教学事务处},
+  key = {shang hai ke ji da xue jiao xue shi wu chu},
+  title = {本科毕业论文（设计）表格模板下载（任务书、封面、撰写模板等）},
+  year = 2019,
+  url = {http://oaa.shanghaitech.edu.cn/2019/0321/c4666a41070/page.htm},
+  urldate = {2020-06-17}
+}
+\end{filecontents}
+
 \begin{document}
 
 \maketitle
 
 \frontmatter
 \begin{abstract}[flattitle]
-  本文档阐述 \shtthesis{} 的使用方法，包括其编译方式、文档类选项、文档类提供的功能及其他便于用户（\emph{也就是正在阅读这篇文档的您}）快速撰写符合上海科技大学要求的学位论文的技术要点。
+  本文档阐述 \shtthesis{} v\version{} 的使用方法，包括其编译方式、文档类选项以及提供的功能。希望能够帮助读者快速便捷地完成学位论文排版。
 
-  \shtthesis{} 旨在以最简实现和最小依赖完整覆盖《上海科技大学研究生学位论文撰写规范（初稿）》的所有格式要求，且不为用户额外设限。从 v\version{} 起，仅需指定 documentclass 为 \shtthesis{} 即可满足基本排版要求。文档通过 \verb|\shtsetup| 命令统一设定学位论文信息，且仅提供满足格式需求的最少额外命令以保证兼容性。用户可根据自身撰文习惯，引入额外的宏包和命令完成学位论文撰写。
+  \shtthesis{} 旨在以最简实现和最小依赖完整覆盖上海科技大学本科及研究生学位论文的所有格式要求，且不为用户额外设限。使用时仅需指定 documentclass 为 \shtthesis{} 即可满足基本排版要求。文档通过 \verb|\shtsetup| 命令统一设定学位论文信息，且仅提供满足格式需求的最少额外命令以保证兼容性。用户可根据自身撰文习惯，引入额外的宏包和命令完成学位论文撰写。
 \end{abstract}
 
 \begin{abstract*}[flattitle]
-  We elaborate on the usage of document class \shtthesis{}, including its compiling process, class options, provided functionalities, and other technical points to facilitate the user (that is, \emph{you}) to quickly develop their thesis to meet the format requirements of ShanghaiTech University. 
+  We elaborate on the usage of document class \shtthesis{} v\version{}, including its compiling process, class options and provided functionalities. We hope this document can help the reader to quickly typeset his or her thesis. 
 
-  \shtthesis{} is intended to cover all requirements in 《上海科技大学研究生学位论文撰写规范(初稿)》with minimal function set and introduce no restriction to the user. Beginning with v\version{}, specifying documentclass to \shtthesis{} is suﬀicient for the basic thesis typesetting requirements. This document class uses \verb|\shtsetup| to uniformly set up thesis information and only provides minimum auxiliary commands to meet all format requirements. The user can import other packages and functionalities according to their writing habits. 
+  \shtthesis{} is intended to cover all format requirements of ShanghaiTech graduate/undergraduate thesis with minimal function set and introduce no restriction to the user. Specifying documentclass to \shtthesis{} is suﬀicient for the basic typesetting requirements. This document class uses \verb|\shtsetup| to uniformly set up mandatory information and only provides minimum auxiliary commands to meet all format requirements. Users can import other packages and functionalities according to their writing habits. 
 \end{abstract*}
 
 \makeindices
@@ -174,9 +257,9 @@
 
 \mainmatter
 \chapter{模板介绍}
-\shtthesis{} (\textbf{S}hang\textbf{h}ai\textbf{T}ech University \textbf{THESIS}) 是根据《上海科技大学研究生学位论文撰写规范（初稿）》（下文简称《规范》）编写的、适用于上海科技大学学位论文写作的\emph{非官方} \LaTeX 模板。目前版本（v\version{}）提供了博士、硕士学位论文排版选项，且能够自动生成用于盲审的匿名版以及最终提交的打印版论文。
+\shtthesis{} (\textbf{S}hang\textbf{h}ai\textbf{T}ech University \textbf{THESIS}) 是根据《上海科技大学研究生学位论文撰写规范（初稿）》和《上海科技大学本科毕业论文（设计）工作条例（试行）》（下文统一简称《规范》）编写的、适用于上海科技大学学位论文写作的\emph{非官方} \LaTeX 模板。目前版本（v\version{}）提供了本科、硕士和博士学位论文排版选项，且能够自动生成用于盲审的匿名版以及最终提交的打印版论文。
 
-这篇文档将尽量详细地阐释 \shtthesis{} 的使用方法和技巧。由于这篇文档直接使用 \shtthesis{} 排版，所以其源代码文件 \jobname.tex 也可以作为一个实际样例以供读者参考使用。
+本文档将尽量详细地阐释 \shtthesis{} 的使用方法和技巧。同时本文档直接使用 \shtthesis{} 排版，其源代码文件 \jobname.tex 也可以作为一个实际样例以供读者参考使用。
 
 我们计划在 \shtthesis{} 后续版本中加入本科学位论文的排版选项，因此亟需有上海科技大学本科论文排版经验的同学参与到 \shtthesis{} 项目中。我们也计划将该使用说明和模板文件 shtthesis.cls 使用 \textsf{DocStrip} 统一重构，并逐步向 \LaTeX3 迁移。我们非常希望得到用户宝贵的反馈和建议，若您有意为 \shtthesis{} 贡献 issues 和 pull requests，请移步至项目主页 \url{https://github.com/lirundong/shtthesis}。
 
@@ -194,7 +277,7 @@
 
 \chapter{模板使用}
 \section{模板安装}
-\shtthesis{} 已经发布至 CTAN （\url{https://ctan.org/pkg/ShtThesis}）并已收录至 \TeX{} Live 中，推荐使用 \TeX{} Live 的包管理器 \verb|tlmgr| 直接安装：
+\shtthesis{} 已经发布至 CTAN\footnote{\url{https://www.ctan.org/pkg/shtthesis}} 并已收录至 \TeX{} Live 中，推荐使用 \TeX{} Live 的包管理器 \verb|tlmgr| 直接安装：
 \begin{shell}
 `\prompt' tlmgr install shtthesis
 \end{shell}
@@ -203,7 +286,7 @@
 `\prompt' tlmgr update shtthesis
 \end{shell}
 
-为避免版权问题，上传至 CTAN 的 \shtthesis{} 并不包含校徽文件，需要至项目主页下载 shanghaitech-logo.pdf\footnote{\url{https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf}}。假设用户的论文文档为 thesis.tex，参考文献数据库为 reference.bib，则需要将下载的校徽文件与它们放在同一目录下，下文称为\emph{工作目录}。工作目录中必要的文件包括：
+为避免版权问题，上传至 CTAN 的 \shtthesis{} 并不包含校徽文件，需要至项目主页下载 shanghaitech-logo.pdf\footnote{\url{https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf}}。假设用户的论文文档为 thesis.tex，参考文献数据库为 reference.bib （本文档的 bib 数据库由 \jobname.tex 自动生成），则需要将下载的校徽文件与它们放在同一目录下，下文称为\emph{工作目录}。工作目录中必要的文件包括：
 \begin{center}
   \begin{tabular}{ll}
     \toprule
@@ -217,7 +300,7 @@
 \end{center}
 
 \section{文档编译}
-\shtthesis{} 支持使用 \hologo{XeLaTeX} 和 \hologo{LuaLaTeX} 编译（注意，\emph{不支持} \hologo{pdfLaTeX}）。推荐在最新的 \hologo{TeX} Live 环境下，使用 \verb|latexmk| 工具进行编译。Windows 及 Linux 用户请下载安装 \hologo{TeX} Live (\url{https://www.tug.org/texlive/})，macOS 用户请下载安装 Mac\hologo{TeX} (\url{https://www.tug.org/mactex/})。\emph{非常不推荐}使用 $\mathbb{C}$\TeX 发行版（大人，时代变了\emoji{unamused}），也不推荐在 overleaf 等在线平台编译使用 \shtthesis{}。项目主页不接受与 $\mathbb{C}$\TeX、overleaf 相关的 issues。
+\shtthesis{} 支持使用 \hologo{XeLaTeX} 和 \hologo{LuaLaTeX} 编译（注意，\emph{不支持} \hologo{pdfLaTeX}）。推荐在最新的 \hologo{TeX} Live 环境下，使用 \verb|latexmk| 工具进行编译。Windows 及 Linux 用户请下载安装 \hologo{TeX} Live (\url{https://www.tug.org/texlive/})，macOS 用户请下载安装 Mac\hologo{TeX} (\url{https://www.tug.org/mactex/})。\emph{非常不推荐}使用 $\mathbb{C}$\TeX 发行版（大人，时代变了\emoji{unamused}），也不推荐在 overleaf 等在线平台编译使用 \shtthesis{} （免费版用户编译时长被限制在 1 分钟，不一定能够编译完上百页的大论文）。项目主页不接受与 $\mathbb{C}$\TeX、overleaf 相关的 issues。
 
 在完成环境配置后，即可使用 \verb|latexmk| 工具完成编译。打开终端（Windows 用户打开 CMD）切换至工作目录，使用 \hologo{XeLaTeX} 引擎进行编译：
 \begin{shell}
@@ -567,10 +650,10 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
 \shtthesis{} 通过 \textsf{biblatex} 宏包及 \textsf{biblatex-gb7714-2015} 格式支持符合 GB/T 7714-2015 标准的文献引用。本科生论文使用顺序编码制，研究生论文使用“著者-出版年”制。
 
 \paragraph{顺序编码制}
-使用一般引用 \verb|\cite| 的编码显示为上标，例如~\cite{stamerjohanns2009mathml, yuan2012lanc}。也可以使用行内引用 \verb|\inlinecite| 将引用编码排版至正文，例如 \inlinecite{Bohan1928}。参考文献列表按照各条目在正文中被引用顺序排列。
+使用一般引用 \verb|\cite| 的编码显示为上标，例如~\cite{stamerjohanns2009mathml, yuan2012lana}。也可以使用行内引用 \verb|\inlinecite| 将引用编码排版至正文，例如 \inlinecite{Bohan1928}。参考文献列表按照各条目在正文中被引用顺序排列。
 
 \paragraph{“著者-出版年”制}
-使用 \verb|\citet| 进行文本形式的引用 \citet{Bohan1928}，使用 \verb|\citep| 进行括号形式的引用 \citep{yuan2012lanc}，使用 \verb|\citeauthor| 进行作者引用 \citeauthor{niu2013zonghe}，以及使用 \verb|\citeyear| 进行年份引用 \citeyear{walls2013drought}。参考文献列表各条目按照语言分组后，按照字母序排列。
+使用 \verb|\citet| 进行文本形式的引用 \citet{Bohan1928}，使用 \verb|\citep| 进行括号形式的引用 \citep{yuan2012lana}，使用 \verb|\citeauthor| 进行作者引用 \citeauthor{niu2013zonghe}，以及使用 \verb|\citeyear| 进行年份引用 \citeyear{walls2013drought}。参考文献列表各条目按照语言分组后，按照字母序排列。
 
 \shtthesis{} 通过 \verb|\shtsetup| 的 bib-resource 选项指定参考文献数据库，例如载入 reference.bib 文件：
 \begin{latex}
@@ -738,7 +821,7 @@ Ordinary math: $A,F,L,2,3,5,\sigma$. \verb|\mathrm|: $\mathrm{A,F,L,2,3,5,\sigma
 
 \backmatter
 \begin{acknowledgement}
-\shtthesis{} 派生于中国科学院大学论文模板 \textsf{ucasthesis}\footnote{\url{https://github.com/mohuangrui/ucasthesis}，使用 GPLv3 许可证分发。}，v0.2.0 开发过程中参考了清华大学论文模板 \textsf{thuthesis}\footnote{\url{https://github.com/tuna/thuthesis}，使用 LPPL-1.3c 许可证分发。}，特别是 \verb|\thusetup| 命令的设计和实现。这些项目中流淌的智慧，以及项目作者们的专业态度和共享精神使得 \shtthesis{} 的开发及完善成为可能。
+\shtthesis{} 派生于中国科学院大学论文模板 \textsf{ucasthesis}\footnote{\url{https://github.com/mohuangrui/ucasthesis}，使用 GPLv3 许可证分发。}；v0.2.0 开发过程中参考了清华大学论文模板 \textsf{thuthesis}\footnote{\url{https://www.ctan.org/pkg/thuthesis}，使用 LPPL-1.3c 许可证分发。}，特别是 \verb|\thusetup| 命令的设计和实现；v0.3.0 及后续版本开发过程中参考了复旦大学论文模板 \textsf{fduthesis}\footnote{\url{https://www.ctan.org/pkg/fduthesis}，使用 LPPL-1.3c 许可证分发。}，以及其超链接配色方案。这些项目中流淌的智慧，以及项目作者们的专业态度和共享精神使得 \shtthesis{} 的开发及完善成为可能。
 \end{acknowledgement}
 
 \ifgraduate

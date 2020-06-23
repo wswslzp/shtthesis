@@ -4,9 +4,9 @@
 [![GitHub release](https://img.shields.io/github/v/release/lirundong/shtthesis)](https://github.com/lirundong/shtthesis/releases/latest)
 [![GitHub downloads](https://img.shields.io/github/downloads/lirundong/shtthesis/total)](https://github.com/lirundong/shtthesis/releases)
 
-`shtthesis` project, forked from [`ucasthesis`](https://github.com/mohuangrui/ucasthesis), is an **unofficial** LaTeX thesis template for ShanghaiTech University and satisfies all format requirements in 《上海科技大学研究生学位论文撰写规范（初稿）》. The user just need to set `\documentclass{shtthesis}` and to setup mandatory information via `\shtsetup`, then his or her thesis document will be typeset properly:
+`shtthesis` project, forked from [`ucasthesis`](https://github.com/mohuangrui/ucasthesis), is an **unofficial** LaTeX thesis template for ShanghaiTech University and satisfies all format requirements of graduate/undergraduate thesis. The user just need to set `\documentclass{shtthesis}` and to setup mandatory information via `\shtsetup`, then his or her thesis document will be typeset properly:
 ```latex
-\documentclass{shtthesis}
+\documentclass[master]{shtthesis}
 
 \shtsetup{
   title = {论文标题},
@@ -22,13 +22,13 @@
 
 ## Get the Template
 - Stable version:
-  - GitHub Release: please refer to [release](https://github.com/lirundong/sht-thesis/releases) page, and download required files based on release information
-  - CTAN: [`shtthesis`](https://ctan.org/pkg/shtthesis) package on CTAN can be installed via `tlmgr` for TeX Live and MacTeX users:
+  - CTAN (**strongly recommended**): [`shtthesis`](https://ctan.org/pkg/shtthesis) package on CTAN can be installed via `tlmgr` for TeX Live and MacTeX users:
     ```bash
     tlmgr install shtthesis
     ```
 
-    Note that `shtthesis` package on CTAN does not include the university logo file. Please download [`shanghaitech-logo.pdf`](https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf) from this repository and put it in the root of your project folder.
+    **Note**: `shtthesis` package on CTAN does not include the university logo file. Please download [`shanghaitech-logo.pdf`](https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf) from this repository and put it in the root of your project directory.
+  - GitHub Release: please refer to [release](https://github.com/lirundong/sht-thesis/releases) page, and download required files based on release information
 - Develop version: directly clone the GitHub repo
   ```bash
   git clone https://github.com/lirundong/sht-thesis.git

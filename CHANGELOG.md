@@ -2,6 +2,14 @@
 
 `sht-thesis` 项目派生于 `ucasthesis`，一个在 GPLv3 License 下分发的项目。根据该许可证条款，`sht-thesis` 项目列出基于 `ucasthesis` (commit `faad94b` 之后) 的所有修改条目：
 
+## 2020-06-23
+> Release: v0.3.0
+
+1. （试验性地）支持本科论文排版；
+2. 将参考文献后端改为 biblatex；
+3. 添加编号定理、证明等常用数学环境；
+4. 将学位指定从 `\shtsetup` 移至类选项；
+
 ## 2020-06-05
 
 项目名称改为 shtthesis，并完全重构项目结构。

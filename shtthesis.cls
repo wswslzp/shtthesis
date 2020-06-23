@@ -17,8 +17,8 @@
 % Identification
 % ==============================================================================
 \NeedsTeXFormat{LaTeX2e}
-\newcommand\version{0.3.0-dev}
-\newcommand\versiondate{2020/06/05}
+\newcommand\version{0.3.0}
+\newcommand\versiondate{2020/06/23}
 \ProvidesClass{shtthesis}[%
   \versiondate\space%
   v\version\space%
@@ -333,7 +333,7 @@
     pdfencoding = auto,
     psdextra = true,
     bookmarksnumbered = true,
-    pdftitle = {\sht@title},
+    pdftitle = {\sht@flat@title},
     pdfauthor = {\sht@author},
   }
   \ifsht@print
@@ -1003,7 +1003,16 @@
 \ExplSyntaxOn
 \ctex_patch_cmd:Nnn \quotation { 1.5em } { 2 \ccwd }
 \ExplSyntaxOff
-\AtBeginEnvironment{quotation}{\fangsong}
+\BeforeBeginEnvironment{quotation}{%
+  \begingroup%
+  \setlength\leftmargini{2\ccwd}%
+}
+\AtBeginEnvironment{quotation}{%
+  \itshape%
+}
+\AfterEndEnvironment{quotation}{%
+  \endgroup%
+}
 % ==============================================================================
 % Cover Generation
 % ==============================================================================

@@ -21,7 +21,6 @@ PKG_CONTENT="\
   shtthesis.cls \
   shtthesis-user-guide.tex \
   shtthesis-user-guide.pdf \
-  reference.bib \
   README.md \
   LICENSE \
   CHANGELOG.md \
