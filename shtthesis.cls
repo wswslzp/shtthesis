@@ -629,8 +629,8 @@
     \setCJKmainfont[ItalicFont=\unix@kaiti]{\unix@songti}
     \setCJKsansfont[BoldFont=\unix@heiti@bold]{\unix@heiti}
     \setCJKmonofont{\unix@fangsong}
-    \setCJKfamilyfont{zhsong}{\unix@songti}
-    \setCJKfamilyfont{zhhei}{\unix@heiti}
+    \setCJKfamilyfont{zhsong}{\unix@songti}[ItalicFont=\unix@kaiti]
+    \setCJKfamilyfont{zhhei}{\unix@heiti}[BoldFont=\unix@heiti@bold]
     \setCJKfamilyfont{zhkai}{\unix@kaiti}
     \setCJKfamilyfont{zhfs}{\unix@fangsong}
     \providecommand{\songti}{\CJKfamily{zhsong}}

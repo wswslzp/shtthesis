@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # shtthesis, an unofficial LaTeX thesis template for ShanghaiTech University.
 # Copyright (C) 2020 Li Rundong <rundong.001@gmail.com>
@@ -17,18 +18,38 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 PKG_NAME=shtthesis
-PKG_CONTENT="\
+PKG_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+RELEASE_DIR=${PKG_ROOT}/release/${PKG_NAME}
+BASE_CONTENT="\
   shtthesis.cls \
   shtthesis-user-guide.tex \
-  shtthesis-user-guide.pdf \
   README.md \
   LICENSE \
   CHANGELOG.md \
   "
-if [ -x "$(command -v gtar)" ]; then
-  TAR_EXE=gtar # macOS
-else
-  TAR_EXE=tar
-fi
+OVER_LEAF_CONTENT="\
+  ${BASE_CONTENT}
+  shanghaitech-logo.pdf
+  "
+CTAN_CONTENT="\
+  ${BASE_CONTENT}
+  shtthesis-user-guide.pdf \
+  "
 
-$TAR_EXE --transform "s/^/$PKG_NAME\//" -zcf $PKG_NAME.tar.gz $PKG_CONTENT
+rm -rf ${PKG_ROOT}/release
+mkdir -p ${RELEASE_DIR}
+pushd ${PKG_ROOT}/release
+for f in $OVER_LEAF_CONTENT; do
+  cp ${PKG_ROOT}/$f ${RELEASE_DIR}/
+done
+zip -r -q -9 ${PKG_NAME}-overleaf.zip ${PKG_NAME}
+for f in $CTAN_CONTENT; do
+  cp ${PKG_ROOT}/$f ${RELEASE_DIR}/
+done
+zip -r -q -9 ${PKG_NAME}-ctan.zip ${PKG_NAME}
+rm -rf ${RELEASE_DIR}
+popd
+
+echo "Relase archives ready in:"
+echo -e "\trelease/${PKG_NAME}-ctan.zip"
+echo -e "\trelease/${PKG_NAME}-overleaf.zip"

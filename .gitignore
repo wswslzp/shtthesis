@@ -21,6 +21,7 @@ _minted*/
 *.thm
 *.lof
 build*/
+release*/
 
 # ignore compiled docuemnt within root
 *.pdf
