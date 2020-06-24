@@ -550,46 +550,46 @@
 % ------------------------------------------------------------------------------
 \ifthenelse{\equal{\sht@fontset}{windows}}{
   \def\fake@bold@factor{2.5}
-  \setCJKmainfont[
-      AutoFakeBold = \fake@bold@factor,
-        ItalicFont = KaiTi,
-    ]{SimSun}
-  \setCJKsansfont[
-      AutoFakeBold = \fake@bold@factor,
-    ]{SimHei}
-  \setCJKfamilyfont{zhsong}[
-      AutoFakeBold = \fake@bold@factor,
-    ]{SimSun}
-  \setCJKfamilyfont{zhhei}[
-      AutoFakeBold = \fake@bold@factor,
-    ]{SimHei}
-  \setCJKfamilyfont{zhkai}[
-      AutoFakeBold = \fake@bold@factor,
-    ]{KaiTi}
+  \setCJKmainfont{SimSun}[
+    AutoFakeBold = \fake@bold@factor,
+      ItalicFont = KaiTi,
+  ]
+  \setCJKsansfont{SimHei}[
+    AutoFakeBold = \fake@bold@factor,
+  ]
+  \setCJKfamilyfont{zhsong}{SimSun}[
+    AutoFakeBold = \fake@bold@factor,
+  ]
+  \setCJKfamilyfont{zhhei}{SimHei}[
+    AutoFakeBold = \fake@bold@factor,
+  ]
+  \setCJKfamilyfont{zhkai}{KaiTi}[
+    AutoFakeBold = \fake@bold@factor,
+  ]
 }{
   \ifthenelse{\equal{\sht@fontset}{mac}}{
-    \setCJKmainfont[
-           UprightFont = * Regular,
-              BoldFont = * Bold,
-            ItalicFont = Kaiti SC Regular,
-        BoldItalicFont = Kaiti SC Bold,
-      ]{Songti SC}
-    \setCJKsansfont[
-        UprightFont = * Light,
-           BoldFont = * Medium,
-      ]{Heiti SC}
-    \setCJKfamilyfont{zhsong}[
-        UprightFont = * Regular,
-           BoldFont = * Bold,
-      ]{Songti SC}
-    \setCJKfamilyfont{zhhei}[
-        UprightFont = * Light,
-           BoldFont = * Medium,
-      ]{Heiti SC}
-    \setCJKfamilyfont{zhkai}[
-        UprightFont = * Regular,
-           BoldFont = * Bold,
-      ]{Kaiti SC}
+    \setCJKmainfont{Songti SC}[
+         UprightFont = * Regular,
+            BoldFont = * Bold,
+          ItalicFont = Kaiti SC Regular,
+      BoldItalicFont = Kaiti SC Bold,
+    ]
+    \setCJKsansfont{Heiti SC}[
+      UprightFont = * Light,
+         BoldFont = * Medium,
+    ]
+    \setCJKfamilyfont{zhsong}{Songti SC}[
+      UprightFont = * Regular,
+         BoldFont = * Bold,
+    ]
+    \setCJKfamilyfont{zhhei}{Heiti SC}[
+      UprightFont = * Light,
+         BoldFont = * Medium,
+    ]
+    \setCJKfamilyfont{zhkai}{Kaiti SC}[
+      UprightFont = * Regular,
+         BoldFont = * Bold,
+    ]
   }{
     \IfFontExistsTF{Source Han Serif SC}{
       \def\unix@songti{Source Han Serif SC}
@@ -626,13 +626,75 @@
     }{
       \def\unix@fangsong{FandolFang}
     }
-    \setCJKmainfont[ItalicFont=\unix@kaiti]{\unix@songti}
-    \setCJKsansfont[BoldFont=\unix@heiti@bold]{\unix@heiti}
-    \setCJKmonofont{\unix@fangsong}
-    \setCJKfamilyfont{zhsong}{\unix@songti}[ItalicFont=\unix@kaiti]
-    \setCJKfamilyfont{zhhei}{\unix@heiti}[BoldFont=\unix@heiti@bold]
-    \setCJKfamilyfont{zhkai}{\unix@kaiti}
-    \setCJKfamilyfont{zhfs}{\unix@fangsong}
+    \ifluatex
+      \setCJKmainfont{\unix@songti}[ItalicFont=\unix@kaiti]
+      \setCJKsansfont{\unix@heiti}[BoldFont=\unix@heiti@bold]
+      \setCJKmonofont{\unix@fangsong}
+      \setCJKfamilyfont{zhsong}{\unix@songti}
+      \setCJKfamilyfont{zhhei}{\unix@heiti}[BoldFont=\unix@heiti@bold]
+      \setCJKfamilyfont{zhkai}{\unix@kaiti}
+      \setCJKfamilyfont{zhfs}{\unix@fangsong}
+    \else
+      \ifthenelse{\equal{\unix@songti}{FandolSong}}{
+        \setCJKmainfont{FandolSong}[
+          Extension   = .otf,
+          UprightFont = *-Regular,
+          BoldFont    = *-Bold,
+          ItalicFont  = FandolKai-Regular,
+        ]
+        \setCJKfamilyfont{zhsong}{FandolSong}[
+          Extension   = .otf,
+          UprightFont = *-Regular,
+          BoldFont    = *-Bold,
+        ]
+      }{
+        \ifthenelse{\equal{\unix@kaiti}{FandolKai}}{
+          \setCJKmainfont{\unix@songti}[
+            ItalicFont  = FandolKai-Regular,
+            ItalicFeatures = {Extension = .otf},
+          ]
+        }{
+          \setCJKmainfont{\unix@songti}[ItalicFont=\unix@kaiti]
+        }
+        \setCJKfamilyfont{zhsong}{\unix@songti}
+      }
+      \ifthenelse{\equal{\unix@heiti}{FandolHei}}{
+        \setCJKsansfont{FandolHei}[
+          Extension   = .otf,
+          UprightFont = *-Regular,
+          BoldFont    = *-Bold,
+        ]
+        \setCJKfamilyfont{zhhei}{FandolHei}[
+          Extension   = .otf,
+          UprightFont = *-Regular,
+          BoldFont    = *-Bold,
+        ]
+      }{
+        \setCJKsansfont{\unix@heiti}[BoldFont=\unix@heiti@bold]
+        \setCJKfamilyfont{zhhei}{\unix@heiti}[BoldFont=\unix@heiti@bold]
+      }
+      \ifthenelse{\equal{\unix@kaiti}{FandolKai}}{
+        \setCJKfamilyfont{zhkai}{FandolKai}[
+          Extension   = .otf,
+          UprightFont = *-Regular,
+        ]
+      }{
+        \setCJKfamilyfont{zhkai}{\unix@kaiti}
+      }
+      \ifthenelse{\equal{\unix@fangsong}{FandolFang}}{
+        \setCJKfamilyfont{zhfs}{FandolFang}[
+          Extension   = .otf,
+          UprightFont = *-Regular,
+        ]
+        \setCJKmonofont{FandolFang}[
+          Extension   = .otf,
+          UprightFont = *-Regular,
+        ]
+      }{
+        \setCJKmonofont{\unix@fangsong}
+        \setCJKfamilyfont{zhfs}{\unix@fangsong}
+      }
+    \fi
     \providecommand{\songti}{\CJKfamily{zhsong}}
     \providecommand{\heiti}{\CJKfamily{zhhei}}
     \providecommand{\kaishu}{\CJKfamily{zhkai}}
