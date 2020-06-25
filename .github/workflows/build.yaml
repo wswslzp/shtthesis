@@ -108,7 +108,7 @@ jobs:
           7z x ${{ env.DOWNLOAD_DIR }}/texlive2020.iso -o${{ env.EXTRACT_DIR }}
           chmod +x ${{ env.EXTRACT_DIR }}/install-tl
           ./${{ env.EXTRACT_DIR }}/install-tl --profile .github/workflows/texlive.profile
-          echo "::set-env name=PATH::/tmp/texlive/bin/x86_64-linux:$PATH"
+          echo "::set-env name=PATH::/tmp/texlive/bin/x86_64-darwin:$PATH"
       - name: Build user document (LuaLaTeX)
         run: |
           gsed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
