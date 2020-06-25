@@ -63,7 +63,7 @@ jobs:
           sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
           latexmk -pdflua -outdir=${{ env.BUILD_DIR }}/lualatex
       - name: Build user document (XeLaTeX)
-        if: succeeded() || failed()
+        if: success() || failure()
         run: |
           latexmk -pdfxe -outdir=${{ env.BUILD_DIR }}/xelatex
       - name: Archive build outputs
@@ -114,7 +114,7 @@ jobs:
           gsed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
           latexmk -pdflua -outdir=${{ env.BUILD_DIR }}/lualatex
       - name: Build user document (XeLaTeX)
-        if: succeeded() || failed()
+        if: success() || failure()
         run: |
           latexmk -pdfxe -outdir=${{ env.BUILD_DIR }}/xelatex
       - name: Archive build outputs
@@ -169,7 +169,7 @@ jobs:
           sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
           latexmk -pdflua -outdir=${{ env.BUILD_DIR }}/lualatex
       - name: Build user document (XeLaTeX)
-        if: succeeded() || failed()
+        if: success() || failure()
         run: |
           latexmk -pdfxe -outdir=${{ env.BUILD_DIR }}/xelatex
       - name: Archive build outputs
