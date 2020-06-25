@@ -3,9 +3,8 @@
 name: Build
 
 on:
-  push:
-  schedule:
-  - cron:  '0 0 * * *'
+  - push
+  - pull_request
 
 env:
   CTAN_URL: http://mirrors.ctan.org
@@ -23,145 +22,158 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ contains(github.event.head_commit.message, '[ci ubuntu]') || !contains(github.event.head_commit.message, '[ci skip]') }}
     steps:
-    - uses: actions/checkout@v2
-    - name: Install Noto and Times fonts
-      run: |
-        for i in NotoSerifCJK NotoSansCJK; do curl -O ${{ env.NOTO_URL }}/$i.ttc.zip; done
-        unzip -o "*.zip"
-        mkdir -p ${{ env.UBUNTU_FONTS_DIR }}
-        cp -vf *.ttc ${{ env.UBUNTU_FONTS_DIR }}
-        pushd ${{ env.UBUNTU_FONTS_DIR }} && mkfontscale && popd
-        sudo apt-get update
-        echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
-        sudo apt-get install ttf-mscorefonts-installer
-        fc-cache -fv
-    - name: Get TeX Live hash
-      id: texlive-hash
-      run: |
-        HASH=$(curl -sSL ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso.sha512 | head -c 10)
-        echo "::set-output name=hash::$HASH"
-    - name: Check TeX Live cache
-      id: texlive-cache
-      uses: actions/cache@v2
-      with:
-        path: ${{ env.DOWNLOAD_DIR }}
-        key: ${{ steps.texlive-hash.outputs.hash }}
-    - name: Download TeX Live image
-      if: steps.texlive-cache.outputs.cache-hit != 'true'
-      run: |
-        mkdir ${{ env.DOWNLOAD_DIR }}
-        pushd ${{ env.DOWNLOAD_DIR }}
-        curl -O -L ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso
-        popd
-    - name: Install TeX Live
-      run: |
-        7z x ${{ env.DOWNLOAD_DIR }}/texlive2020.iso -o${{ env.EXTRACT_DIR }}
-        chmod +x ${{ env.EXTRACT_DIR }}/install-tl
-        ./${{ env.EXTRACT_DIR }}/install-tl --profile .github/workflows/texlive.profile
-    - name: Build user document
-      run: |
-        export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
-        sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
-        latexmk -pdflua -outdir=${{ env.BUILD_DIR }}
-    - name: Archive build outputs
-      uses: actions/upload-artifact@v2
-      with:
-        name: ubuntu-build
-        path: ${{ env.BUILD_DIR }}
+      - uses: actions/checkout@v2
+      - name: Install Noto and Times fonts
+        run: |
+          for i in NotoSerifCJK NotoSansCJK; do curl -O ${{ env.NOTO_URL }}/$i.ttc.zip; done
+          unzip -o "*.zip"
+          mkdir -p ${{ env.UBUNTU_FONTS_DIR }}
+          cp -vf *.ttc ${{ env.UBUNTU_FONTS_DIR }}
+          pushd ${{ env.UBUNTU_FONTS_DIR }} && mkfontscale && popd
+          sudo apt-get update
+          echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
+          sudo apt-get install ttf-mscorefonts-installer
+          fc-cache -fv
+      - name: Get TeX Live hash
+        id: texlive-hash
+        run: |
+          HASH=$(curl -sSL ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso.sha512 | head -c 10)
+          echo "::set-output name=hash::$HASH"
+      - name: Check TeX Live cache
+        id: texlive-cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.DOWNLOAD_DIR }}
+          key: ${{ steps.texlive-hash.outputs.hash }}
+      - name: Download TeX Live image
+        if: steps.texlive-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir ${{ env.DOWNLOAD_DIR }}
+          pushd ${{ env.DOWNLOAD_DIR }}
+          curl -O -L ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso
+          popd
+      - name: Install TeX Live
+        run: |
+          7z x ${{ env.DOWNLOAD_DIR }}/texlive2020.iso -o${{ env.EXTRACT_DIR }}
+          chmod +x ${{ env.EXTRACT_DIR }}/install-tl
+          ./${{ env.EXTRACT_DIR }}/install-tl --profile .github/workflows/texlive.profile
+          echo "::set-env name=PATH::/tmp/texlive/bin/x86_64-linux:$PATH"
+      - name: Build user document (LuaLaTeX)
+        run: |
+          sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
+          latexmk -pdflua -outdir=${{ env.BUILD_DIR }}/lualatex
+      - name: Build user document (XeLaTeX)
+        if: succeeded() || failed()
+        run: |
+          latexmk -pdfxe -outdir=${{ env.BUILD_DIR }}/xelatex
+      - name: Archive build outputs
+        uses: actions/upload-artifact@v2
+        with:
+          name: ubuntu-build
+          path: ${{ env.BUILD_DIR }}
   build-macos:
     name: Build on macOS
     runs-on: macos-latest
     if: ${{ contains(github.event.head_commit.message, '[ci macos]') || !contains(github.event.head_commit.message, '[ci skip]') }}
     steps:
-    - uses: actions/checkout@v2
-    - name: Install utilities
-      run: |
-        brew install gnu-sed
-    - name: Install Noto fonts
-      run: |
-        for i in NotoSerifCJK NotoSansCJK; do curl -O ${{ env.NOTO_URL }}/$i.ttc.zip; done
-        unzip -o "*.zip"
-        cp -vf *.ttc /Library/Fonts/
-    - name: Get TeX Live hash
-      id: texlive-hash
-      run: |
-        HASH=$(curl -sSL ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso.sha512 | head -c 10)
-        echo "::set-output name=hash::$HASH"
-    - name: Check TeX Live cache
-      id: texlive-cache
-      uses: actions/cache@v2
-      with:
-        path: ${{ env.DOWNLOAD_DIR }}
-        key: ${{ steps.texlive-hash.outputs.hash }}
-    - name: Download TeX Live image
-      if: steps.texlive-cache.outputs.cache-hit != 'true'
-      run: |
-        mkdir ${{ env.DOWNLOAD_DIR }}
-        pushd ${{ env.DOWNLOAD_DIR }}
-        curl -O -L ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso
-        popd
-    - name: Install TeX Live
-      run: |
-        7z x ${{ env.DOWNLOAD_DIR }}/texlive2020.iso -o${{ env.EXTRACT_DIR }}
-        chmod +x ${{ env.EXTRACT_DIR }}/install-tl
-        ./${{ env.EXTRACT_DIR }}/install-tl --profile .github/workflows/texlive.profile
-    - name: Build user document
-      run: |
-        export PATH=/tmp/texlive/bin/x86_64-darwin:$PATH
-        gsed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
-        latexmk -pdflua -outdir=${{ env.BUILD_DIR }}
-    - name: Archive build outputs
-      uses: actions/upload-artifact@v2
-      with:
-        name: macos-build
-        path: ${{ env.BUILD_DIR }}
+      - uses: actions/checkout@v2
+      - name: Install utilities
+        run: |
+          brew install gnu-sed
+      - name: Install Noto fonts
+        run: |
+          for i in NotoSerifCJK NotoSansCJK; do curl -O ${{ env.NOTO_URL }}/$i.ttc.zip; done
+          unzip -o "*.zip"
+          cp -vf *.ttc /Library/Fonts/
+      - name: Get TeX Live hash
+        id: texlive-hash
+        run: |
+          HASH=$(curl -sSL ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso.sha512 | head -c 10)
+          echo "::set-output name=hash::$HASH"
+      - name: Check TeX Live cache
+        id: texlive-cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.DOWNLOAD_DIR }}
+          key: ${{ steps.texlive-hash.outputs.hash }}
+      - name: Download TeX Live image
+        if: steps.texlive-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir ${{ env.DOWNLOAD_DIR }}
+          pushd ${{ env.DOWNLOAD_DIR }}
+          curl -O -L ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso
+          popd
+      - name: Install TeX Live
+        run: |
+          7z x ${{ env.DOWNLOAD_DIR }}/texlive2020.iso -o${{ env.EXTRACT_DIR }}
+          chmod +x ${{ env.EXTRACT_DIR }}/install-tl
+          ./${{ env.EXTRACT_DIR }}/install-tl --profile .github/workflows/texlive.profile
+          echo "::set-env name=PATH::/tmp/texlive/bin/x86_64-linux:$PATH"
+      - name: Build user document (LuaLaTeX)
+        run: |
+          gsed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
+          latexmk -pdflua -outdir=${{ env.BUILD_DIR }}/lualatex
+      - name: Build user document (XeLaTeX)
+        if: succeeded() || failed()
+        run: |
+          latexmk -pdfxe -outdir=${{ env.BUILD_DIR }}/xelatex
+      - name: Archive build outputs
+        uses: actions/upload-artifact@v2
+        with:
+          name: macos-build
+          path: ${{ env.BUILD_DIR }}
   # Line wrap problem is difficult to resolve on windows.
   build-windows:
     runs-on: windows-latest
     name: Build on Windows
     if: ${{ contains(github.event.head_commit.message, '[ci windows]') || !contains(github.event.head_commit.message, '[ci skip]') }}
     steps:
-    - uses: actions/checkout@v2
-    - name: Install utilities
-      run: |
-        choco install sed
-    - name: Install Noto fonts
-      run: |
-        "NotoSansCJK", "NotoSerifCJK" | ForEach-Object -Process {Invoke-WebRequest -Uri "${{ env.NOTO_URL }}/$_.ttc.zip" -OutFile "$_.ttc.zip"}
-        Get-ChildItem *.ttc.zip | Expand-Archive -DestinationPath . -Force
-        Copy-Item *.ttc C:\Windows\Fonts
-    - name: Get TeX Live hash
-      id: texlive-hash
-      run: |
-        Invoke-WebRequest -Uri ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso.sha512 -OutFile texlive2020.iso.sha512
-        $hash = (Get-Content .\texlive2020.iso.sha512 -Raw).Substring(0, 10)
-        echo "::set-output name=hash::$hash"
-    - name: Check TeX Live cache
-      id: texlive-cache
-      uses: actions/cache@v2
-      with:
-        path: ${{ env.DOWNLOAD_DIR }}
-        key: ${{ steps.texlive-hash.outputs.hash }}
-    - name: Download TeX Live image
-      if: steps.texlive-cache.outputs.cache-hit != 'true'
-      run: |
-        New-Item ${{ env.DOWNLOAD_DIR }} -ItemType Directory
-        Push-Location ${{ env.DOWNLOAD_DIR }}
-        Invoke-WebRequest -Uri ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso -OutFile texlive2020.iso
-        Pop-Location
-    - name: Install TeX Live
-      run: |
-        7z x ${{ env.DOWNLOAD_DIR }}/texlive2020.iso -o${{ env.EXTRACT_DIR }}
-        Push-Location ${{ env.EXTRACT_DIR }}
-        .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive-win.profile
-        Pop-Location
-    - name: Build user document
-      run: |
-        ${env:PATH} = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
-        sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
-        latexmk -pdfxe -outdir=${{ env.BUILD_DIR }}
-    - name: Archive build outputs
-      uses: actions/upload-artifact@v2
-      with:
-        name: windows-build
-        path: ${{ env.BUILD_DIR }}
+      - uses: actions/checkout@v2
+      - name: Install utilities
+        run: |
+          choco install sed
+      - name: Install Noto fonts
+        run: |
+          "NotoSansCJK", "NotoSerifCJK" | ForEach-Object -Process {Invoke-WebRequest -Uri "${{ env.NOTO_URL }}/$_.ttc.zip" -OutFile "$_.ttc.zip"}
+          Get-ChildItem *.ttc.zip | Expand-Archive -DestinationPath . -Force
+          Copy-Item *.ttc C:\Windows\Fonts
+      - name: Get TeX Live hash
+        id: texlive-hash
+        run: |
+          Invoke-WebRequest -Uri ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso.sha512 -OutFile texlive2020.iso.sha512
+          $hash = (Get-Content .\texlive2020.iso.sha512 -Raw).Substring(0, 10)
+          echo "::set-output name=hash::$hash"
+      - name: Check TeX Live cache
+        id: texlive-cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.DOWNLOAD_DIR }}
+          key: ${{ steps.texlive-hash.outputs.hash }}
+      - name: Download TeX Live image
+        if: steps.texlive-cache.outputs.cache-hit != 'true'
+        run: |
+          New-Item ${{ env.DOWNLOAD_DIR }} -ItemType Directory
+          Push-Location ${{ env.DOWNLOAD_DIR }}
+          Invoke-WebRequest -Uri ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso -OutFile texlive2020.iso
+          Pop-Location
+      - name: Install TeX Live
+        run: |
+          7z x ${{ env.DOWNLOAD_DIR }}/texlive2020.iso -o${{ env.EXTRACT_DIR }}
+          Push-Location ${{ env.EXTRACT_DIR }}
+          .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive-win.profile
+          Pop-Location
+          $tl_path = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
+          echo "::set-env name=PATH::$tl_path"
+      - name: Build user document (LuaLaTeX)
+        run: |
+          sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
+          latexmk -pdflua -outdir=${{ env.BUILD_DIR }}/lualatex
+      - name: Build user document (XeLaTeX)
+        if: succeeded() || failed()
+        run: |
+          latexmk -pdfxe -outdir=${{ env.BUILD_DIR }}/xelatex
+      - name: Archive build outputs
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows-build
+          path: ${{ env.BUILD_DIR }}
