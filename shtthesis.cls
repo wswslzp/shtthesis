@@ -591,20 +591,20 @@
          BoldFont = * Bold,
     ]
   }{
-    \IfFontExistsTF{Source Han Serif SC}{
-      \def\unix@songti{Source Han Serif SC}
+    \IfFontExistsTF{Noto Serif CJK SC}{
+      \def\unix@songti{Noto Serif CJK SC}
     }{
-      \IfFontExistsTF{Noto Serif CJK SC}{
-        \def\unix@songti{Noto Serif CJK SC}
+      \IfFontExistsTF{Source Han Serif SC}{
+        \def\unix@songti{Source Han Serif SC}
       }{
         \def\unix@songti{FandolSong}
       }
     }
-    \IfFontExistsTF{Source Han Sans SC}{
-      \def\unix@heiti{Source Han Sans SC}
+    \IfFontExistsTF{Noto Sans CJK SC}{
+      \def\unix@heiti{Noto Sans CJK SC}
     }{
-      \IfFontExistsTF{Noto Sans CJK SC}{
-        \def\unix@heiti{Noto Sans CJK SC}
+      \IfFontExistsTF{Source Han Sans SC}{
+        \def\unix@heiti{Source Han Sans SC}
       }{
         \def\unix@heiti{FandolHei}
       }

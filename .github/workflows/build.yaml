@@ -1,6 +1,6 @@
 # from fduthesis: https://github.com/stone-zeng/fduthesis/blob/master/.github/workflows/test.yml
 
-name: Build
+name: build
 
 on:
   - push
@@ -25,15 +25,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install Noto and Times fonts
         run: |
-          for i in NotoSerifCJK NotoSansCJK; do curl -O ${{ env.NOTO_URL }}/$i.ttc.zip; done
-          unzip -o "*.zip"
-          mkdir -p ${{ env.UBUNTU_FONTS_DIR }}
-          cp -vf *.ttc ${{ env.UBUNTU_FONTS_DIR }}
-          pushd ${{ env.UBUNTU_FONTS_DIR }} && mkfontscale && popd
           sudo apt-get update
           echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
-          sudo apt-get install ttf-mscorefonts-installer
-          fc-cache -fv
+          sudo apt-get --yes install fonts-noto-cjk fonts-noto-cjk-extra ttf-mscorefonts-installer
       - name: Get TeX Live hash
         id: texlive-hash
         run: |
@@ -67,6 +61,7 @@ jobs:
         run: |
           latexmk -pdfxe -outdir=${{ env.BUILD_DIR }}/xelatex
       - name: Archive build outputs
+        if: success() || failure()
         uses: actions/upload-artifact@v2
         with:
           name: ubuntu-build
@@ -118,6 +113,7 @@ jobs:
         run: |
           latexmk -pdfxe -outdir=${{ env.BUILD_DIR }}/xelatex
       - name: Archive build outputs
+        if: success() || failure()
         uses: actions/upload-artifact@v2
         with:
           name: macos-build
@@ -175,6 +171,7 @@ jobs:
         run: |
           latexmk -pdfxe -outdir=${{ env.BUILD_DIR }}/xelatex
       - name: Archive build outputs
+        if: success() || failure()
         uses: actions/upload-artifact@v2
         with:
           name: windows-build
