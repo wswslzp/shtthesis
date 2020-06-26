@@ -627,13 +627,10 @@
       \def\unix@fangsong{FandolFang}
     }
     \ifluatex
-      \setCJKmainfont{\unix@songti}[
-        BoldFont   = * Bold,
-        ItalicFont = \unix@kaiti,
-      ]
+      \setCJKmainfont{\unix@songti}[ItalicFont=\unix@kaiti]
       \setCJKsansfont{\unix@heiti}[BoldFont=\unix@heiti@bold]
       \setCJKmonofont{\unix@fangsong}
-      \setCJKfamilyfont{zhsong}{\unix@songti}[BoldFont=* Bold]
+      \setCJKfamilyfont{zhsong}{\unix@songti}
       \setCJKfamilyfont{zhhei}{\unix@heiti}[BoldFont=\unix@heiti@bold]
       \setCJKfamilyfont{zhkai}{\unix@kaiti}
       \setCJKfamilyfont{zhfs}{\unix@fangsong}

@@ -1,8 +1,8 @@
 # ShangHaiTech university THESIS (shtthesis)
 [![Action status](https://github.com/lirundong/sht-thesis/workflows/Build/badge.svg)](https://github.com/lirundong/shtthesis/actions)
-[![CTAN version](https://img.shields.io/ctan/v/shtthesis)](https://ctan.org/pkg/shtthesis)
-[![GitHub release](https://img.shields.io/github/v/release/lirundong/shtthesis)](https://github.com/lirundong/shtthesis/releases/latest)
-[![GitHub downloads](https://img.shields.io/github/downloads/lirundong/shtthesis/total)](https://github.com/lirundong/shtthesis/releases)
+[![GitHub release](https://img.shields.io/github/v/release/lirundong/shtthesis?style=plastic&logo=GitHub)](https://github.com/lirundong/shtthesis/releases/latest)
+[![CTAN version](https://img.shields.io/ctan/v/shtthesis?style=plastic&logo=LaTeX)](https://ctan.org/pkg/shtthesis)
+[![Overleaf](https://img.shields.io/badge/Overleaf-shtthesis-green?style=plastic&logo=Overleaf&color=1C890F)](https://www.overleaf.com/latex/templates/shanghaitech-university-thesis-template/mskbxkmfxqpt)
 
 `shtthesis` project, forked from [`ucasthesis`](https://github.com/mohuangrui/ucasthesis), is an **unofficial** LaTeX thesis template for ShanghaiTech University and satisfies all format requirements of graduate/undergraduate thesis. The user just need to set `\documentclass{shtthesis}` and to setup mandatory information via `\shtsetup`, then his or her thesis document will be typeset properly:
 ```latex
@@ -21,17 +21,22 @@
 ```
 
 ## Get the Template
-- Stable version:
+- Stable version: Install or download with any of following methods
   - CTAN (**strongly recommended**): [`shtthesis`](https://ctan.org/pkg/shtthesis) package on CTAN can be installed via `tlmgr` for TeX Live and MacTeX users:
     ```bash
     tlmgr install shtthesis
     ```
+    If your distribution has already installed `shtthesis`, please update it to the latest version:
+    ```bash
+    tlmgr update shtthesis
+    ```
 
     **Note**: `shtthesis` package on CTAN does not include the university logo file. Please download [`shanghaitech-logo.pdf`](https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf) from this repository and put it in the root of your project directory.
+  - [Overleaf](https://www.overleaf.com/latex/templates/shanghaitech-university-thesis-template/mskbxkmfxqpt): Please compile with XeLaTeX. Since compilation time for Overleaf free-plan is limited to *1 minute*, you might encounter with timeout issue if compiling with LuaLaTeX
   - GitHub Release: please refer to [release](https://github.com/lirundong/sht-thesis/releases) page, and download required files based on release information
-- Develop version: directly clone the GitHub repo
+- Develop version: Directly clone the GitHub repo
   ```bash
-  git clone https://github.com/lirundong/sht-thesis.git
+  git clone https://github.com/lirundong/shtthesis.git
   ```
 
 Please, read through [the user's guide](shtthesis-user-guide.pdf) before continuing.

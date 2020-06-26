@@ -132,11 +132,6 @@ jobs:
       - name: Install utilities
         run: |
           choco install sed
-      - name: Install Noto fonts
-        run: |
-          "NotoSansCJK", "NotoSerifCJK" | ForEach-Object -Process {Invoke-WebRequest -Uri "${{ env.NOTO_URL }}/$_.ttc.zip" -OutFile "$_.ttc.zip"}
-          Get-ChildItem *.ttc.zip | Expand-Archive -DestinationPath . -Force
-          Copy-Item *.ttc C:\Windows\Fonts
       - name: Get TeX Live hash
         id: texlive-hash
         run: |
@@ -164,6 +159,13 @@ jobs:
           Pop-Location
           $tl_path = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
           echo "::set-env name=PATH::$tl_path"
+      - name: Install Noto fonts
+        run: |
+          "NotoSansCJK", "NotoSerifCJK" | ForEach-Object -Process {Invoke-WebRequest -Uri "${{ env.NOTO_URL }}/$_.ttc.zip" -OutFile "$_.ttc.zip"}
+          Get-ChildItem *.ttc.zip | Expand-Archive -DestinationPath . -Force
+          Copy-Item *.ttc C:\Windows\Fonts
+          fc-cache -fsv
+          luaotfload-tool -fuv
       - name: Build user document (LuaLaTeX)
         run: |
           sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
