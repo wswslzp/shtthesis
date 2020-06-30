@@ -206,6 +206,14 @@
   url = {http://oaa.shanghaitech.edu.cn/2019/0321/c4666a41070/page.htm},
   urldate = {2020-06-17}
 }
+@online{clerkma2013unicode,
+  author = {Clerk Ma},
+  title = {如何在{XeTeX}中单独设置数学字体，为什么{STIX}的数学字体很牛？},
+  year = 2013,
+  url = {https://www.zhihu.com/question/20592491/answer/15577847},
+  urldate = {2020-06-30}
+}
+作者：Clerk Ma
 \end{filecontents}
 
 \begin{document}
@@ -596,6 +604,16 @@
 P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
 \end{align}
 同时重载了 \verb|\eqref|，使得公式编号格式修改后，其引用格式仍与 \textsf{amsmath} 无异：贝叶斯定理~\eqref{eq::bayesian}。排版本科生论文时不修改公式编号格式。
+
+\shtthesis{} 使用 \textsf{unicode-math} 宏包进行公式排版，因此在数学环境内既可以用标准 \LaTeX{} 宏，也可以直接输入 Unicode 符号。例如 $\oiint$ 符号可以通过 \verb|\oiint| 宏录入，也可以通过 Unicode 符号 $∯$ （对应 \verb|U+0222F| 码点） 录入。以下测试公式来自 \citet{clerkma2013unicode}，其中所有字符均直接使用对应 Unicode 符号录入。
+\begin{align}
+& ⊢ ∀x[(Fx ∨ Gx) → \mathord{∼}Hx] \\
+& ⊨ ¬∃y∀x[x∈y ↔ x∉x]  \\
+& ⊭ x ∩ (y ∪ z) ≠ (x ∩ y) ∪ (x ∩ z) \\
+& ⊢ ⟦α⟧ = ℵ₀ → α ≇ ℘(α) \\
+& ⌜ψ[(℩x)φx]⌝ ≝ ⌜(∃x)[φx ∧ (∀z)(φz ⊃ x=z) ∧ ψx]⌝ \\
+& ⊢ (P ⥽ Q) ⥽ (□P ⥽ ◇Q)
+\end{align}
 
 \subsection{数学环境}
 \shtthesis 通过 \textsf{amsthm} 宏包定义了常用的数学环境和证明环境，如表~\ref{tab::math_envs} 所列。其中，英文表示 tex 文档内调用的环境名称，中文表示排版后论文中显示的环境名称。
