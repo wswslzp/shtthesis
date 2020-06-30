@@ -295,6 +295,7 @@
 }{ctexbook}
 \PassOptionsToPackage{
   natbib = true,
+  hyperref = manual,
   backend = biber,
   gbpub = false,
   gbcitelocal = chinese,
@@ -320,15 +321,12 @@
 \RequirePackage[shortlabels, inline]{enumitem}
 \RequirePackage{mathtools}
 \RequirePackage{amsthm}
-\RequirePackage[
-  mathrm = sym,
-  mathit = sym,
-  mathbf = sym,
-  mathtt = sym,
-]{unicode-math}
-\RequirePackage{hyperref}
+\RequirePackage[mathbf=sym]{unicode-math}
 \RequirePackage{biblatex}
 \AtEndPreamble{
+  \RequirePackage{hyperref}
+  \addbibresource{\sht@bib@resource}
+  \BiblatexManualHyperrefOn
   \hypersetup{
     pdfencoding = auto,
     psdextra = true,
@@ -346,14 +344,6 @@
     \definecolor{fdu@link}{HTML}{990000}
     \definecolor{fdu@url}{HTML}{0000B2}
     \definecolor{fdu@cite}{HTML}{007F00}
-    % `classic' color scheme from `fduthesis'
-    \definecolor{classic@link}{HTML}{FF0000}
-    \definecolor{classic@url}{HTML}{0000FF}
-    \definecolor{classic@cite}{HTML}{00FF00}
-    % `science' color scheme from `fduthesis'
-    \definecolor{science@link}{HTML}{CA0619}
-    \definecolor{science@url}{HTML}{389F9D}
-    \definecolor{science@cite}{HTML}{FF8920}
     \hypersetup{
       colorlinks = true,
       linkcolor = fdu@link,
@@ -362,7 +352,6 @@
     }
   \fi
   \urlstyle{tt}
-  \addbibresource{\sht@bib@resource}
 }
 % ==============================================================================
 % Format Specifications
@@ -382,7 +371,10 @@
 \def\tablename{表}
 \def\figurename{图}
 \definecolor{ShtRed}{RGB}{146,46,23}
-\def\school@logo@missing{校徽文件缺失，请至\href{https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf}{项目主页}下载！}
+\def\school@logo@missing{%
+  校徽文件缺失，请至\href{https://github.com/lirundong/shtthesis/raw/master/%
+  shanghaitech-logo.pdf}{项目主页}下载！%
+}
 % ------------------------------------------------------------------------------
 %   Geometry and layouts
 % ------------------------------------------------------------------------------
@@ -745,37 +737,21 @@
 %   Math fonts
 % ------------------------------------------------------------------------------
 \IfFontExistsTF{XITSMath-Regular.otf}{
-  \setmathfont{XITSMath-Regular} [
-    Extension    = .otf,
-    BoldFont     = XITSMath-Bold,
-    StylisticSet = 8,
-  ]
-  \setmathfont{XITSMath-Regular.otf} [
-    range        = {cal, bfcal},
-    StylisticSet = 1,
-  ]
-  \setmathfont{XITSMath-Regular.otf} [
-    range        = {scr, bfscr},
-    StylisticSet = 2,
-  ]
+  \def\sht@math@font{XITSMath-Regular.otf}
 }{
-  \setmathfont{xits-math} [
-    Extension    = .otf,
-    BoldFont     = *bold,
-    StylisticSet = 8,
-  ]
-  \setmathfont{xits-math.otf} [
-    range        = {cal, bfcal},
-    StylisticSet = 1,
-  ]
-  \setmathfont{xits-math.otf} [
-    range        = {scr, bfscr},
-    StylisticSet = 2,
-  ]
+  \def\sht@math@font{xits-math.otf}
 }
-\IfFontExistsTF{FiraMath-Regular.otf}{
-  \setmathfontface\mathsf{FiraMath-Regular.otf}
-}{}
+\setmathfont{\sht@math@font}[
+  StylisticSet = 8,
+]
+\setmathfont{\sht@math@font}[
+  range        = {cal, bfcal},
+  StylisticSet = 1,
+]
+\setmathfont{\sht@math@font}[
+  range        = {scr, bfscr},
+  StylisticSet = 2,
+]
 % ------------------------------------------------------------------------------
 %   Math environmrnts
 % ------------------------------------------------------------------------------
@@ -794,7 +770,8 @@
 \theoremstyle{remark}
 \newtheorem{remark}{注}[chapter]
 \renewcommand*{\proofname}{证明}
-\expandafter\patchcmd\csname\string\proof\endcsname{\@addpunct{.}}{\@addpunct{\emph{：}}}{}{}
+\expandafter\patchcmd\csname\string\proof\endcsname{\@addpunct{.}}%
+  {\@addpunct{\emph{：}}}{}{}
 % ------------------------------------------------------------------------------
 %   Utility functions for ToC and bookmarks
 % ------------------------------------------------------------------------------
@@ -1220,14 +1197,17 @@
             \fi%
           }}} \\
         \ifdefempty{\sht@supervisor@institution}{}{ &
-          \multicolumn{2}{c}{\shifted@uline{\shifted@box{\sht@supervisor@institution}}} \\
+          \multicolumn{2}{c}{\shifted@uline{%
+            \shifted@box{\sht@supervisor@institution}}} \\
         }
         学位类别：&
           \multicolumn{2}{c}{\shifted@uline{\shifted@box{\sht@degree@name}}} \\
         一级学科：&
-          \multicolumn{2}{c}{\shifted@uline{\shifted@box{\sht@discipline@level@i}}} \\
+          \multicolumn{2}{c}{\shifted@uline{%
+            \shifted@box{\sht@discipline@level@i}}} \\
         \multicolumn{2}{l}{学校/学院名称：} &
-          \shifted@uline{\shifted@box[\cover@tab@last@entry@width]{\sht@institution}} \\
+          \shifted@uline{\shifted@box[\cover@tab@last@entry@width]{%
+            \sht@institution}} \\
       \end{tabular}
     }
 
@@ -1325,22 +1305,28 @@
             [\cover@tab@entry@width@undergraduate]{\sht@title} \\
         学生姓名：&
           \shifted@uline[\cover@tab@uline@thick@undergraduate]%
-            {\shifted@box[\cover@tab@entry@width@undergraduate]{\sht@author}} \\
+            {\shifted@box[\cover@tab@entry@width@undergraduate]{%
+              \sht@author}} \\
         学\hspace{2\ccwd}号：&
           \shifted@uline[\cover@tab@uline@thick@undergraduate]%
-            {\shifted@box[\cover@tab@entry@width@undergraduate]{\sht@author@id}} \\
+            {\shifted@box[\cover@tab@entry@width@undergraduate]{%
+              \sht@author@id}} \\
         入学年份：&
           \shifted@uline[\cover@tab@uline@thick@undergraduate]%
-            {\shifted@box[\cover@tab@entry@width@undergraduate]{\sht@entrance@year}} \\
+            {\shifted@box[\cover@tab@entry@width@undergraduate]{%
+              \sht@entrance@year}} \\
         所在学院：&
           \shifted@uline[\cover@tab@uline@thick@undergraduate]%
-            {\shifted@box[\cover@tab@entry@width@undergraduate]{\sht@institution}} \\
+            {\shifted@box[\cover@tab@entry@width@undergraduate]{%
+              \sht@institution}} \\
         攻读专业：&
           \shifted@uline[\cover@tab@uline@thick@undergraduate]%
-            {\shifted@box[\cover@tab@entry@width@undergraduate]{\sht@discipline}} \\
+            {\shifted@box[\cover@tab@entry@width@undergraduate]{%
+              \sht@discipline}} \\
         指导教师：&
           \shifted@uline[\cover@tab@uline@thick@undergraduate]%
-            {\shifted@box[\cover@tab@entry@width@undergraduate]{\sht@supervisor}} \\
+            {\shifted@box[\cover@tab@entry@width@undergraduate]{%
+              \sht@supervisor}} \\
       \end{tabular}
     }
 
@@ -1378,25 +1364,32 @@
       \begin{tabular}{lc}
         Subject: &
           \sht@lines@to@tab[\cover@tab@uline@thick@undergraduate]%
-            [\cover@tab@entry@width@undergraduate][\content@left@shift@en]{\sht@title@en} \\
+            [\cover@tab@entry@width@undergraduate][\content@left@shift@en]{%
+              \sht@title@en} \\
         Student Name: &
           \shifted@uline[\cover@tab@uline@thick@undergraduate]%
-            {\shifted@box[\cover@tab@entry@width@undergraduate][\content@left@shift@en]{\sht@author@en}} \\
+            {\shifted@box[\cover@tab@entry@width@undergraduate]%
+              [\content@left@shift@en]{\sht@author@en}} \\
         Student ID: &
           \shifted@uline[\cover@tab@uline@thick@undergraduate]%
-            {\shifted@box[\cover@tab@entry@width@undergraduate][\content@left@shift@en]{\sht@author@id}} \\
+            {\shifted@box[\cover@tab@entry@width@undergraduate]%
+              [\content@left@shift@en]{\sht@author@id}} \\
         Year of Entrance: &
           \shifted@uline[\cover@tab@uline@thick@undergraduate]%
-            {\shifted@box[\cover@tab@entry@width@undergraduate][\content@left@shift@en]{\sht@entrance@year}} \\
+            {\shifted@box[\cover@tab@entry@width@undergraduate]%
+              [\content@left@shift@en]{\sht@entrance@year}} \\
         School: &
           \shifted@uline[\cover@tab@uline@thick@undergraduate]%
-            {\shifted@box[\cover@tab@entry@width@undergraduate][\content@left@shift@en]{\sht@institution@en}} \\
+            {\shifted@box[\cover@tab@entry@width@undergraduate]%
+              [\content@left@shift@en]{\sht@institution@en}} \\
         Major: &
           \shifted@uline[\cover@tab@uline@thick@undergraduate]%
-            {\shifted@box[\cover@tab@entry@width@undergraduate][\content@left@shift@en]{\sht@discipline@en}} \\
+            {\shifted@box[\cover@tab@entry@width@undergraduate]%
+              [\content@left@shift@en]{\sht@discipline@en}} \\
         Advisor: &
           \shifted@uline[\cover@tab@uline@thick@undergraduate]%
-            {\shifted@box[\cover@tab@entry@width@undergraduate][\content@left@shift@en]{\sht@supervisor@en}} \\
+            {\shifted@box[\cover@tab@entry@width@undergraduate]%
+              [\content@left@shift@en]{\sht@supervisor@en}} \\
       \end{tabular}
     }
 
@@ -1457,7 +1450,8 @@
 
     {\hfill{}作者签名：\hspace*{10em}导师签名：\hspace*{9em}}
 
-    {\hfill{}日\hspace*{2\ccwd}期：\hspace*{10em}日\hspace*{2\ccwd}期：\hspace*{9em}}
+    \hfill{}日\hspace*{2\ccwd}期：%
+    \hspace*{10em}日\hspace*{2\ccwd}期：\hspace*{9em}%
 
     \vspace{3ex}
   }
@@ -1655,7 +1649,9 @@
 \providecommand{\makebiblio}{%
   \renewcommand{\bibfont}{\zihao{5}}%
   \intotoc*{\cleardoublepage}{\bibname}%
+  \urlstyle{same}%
   \printbibliography%
+  \urlstyle{tt}%
 }
 % ------------------------------------------------------------------------------
 %   Appendix
