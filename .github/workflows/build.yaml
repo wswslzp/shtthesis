@@ -125,12 +125,6 @@ jobs:
     if: ${{ contains(github.event.head_commit.message, '[ci windows]') || !contains(github.event.head_commit.message, '[ci skip]') }}
     steps:
       - uses: actions/checkout@v2
-      - name: Install utilities
-        run: |
-          choco install sed
-          choco install ghostscript --version=9.52
-          $util_path = "C:\Program Files\gs\gs9.52\bin;" + ${env:PATH}
-          echo "::set-env name=PATH::$util_path"
       - name: Get TeX Live hash
         id: texlive-hash
         run: |
@@ -160,6 +154,14 @@ jobs:
           7z x ${{ env.DOWNLOAD_DIR }}/tl-win64.zip -o${{ github.workspace }}/tmp/texlive
           $tl_path = "${{ github.workspace }}\tmp\texlive\bin\win64;" + "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
           echo "::set-env name=PATH::$tl_path"
+      - name: Update CTeX/LuaTeX and install utilities
+        run: |
+          tlmgr update --self
+          tlmgr update ctex luatexja
+          choco install sed
+          choco install ghostscript --version=9.52
+          $util_path = "C:\Program Files\gs\gs9.52\bin;" + ${env:PATH}
+          echo "::set-env name=PATH::$util_path"
       - name: Install Noto fonts
         run: |
           "NotoSerifCJK-Regular", "NotoSerifCJK-Bold", "NotoSansCJK-Regular", "NotoSansCJK-Bold", "NotoSansCJK-Medium" | ForEach-Object -Process {Invoke-WebRequest -Uri "${{ env.NOTO_URL }}/$_.ttc.zip" -OutFile "$_.ttc.zip"}
@@ -171,19 +173,6 @@ jobs:
         run: |
           sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
           latexmk -pdflua -outdir=${{ env.BUILD_DIR }}/lualatex
-      # - name: Build user document (LuaLaTeX, manually)
-      #   run: |
-      #     sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
-      #     New-Item ${{ env.BUILD_DIR }}\lualatex -ItemType Directory
-      #     Copy-Item shtthesis-user-guide.tex ${{ env.BUILD_DIR }}\lualatex
-      #     Copy-Item shanghaitech-logo.pdf ${{ env.BUILD_DIR }}\lualatex
-      #     Copy-Item shtthesis.cls ${{ env.BUILD_DIR }}\lualatex
-      #     Push-Location ${{ env.BUILD_DIR }}\lualatex
-      #     lualatex shtthesis-user-guide
-      #     biber shtthesis-user-guide
-      #     lualatex shtthesis-user-guide
-      #     lualatex shtthesis-user-guide
-      #     Pop-Location
       - name: Build user document (XeLaTeX)
         if: success() || failure()
         run: |
