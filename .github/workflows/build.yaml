@@ -127,7 +127,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install utilities
         run: |
-          choco install sed ghostscript
+          choco install sed
+          choco install ghostscript --version=9.52
+          $util_path = "C:\Program Files\gs\gs9.52\bin;" + ${env:PATH}
+          echo "::set-env name=PATH::$util_path"
       - name: Get TeX Live hash
         id: texlive-hash
         run: |
@@ -164,23 +167,23 @@ jobs:
           Copy-Item *.ttc C:\Windows\Fonts
           fc-cache -fsv
           luaotfload-tool -fuv
-      # - name: Build user document (LuaLaTeX)
-      #   run: |
-      #     sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
-      #     latexmk -pdflua -outdir=${{ env.BUILD_DIR }}/lualatex
-      - name: Build user document (LuaLaTeX, manually)
+      - name: Build user document (LuaLaTeX)
         run: |
           sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
-          New-Item ${{ env.BUILD_DIR }}\lualatex -ItemType Directory
-          Copy-Item shtthesis-user-guide.tex ${{ env.BUILD_DIR }}\lualatex
-          Copy-Item shanghaitech-logo.pdf ${{ env.BUILD_DIR }}\lualatex
-          Copy-Item shtthesis.cls ${{ env.BUILD_DIR }}\lualatex
-          Push-Location ${{ env.BUILD_DIR }}\lualatex
-          lualatex shtthesis-user-guide
-          biber shtthesis-user-guide
-          lualatex shtthesis-user-guide
-          lualatex shtthesis-user-guide
-          Pop-Location
+          latexmk -pdflua -outdir=${{ env.BUILD_DIR }}/lualatex
+      # - name: Build user document (LuaLaTeX, manually)
+      #   run: |
+      #     sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
+      #     New-Item ${{ env.BUILD_DIR }}\lualatex -ItemType Directory
+      #     Copy-Item shtthesis-user-guide.tex ${{ env.BUILD_DIR }}\lualatex
+      #     Copy-Item shanghaitech-logo.pdf ${{ env.BUILD_DIR }}\lualatex
+      #     Copy-Item shtthesis.cls ${{ env.BUILD_DIR }}\lualatex
+      #     Push-Location ${{ env.BUILD_DIR }}\lualatex
+      #     lualatex shtthesis-user-guide
+      #     biber shtthesis-user-guide
+      #     lualatex shtthesis-user-guide
+      #     lualatex shtthesis-user-guide
+      #     Pop-Location
       - name: Build user document (XeLaTeX)
         if: success() || failure()
         run: |
