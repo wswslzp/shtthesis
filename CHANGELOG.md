@@ -2,6 +2,14 @@
 
 `sht-thesis` 项目派生于 `ucasthesis`，一个在 GPLv3 License 下分发的项目。根据该许可证条款，`sht-thesis` 项目列出基于 `ucasthesis` (commit `faad94b` 之后) 的所有修改条目：
 
+## 2020-06-30
+> Release: v0.3.1
+
+1. 改进 Linux/UNIX 环境下 XeLaTeX 和 LuaLaTeX 引擎的中文字体回退机制；
+2. unicode-math 仅对 `\mathbf` 强制使用 `\symbf` 覆盖，其他命令保持原有语义；
+3. 确保 hyperref 宏包在导言区最后被导入；
+4. 从该版本开始，所有 release 同步发布至 Overleaf （真香）。
+
 ## 2020-06-23
 > Release: v0.3.0
 

@@ -17,8 +17,8 @@
 % Identification
 % ==============================================================================
 \NeedsTeXFormat{LaTeX2e}
-\newcommand\version{0.3.0}
-\newcommand\versiondate{2020/06/23}
+\newcommand\version{0.3.1}
+\newcommand\versiondate{2020/06/30}
 \ProvidesClass{shtthesis}[%
   \versiondate\space%
   v\version\space%
