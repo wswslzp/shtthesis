@@ -8,10 +8,10 @@ on:
 
 env:
   CTAN_URL: http://mirrors.ctan.org
-  CLS_DEPENDENCE: latexmk tex-gyre xits ctex datetime biblatex biblatex-gb7714-2015 fancyhdr pageslts tocvsec2 caption mathtools unicode-math
+  NOTO_URL: https://noto-website-2.storage.googleapis.com/pkgs
+  CLS_DEPENDENCE: latexmk tex-gyre xits ctex datetime fmtcount biblatex biblatex-gb7714-2015 fancyhdr pageslts tocvsec2 caption mathtools unicode-math
   DOC_DEPENDENCE: listings hologo emoji noto-emoji ctable
   BUILD_DIR: build
-  NOTO_URL: https://noto-website-2.storage.googleapis.com/pkgs
   SED_REP: s/\\documentclass/\\documentclass\[fontset=none\]/
   SED_REP_WITH_CLS_ARGS: s/\\documentclass\[\(.*\)\]/\\documentclass\[\1, fontset=none\]/
 
@@ -106,8 +106,9 @@ jobs:
           Pop-Location
           tlmgr install ${{ env.CLS_DEPENDENCE}} ${{ env.DOC_DEPENDENCE }}
           Expand-Archive tl-win64.zip -DestinationPath ${{ github.workspace }}\tmp\texlive
-          $tl_path = "${{ github.workspace }}\tmp\texlive\bin\win64;" + "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
-          echo "::set-env name=PATH::$tl_path"
+          $tl_path_w32 = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
+          $tl_path_w64 = "${{ github.workspace }}\tmp\texlive\bin\win64;" + "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
+          echo "::set-env name=PATH::$tl_path_w32"
       - name: Install utilities
         run: |
           choco install sed
