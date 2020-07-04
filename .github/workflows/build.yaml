@@ -8,13 +8,12 @@ on:
 
 env:
   CTAN_URL: http://mirrors.ctan.org
-  DOWNLOAD_DIR: texlive_download
-  EXTRACT_DIR: texlive_extract
+  CLS_DEPENDENCE: latexmk tex-gyre xits ctex datetime biblatex biblatex-gb7714-2015 fancyhdr pageslts tocvsec2 caption mathtools unicode-math
+  DOC_DEPENDENCE: listings hologo emoji noto-emoji ctable
   BUILD_DIR: build
   NOTO_URL: https://noto-website-2.storage.googleapis.com/pkgs
   SED_REP: s/\\documentclass/\\documentclass\[fontset=none\]/
   SED_REP_WITH_CLS_ARGS: s/\\documentclass\[\(.*\)\]/\\documentclass\[\1, fontset=none\]/
-  UBUNTU_FONTS_DIR: $HOME/.local/share/fonts/
 
 jobs:
   build-ubuntu:
@@ -28,38 +27,24 @@ jobs:
           sudo apt-get update
           echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
           sudo apt-get --yes install fonts-noto-cjk fonts-noto-cjk-extra ttf-mscorefonts-installer
-      - name: Get TeX Live hash
-        id: texlive-hash
-        run: |
-          HASH=$(curl -sSL ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso.sha512 | head -c 10)
-          echo "::set-output name=hash::$HASH"
-      - name: Check TeX Live cache
-        id: texlive-cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.DOWNLOAD_DIR }}
-          key: ${{ steps.texlive-hash.outputs.hash }}
-      - name: Download TeX Live image
-        if: steps.texlive-cache.outputs.cache-hit != 'true'
-        run: |
-          mkdir ${{ env.DOWNLOAD_DIR }}
-          pushd ${{ env.DOWNLOAD_DIR }}
-          curl -O -L ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso
-          popd
       - name: Install TeX Live
         run: |
-          7z x ${{ env.DOWNLOAD_DIR }}/texlive2020.iso -o${{ env.EXTRACT_DIR }}
-          chmod +x ${{ env.EXTRACT_DIR }}/install-tl
-          ./${{ env.EXTRACT_DIR }}/install-tl --profile .github/workflows/texlive.profile
+          export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
+          curl -OL ${{ env.CTAN_URL }}/systems/texlive/tlnet/install-tl-unx.tar.gz
+          tar -zxf install-tl-unx.tar.gz
+          pushd install-tl-20* && chmod +x install-tl
+          ./install-tl --profile ../.github/workflows/texlive.profile --repository ${{ env.CTAN_URL }}/systems/texlive/tlnet/
+          tlmgr install ${{ env.CLS_DEPENDENCE}} ${{ env.DOC_DEPENDENCE }}
+          popd
           echo "::set-env name=PATH::/tmp/texlive/bin/x86_64-linux:$PATH"
       - name: Build user document (LuaLaTeX)
         run: |
           sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
-          latexmk -pdflua -outdir=${{ env.BUILD_DIR }}/lualatex
+          latexmk -pdflua -time -outdir=${{ env.BUILD_DIR }}/lualatex
       - name: Build user document (XeLaTeX)
         if: success() || failure()
         run: |
-          latexmk -pdfxe -outdir=${{ env.BUILD_DIR }}/xelatex
+          latexmk -pdfxe -time -outdir=${{ env.BUILD_DIR }}/xelatex
       - name: Archive build outputs
         if: success() || failure()
         uses: actions/upload-artifact@v2
@@ -80,84 +65,51 @@ jobs:
           for i in NotoSerifCJK NotoSansCJK; do curl -O ${{ env.NOTO_URL }}/$i.ttc.zip; done
           unzip -o "*.zip"
           cp -vf *.ttc /Library/Fonts/
-      - name: Get TeX Live hash
-        id: texlive-hash
-        run: |
-          HASH=$(curl -sSL ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso.sha512 | head -c 10)
-          echo "::set-output name=hash::$HASH"
-      - name: Check TeX Live cache
-        id: texlive-cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.DOWNLOAD_DIR }}
-          key: ${{ steps.texlive-hash.outputs.hash }}
-      - name: Download TeX Live image
-        if: steps.texlive-cache.outputs.cache-hit != 'true'
-        run: |
-          mkdir ${{ env.DOWNLOAD_DIR }}
-          pushd ${{ env.DOWNLOAD_DIR }}
-          curl -O -L ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso
-          popd
       - name: Install TeX Live
         run: |
-          7z x ${{ env.DOWNLOAD_DIR }}/texlive2020.iso -o${{ env.EXTRACT_DIR }}
-          chmod +x ${{ env.EXTRACT_DIR }}/install-tl
-          ./${{ env.EXTRACT_DIR }}/install-tl --profile .github/workflows/texlive.profile
+          export PATH=/tmp/texlive/bin/x86_64-darwin:$PATH
+          curl -OL ${{ env.CTAN_URL }}/systems/texlive/tlnet/install-tl-unx.tar.gz
+          tar -zxf install-tl-unx.tar.gz
+          pushd install-tl-20* && chmod +x install-tl
+          ./install-tl --profile ../.github/workflows/texlive.profile --repository ${{ env.CTAN_URL }}/systems/texlive/tlnet/
+          tlmgr install ${{ env.CLS_DEPENDENCE}} ${{ env.DOC_DEPENDENCE }}
+          popd
           echo "::set-env name=PATH::/tmp/texlive/bin/x86_64-darwin:$PATH"
       - name: Build user document (LuaLaTeX)
         run: |
           gsed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
-          latexmk -pdflua -outdir=${{ env.BUILD_DIR }}/lualatex
+          latexmk -pdflua -time -outdir=${{ env.BUILD_DIR }}/lualatex
       - name: Build user document (XeLaTeX)
         if: success() || failure()
         run: |
-          latexmk -pdfxe -outdir=${{ env.BUILD_DIR }}/xelatex
+          latexmk -pdfxe -time -outdir=${{ env.BUILD_DIR }}/xelatex
       - name: Archive build outputs
         if: success() || failure()
         uses: actions/upload-artifact@v2
         with:
           name: macos-build
           path: ${{ env.BUILD_DIR }}
-  # Line wrap problem is difficult to resolve on windows.
   build-windows:
     runs-on: windows-latest
     name: Build on Windows
     if: ${{ contains(github.event.head_commit.message, '[ci windows]') || !contains(github.event.head_commit.message, '[ci skip]') }}
     steps:
       - uses: actions/checkout@v2
-      - name: Get TeX Live hash
-        id: texlive-hash
-        run: |
-          Invoke-WebRequest -Uri ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso.sha512 -OutFile texlive2020.iso.sha512
-          $hash = (Get-Content .\texlive2020.iso.sha512 -Raw).Substring(0, 10)
-          echo "::set-output name=hash::$hash"
-      - name: Check TeX Live cache
-        id: texlive-cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.DOWNLOAD_DIR }}
-          key: ${{ steps.texlive-hash.outputs.hash }}
-      - name: Download TeX Live image
-        if: steps.texlive-cache.outputs.cache-hit != 'true'
-        run: |
-          New-Item ${{ env.DOWNLOAD_DIR }} -ItemType Directory
-          Push-Location ${{ env.DOWNLOAD_DIR }}
-          Invoke-WebRequest -Uri ${{ env.CTAN_URL }}/systems/texlive/Images/texlive2020.iso -OutFile texlive2020.iso
-          Invoke-WebRequest -Uri ${{ env.CTAN_URL }}/systems/win32/w32tex/TLW64/tl-win64.zip -OutFile tl-win64.zip
-          Pop-Location
       - name: Install TeX Live
         run: |
-          7z x ${{ env.DOWNLOAD_DIR }}/texlive2020.iso -o${{ env.EXTRACT_DIR }}
-          Push-Location ${{ env.EXTRACT_DIR }}
-          .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive-win.profile
+          ${env:PATH} = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
+          Invoke-WebRequest -Uri ${{ env.CTAN_URL }}/systems/texlive/tlnet/install-tl.zip -OutFile install-tl.zip
+          Invoke-WebRequest -Uri ${{ env.CTAN_URL }}/systems/win32/w32tex/TLW64/tl-win64.zip -OutFile tl-win64.zip
+          Expand-Archive install-tl.zip -DestinationPath .
+          Push-Location install-tl-*
+          .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive-win.profile --repository ${{ env.CTAN_URL }}/systems/texlive/tlnet/
           Pop-Location
-          7z x ${{ env.DOWNLOAD_DIR }}/tl-win64.zip -o${{ github.workspace }}/tmp/texlive
+          tlmgr install ${{ env.CLS_DEPENDENCE}} ${{ env.DOC_DEPENDENCE }}
+          Expand-Archive tl-win64.zip -DestinationPath ${{ github.workspace }}\tmp\texlive
           $tl_path = "${{ github.workspace }}\tmp\texlive\bin\win64;" + "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
           echo "::set-env name=PATH::$tl_path"
-      - name: Update CTeX/LuaTeX and install utilities
+      - name: Install utilities
         run: |
-          tlmgr update --self
-          tlmgr update ctex luatexja
           choco install sed
           choco install ghostscript --version=9.52
           $util_path = "C:\Program Files\gs\gs9.52\bin;" + ${env:PATH}
@@ -172,11 +124,11 @@ jobs:
       - name: Build user document (LuaLaTeX)
         run: |
           sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
-          latexmk -pdflua -outdir=${{ env.BUILD_DIR }}/lualatex
+          latexmk -pdflua -time -outdir=${{ env.BUILD_DIR }}/lualatex
       - name: Build user document (XeLaTeX)
         if: success() || failure()
         run: |
-          latexmk -pdfxe -outdir=${{ env.BUILD_DIR }}/xelatex
+          latexmk -pdfxe -time -outdir=${{ env.BUILD_DIR }}/xelatex
       - name: Archive build outputs
         if: success() || failure()
         uses: actions/upload-artifact@v2

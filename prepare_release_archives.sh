@@ -43,6 +43,7 @@ for f in $OVER_LEAF_CONTENT; do
   cp ${PKG_ROOT}/$f ${RELEASE_DIR}/
 done
 zip -r -q -9 ${PKG_NAME}-overleaf.zip ${PKG_NAME}
+rm -rf ${RELEASE_DIR}/*
 for f in $CTAN_CONTENT; do
   cp ${PKG_ROOT}/$f ${RELEASE_DIR}/
 done

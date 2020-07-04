@@ -1,4 +1,4 @@
-selected_scheme     scheme-full
+selected_scheme     scheme-infraonly
 TEXDIR              /tmp/texlive
 TEXMFSYSCONFIG      /tmp/texlive/texmf-config
 TEXMFSYSVAR         /tmp/texlive/texmf-var
