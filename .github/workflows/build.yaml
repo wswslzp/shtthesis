@@ -7,9 +7,9 @@ on:
   - pull_request
 
 env:
-  CTAN_URL: http://mirrors.ctan.org
+  CTAN_URL: https://mirrors.rit.edu/CTAN
   NOTO_URL: https://noto-website-2.storage.googleapis.com/pkgs
-  CLS_DEPENDENCE: latexmk tex-gyre xits ctex datetime fmtcount biblatex biblatex-gb7714-2015 fancyhdr pageslts tocvsec2 caption mathtools unicode-math
+  CLS_DEPENDENCE: latexmk tex-gyre xits ctex datetime fmtcount biblatex biblatex-gb7714-2015 fancyhdr pageslts tocvsec2 caption mathtools unicode-math colortbl
   DOC_DEPENDENCE: listings hologo emoji noto-emoji ctable
   BUILD_DIR: build
   SED_REP: s/\\documentclass/\\documentclass\[fontset=none\]/
