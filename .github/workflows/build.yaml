@@ -9,8 +9,6 @@ on:
 env:
   CTAN_URL: http://mirror.ctan.org
   NOTO_URL: https://noto-website-2.storage.googleapis.com/pkgs
-  CLS_DEPENDENCE: latexmk tex-gyre xits ctex datetime fmtcount biber biblatex biblatex-gb7714-2015 fancyhdr pageslts tocvsec2 caption mathtools unicode-math colortbl undolabl alphalph enumitem lualatex-math xstring booktabs transparent lua-alt-getopt
-  DOC_DEPENDENCE: listings hologo emoji noto-emoji ctable
   BUILD_DIR: build
   SED_REP: s/\\documentclass/\\documentclass\[fontset=none\]/
   SED_REP_WITH_CLS_ARGS: s/\\documentclass\[\(.*\)\]/\\documentclass\[\1, fontset=none\]/
@@ -26,7 +24,7 @@ jobs:
         run: |
           sudo apt-get update
           echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
-          sudo apt-get --yes install fonts-noto-cjk fonts-noto-cjk-extra ttf-mscorefonts-installer
+          sudo apt-get install --yes fonts-noto-cjk fonts-noto-cjk-extra ttf-mscorefonts-installer
       - name: Install TeX Live
         run: |
           export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
@@ -34,8 +32,8 @@ jobs:
           tar -zxf install-tl-unx.tar.gz
           pushd install-tl-20* && chmod +x install-tl
           ./install-tl --profile ../.github/workflows/texlive.profile --repository ${{ env.CTAN_URL }}/systems/texlive/tlnet/
-          tlmgr install ${{ env.CLS_DEPENDENCE}} ${{ env.DOC_DEPENDENCE }}
           popd
+          cat DEPENDS.txt | tr "\n" " " | tlmgr install
           echo "::set-env name=PATH::/tmp/texlive/bin/x86_64-linux:$PATH"
       - name: Build user document (LuaLaTeX)
         run: |
@@ -72,8 +70,8 @@ jobs:
           tar -zxf install-tl-unx.tar.gz
           pushd install-tl-20* && chmod +x install-tl
           ./install-tl --profile ../.github/workflows/texlive.profile --repository ${{ env.CTAN_URL }}/systems/texlive/tlnet/
-          tlmgr install ${{ env.CLS_DEPENDENCE}} ${{ env.DOC_DEPENDENCE }}
           popd
+          cat DEPENDS.txt | tr "\n" " " | tlmgr install
           echo "::set-env name=PATH::/tmp/texlive/bin/x86_64-darwin:$PATH"
       - name: Build user document (LuaLaTeX)
         run: |
@@ -104,9 +102,8 @@ jobs:
           Push-Location install-tl-*
           .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive-win.profile --repository ${{ env.CTAN_URL }}/systems/texlive/tlnet/
           Pop-Location
-          tlmgr install ${{ env.CLS_DEPENDENCE}} ${{ env.DOC_DEPENDENCE }}
+          (Get-Content DEPENDS.txt) -join ' ' | tlmgr install
           Expand-Archive tl-win64.zip -DestinationPath ${{ github.workspace }}\tmp\texlive
-          $tl_path_w32 = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
           $tl_path_w64 = "${{ github.workspace }}\tmp\texlive\bin\win64;" + "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
           echo "::set-env name=PATH::$tl_path_w64"
       - name: Install utilities
