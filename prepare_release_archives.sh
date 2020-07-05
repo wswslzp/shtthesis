@@ -34,6 +34,7 @@ OVER_LEAF_CONTENT="\
 CTAN_CONTENT="\
   ${BASE_CONTENT}
   shtthesis-user-guide.pdf \
+  DEPENDS.txt \
   "
 
 rm -rf ${PKG_ROOT}/release
@@ -42,12 +43,12 @@ pushd ${PKG_ROOT}/release
 for f in $OVER_LEAF_CONTENT; do
   cp ${PKG_ROOT}/$f ${RELEASE_DIR}/
 done
-zip -r -q -9 ${PKG_NAME}-overleaf.zip ${PKG_NAME}
+zip -rq9 ${PKG_NAME}-overleaf.zip ${PKG_NAME}
 rm -rf ${RELEASE_DIR}/*
 for f in $CTAN_CONTENT; do
   cp ${PKG_ROOT}/$f ${RELEASE_DIR}/
 done
-zip -r -q -9 ${PKG_NAME}-ctan.zip ${PKG_NAME}
+zip -rq9 ${PKG_NAME}-ctan.zip ${PKG_NAME}
 rm -rf ${RELEASE_DIR}
 popd
 
