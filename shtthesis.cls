@@ -736,22 +736,12 @@
 % ------------------------------------------------------------------------------
 %   Math fonts
 % ------------------------------------------------------------------------------
-\IfFontExistsTF{XITSMath-Regular.otf}{
-  \def\sht@math@font{XITSMath-Regular.otf}
-}{
-  \def\sht@math@font{xits-math.otf}
-}
-\setmathfont{\sht@math@font}[
-  StylisticSet = 8, % upright integral variants, please refer to stix2-otf doc
-]
+% upright integral variants, please refer to stix2-otf doc
+\setmathfont{STIX2Math.otf}[StylisticSet=8]
 % please refer to "Caligraphic vs. Script variants" section of unicode-math doc
-\setmathfont{\sht@math@font}[
-  range        = {cal, bfcal},
-  StylisticSet = 1,
-]
-\setmathfont{\sht@math@font}[
+\setmathfont{STIX2Math.otf}[
   range        = {scr, bfscr},
-  StylisticSet = 2,
+  StylisticSet = 1,
 ]
 % ------------------------------------------------------------------------------
 %   Math environmrnts

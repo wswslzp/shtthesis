@@ -20,10 +20,10 @@ lualatex-math
 mathtools
 noto-emoji
 pageslts
+stix2-otf
 tex-gyre
 tocvsec2
 transparent
 undolabl
 unicode-math
-xits
 xstring

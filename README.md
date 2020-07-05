@@ -58,4 +58,4 @@ After cloning or downloading this template, please
 
 ## License
 - The copyright of ShanghaiTech University logo (`shanghaitech-logo.pdf`) is owned by ShanghaiTech University
-- The rest of `shtthesis` project is licensed under GNU Public License v3, see [LICENSE](LICENSE) for details
+- The rest of `shtthesis` project is licensed under GNU General Public License v3, see [LICENSE](LICENSE) for details
