@@ -19,6 +19,7 @@ lua-alt-getopt
 lualatex-math
 mathtools
 noto-emoji
+ntheorem
 pageslts
 stix2-otf
 tex-gyre

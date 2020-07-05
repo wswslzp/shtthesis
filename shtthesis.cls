@@ -320,7 +320,7 @@
 \RequirePackage{caption}
 \RequirePackage[shortlabels, inline]{enumitem}
 \RequirePackage{mathtools}
-\RequirePackage{amsthm}
+\RequirePackage[thmmarks, hyperref]{ntheorem}
 \RequirePackage[mathbf=sym]{unicode-math}
 \RequirePackage{biblatex}
 \AtEndPreamble{
@@ -746,23 +746,30 @@
 % ------------------------------------------------------------------------------
 %   Math environmrnts
 % ------------------------------------------------------------------------------
+% amsthm plain style
 \theoremstyle{plain}
+\theoremseparator{.}
 \newtheorem{theorem}{定理}[chapter]
 \newtheorem{lemma}{引理}[chapter]
 \newtheorem{corollary}{推论}[theorem]
 \newtheorem{proposition}{命题}[chapter]
 \newtheorem{conjecture}{猜想}[chapter]
-\theoremstyle{definition}
+% amsthm definition style
+\theorembodyfont{\upshape}
 \newtheorem{definition}{定义}[chapter]
 \newtheorem{axiom}{公理}[chapter]
 \newtheorem{example}{例}[chapter]
 \newtheorem{exercise}{练习}[chapter]
 \newtheorem{problem}{问题}[chapter]
-\theoremstyle{remark}
+% amsthm remark style
+\theoremheaderfont{\kaishu}
 \newtheorem{remark}{注}[chapter]
-\renewcommand*{\proofname}{证明}
-\expandafter\patchcmd\csname\string\proof\endcsname{\@addpunct{.}}%
-  {\@addpunct{\emph{：}}}{}{}
+% amsthm proof style
+\theoremstyle{nonumberplain}
+\theoremheaderfont{\itshape}
+\theoremseparator{：\hspace*{-0.5\ccwd}}
+\theoremsymbol{\ensuremath{\QED}}
+\newtheorem{proof}{证明}
 % ------------------------------------------------------------------------------
 %   Utility functions for ToC and bookmarks
 % ------------------------------------------------------------------------------
