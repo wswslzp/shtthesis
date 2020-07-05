@@ -33,7 +33,7 @@ jobs:
           pushd install-tl-20* && chmod +x install-tl
           ./install-tl --profile ../.github/workflows/texlive.profile --repository ${{ env.CTAN_URL }}/systems/texlive/tlnet/
           popd
-          cat DEPENDS.txt | tr "\n" " " | tlmgr install
+          cat DEPENDS.txt | tr "\n" " " | xargs tlmgr install
           echo "::set-env name=PATH::/tmp/texlive/bin/x86_64-linux:$PATH"
       - name: Build user document (LuaLaTeX)
         run: |
@@ -71,7 +71,7 @@ jobs:
           pushd install-tl-20* && chmod +x install-tl
           ./install-tl --profile ../.github/workflows/texlive.profile --repository ${{ env.CTAN_URL }}/systems/texlive/tlnet/
           popd
-          cat DEPENDS.txt | tr "\n" " " | tlmgr install
+          cat DEPENDS.txt | tr "\n" " " | xargs tlmgr install
           echo "::set-env name=PATH::/tmp/texlive/bin/x86_64-darwin:$PATH"
       - name: Build user document (LuaLaTeX)
         run: |
@@ -102,7 +102,7 @@ jobs:
           Push-Location install-tl-*
           .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive-win.profile --repository ${{ env.CTAN_URL }}/systems/texlive/tlnet/
           Pop-Location
-          (Get-Content DEPENDS.txt) -join ' ' | tlmgr install
+          &tlmgr install @(Get-Content DEPENDS.txt)
           Expand-Archive tl-win64.zip -DestinationPath ${{ github.workspace }}\tmp\texlive
           $tl_path_w64 = "${{ github.workspace }}\tmp\texlive\bin\win64;" + "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
           echo "::set-env name=PATH::$tl_path_w64"
