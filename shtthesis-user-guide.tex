@@ -656,11 +656,15 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
 \end{example}
 
 \begin{proof}
-  留作练习。
+  留作练习。使用前请留意注~\ref{rmk::qed} 的提示。
 \end{proof}
 
 \begin{remark}
   对定理~\ref{thm::CJK} 感兴趣的读者可以查阅 Unicode 规范（\url{https://unicode.org/}）。
+\end{remark}
+
+\begin{remark} \label{rmk::qed}
+  使用 \hologo{LuaLaTeX} 引擎编译时，证明环境的 QED 符号 $\QED$ 可能会排版出错。
 \end{remark}
 
 \subsection{文献引用} \label{sec::citation}
@@ -797,7 +801,7 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
 
 \section{排版数学公式}
 \providecommand{\Vector}[1]{\ensuremath{\symbf{ #1 }}}
-\providecommand{\Tensor}[1]{\ensuremath{\symbfsf{ #1 }}}
+\providecommand{\Tensor}[1]{\ensuremath{\symbfup{ #1 }}}
 \begin{equation}
   \begin{cases}
       \frac{\partial \rho}{\partial t} + \nabla\cdot(\rho\Vector{V}) = 0 \\

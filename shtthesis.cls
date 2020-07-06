@@ -320,7 +320,7 @@
 \RequirePackage{caption}
 \RequirePackage[shortlabels, inline]{enumitem}
 \RequirePackage{mathtools}
-\RequirePackage[thmmarks, hyperref]{ntheorem}
+\RequirePackage[amsmath, thmmarks]{ntheorem}
 \RequirePackage[mathbf=sym]{unicode-math}
 \RequirePackage{biblatex}
 \AtEndPreamble{
@@ -737,9 +737,10 @@
 %   Math fonts
 % ------------------------------------------------------------------------------
 % upright integral variants, please refer to stix2-otf doc
-\setmathfont{STIX2Math.otf}[StylisticSet=8]
+\def\sht@math@font{STIX2Math.otf}
+\setmathfont{\sht@math@font}[StylisticSet=8]
 % please refer to "Caligraphic vs. Script variants" section of unicode-math doc
-\setmathfont{STIX2Math.otf}[
+\setmathfont{\sht@math@font}[
   range        = {scr, bfscr},
   StylisticSet = 1,
 ]
@@ -770,6 +771,8 @@
 \theoremseparator{：\hspace*{-0.5\ccwd}}
 \theoremsymbol{\ensuremath{\QED}}
 \newtheorem{proof}{证明}
+% reset thmstyle to facilitate user's own definitions
+\theoremstyle{plain}
 % ------------------------------------------------------------------------------
 %   Utility functions for ToC and bookmarks
 % ------------------------------------------------------------------------------
