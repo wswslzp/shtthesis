@@ -33,7 +33,7 @@ jobs:
           pushd install-tl-20* && chmod +x install-tl
           ./install-tl --profile ../.github/workflows/texlive.profile --repository ${{ env.CTAN_URL }}/systems/texlive/tlnet/
           popd
-          cat DEPENDS.txt | tr "\n" " " | xargs tlmgr install
+          sed -e '/^[ \t]*#/d' DEPENDS.txt | sed 's/soft //' | tr "\n" " " | xargs tlmgr install
           echo "::set-env name=PATH::/tmp/texlive/bin/x86_64-linux:$PATH"
       - name: Build user document (LuaLaTeX)
         run: |
@@ -71,7 +71,7 @@ jobs:
           pushd install-tl-20* && chmod +x install-tl
           ./install-tl --profile ../.github/workflows/texlive.profile --repository ${{ env.CTAN_URL }}/systems/texlive/tlnet/
           popd
-          cat DEPENDS.txt | tr "\n" " " | xargs tlmgr install
+          gsed -e '/^[ \t]*#/d' DEPENDS.txt | gsed 's/soft //' | tr "\n" " " | xargs tlmgr install
           echo "::set-env name=PATH::/tmp/texlive/bin/x86_64-darwin:$PATH"
       - name: Build user document (LuaLaTeX)
         run: |
@@ -93,6 +93,12 @@ jobs:
     if: ${{ contains(github.event.head_commit.message, '[ci windows]') || !contains(github.event.head_commit.message, '[ci skip]') }}
     steps:
       - uses: actions/checkout@v2
+      - name: Install utilities
+        run: |
+          choco install sed
+          choco install ghostscript --version=9.52
+          $util_path = "C:\Program Files\gs\gs9.52\bin;" + ${env:PATH}
+          echo "::set-env name=PATH::$util_path"
       - name: Install TeX Live
         run: |
           ${env:PATH} = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
@@ -102,16 +108,11 @@ jobs:
           Push-Location install-tl-*
           .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive-win.profile --repository ${{ env.CTAN_URL }}/systems/texlive/tlnet/
           Pop-Location
+          sed -e '/^[ \t]*#/d' DEPENDS.txt | sed 's/soft //' > DEPENDS.txt
           &tlmgr install @(Get-Content DEPENDS.txt)
           Expand-Archive tl-win64.zip -DestinationPath ${{ github.workspace }}\tmp\texlive
           $tl_path_w64 = "${{ github.workspace }}\tmp\texlive\bin\win64;" + "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
           echo "::set-env name=PATH::$tl_path_w64"
-      - name: Install utilities
-        run: |
-          choco install sed
-          choco install ghostscript --version=9.52
-          $util_path = "C:\Program Files\gs\gs9.52\bin;" + ${env:PATH}
-          echo "::set-env name=PATH::$util_path"
       - name: Install Noto fonts
         run: |
           "NotoSerifCJK-Regular", "NotoSerifCJK-Bold", "NotoSansCJK-Regular", "NotoSansCJK-Bold", "NotoSansCJK-Medium" | ForEach-Object -Process {Invoke-WebRequest -Uri "${{ env.NOTO_URL }}/$_.ttc.zip" -OutFile "$_.ttc.zip"}

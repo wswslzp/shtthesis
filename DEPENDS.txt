@@ -28,3 +28,8 @@ transparent
 undolabl
 unicode-math
 xstring
+# optional dependencies for user guide document
+soft firamath-otf
+soft lm-math
+soft stix
+soft xits

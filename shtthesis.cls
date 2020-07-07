@@ -321,7 +321,7 @@
 \RequirePackage[shortlabels, inline]{enumitem}
 \RequirePackage{mathtools}
 \RequirePackage[amsmath, thmmarks]{ntheorem}
-\RequirePackage[mathbf=sym]{unicode-math}
+\RequirePackage[mathbf=sym, mathrm=sym]{unicode-math}
 \RequirePackage{biblatex}
 \AtEndPreamble{
   \RequirePackage{hyperref}

@@ -833,6 +833,187 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
 \end{tabular}
 \end{center}
 
+\section{主要中文字体对比}
+
+\def\chsteststr{永和九年，岁在癸丑，暮春之初，会于会稽山阴之兰亭，修禊事也。群贤毕至，少长咸集。此地有崇山峻岭，茂林修竹；又有清流激湍，映带左右，引以为流觞曲水，列坐其次。虽无丝竹管弦之盛，一觞一咏，亦足以畅叙幽情。}
+\ExplSyntaxOn
+\ProvideDocumentCommand{\chsfonttest}{%
+    O{Auto} % bold font name
+    m % font fullname
+    m}{ % font name printed
+  \IfFontExistsTF{#2}{%
+    \let\testfont\relax%
+    \ifthenelse{\equal{#1}{Auto}}{%
+      \newCJKfontfamily\testfont{#2}[AutoFakeBold=2.5]%
+    }{%
+      \newCJKfontfamily\testfont{#2}[BoldFont=#1]%
+    }%
+    \begingroup%
+      \zihao{5}\linespread{1.3}\testfont\par\textbf{#3}\hspace*{1\ccwd}\chsteststr%
+    \endgroup%
+  }{}
+}
+\ExplSyntaxOff
+
+\subsection{宋体}
+\rmfamily\upshape
+\chsfonttest{SimSun}{中易宋体}
+\chsfonttest[Songti SC Bold]{Songti SC Regular}{华文宋体}
+\chsfonttest{FZShuSong-Z01}{方正书宋}
+\chsfonttest[* Bold]{Noto Serif CJK SC}{思源宋体}
+\chsfonttest[FandolSong-Bold.otf]{FandolSong-Regular.otf}{Fandol宋体}
+
+\subsection{黑体}
+\sffamily\upshape
+\chsfonttest{SimHei}{中易黑体}
+\chsfonttest[Heiti SC Medium]{Heiti SC Light}{华文黑体}
+\chsfonttest{FZHei-B01}{方正黑体}
+\chsfonttest[* Medium]{Noto Sans CJK SC}{思源黑体}
+\chsfonttest[FandolHei-Bold.otf]{FandolHei-Regular.otf}{Fandol黑体}
+
+\subsection{楷体}
+\rmfamily\itshape
+\chsfonttest{KaiTi}{中易楷体}
+\chsfonttest[Kaiti SC Bold]{Kaiti SC Regular}{华文楷体}
+\chsfonttest{FZKai-Z03}{方正楷体}
+\chsfonttest{FandolKai-Regular.otf}{Fandol楷体}
+
+\subsection{仿宋}
+\ttfamily\upshape
+\chsfonttest{FangSong}{中易仿宋}
+\chsfonttest{STFangsong}{华文仿宋}
+\chsfonttest{FZFangSong-Z02}{方正仿宋}
+\chsfonttest{FandolFang-Regular.otf}{Fandol仿宋}
+
+% reset Latin font shapes
+\rmfamily\upshape
+
+\section{主要英文字体对比}
+
+\def\engteststr{The quick brown fox jumps over the lazy dog.}
+\ExplSyntaxOn
+% TODO: remove redudant code here
+\ProvideDocumentCommand{\engfonttest}{%
+    o % bold font name
+    m % full font name
+    m}{% printed font name
+  \IfFontExistsTF{#2}{%
+    \let\testfont\relax%
+    \IfNoValueTF{#1}{%
+      \newfontfamily\testfont{#2}%
+    }{%
+      \newfontfamily\testfont{#2}[BoldFont=#1]%
+    }%
+    \testfont\textbf{#3} &%
+    \let\testfont\relax%
+    \IfNoValueTF{#1}{%
+      \newfontfamily\testfont{#2}%
+    }{%
+      \newfontfamily\testfont{#2}[BoldFont=#1]%
+    }%
+    \testfont\engteststr \\%
+  }{\relax\ignorespaces}%
+}
+\ExplSyntaxOff
+
+\subsection{Serif Fonts}
+\rmfamily\upshape
+\begin{center}
+\begin{tabular}{ll}
+  \toprule
+  \engfonttest{Times New Roman}{Times New Roman}
+  \engfonttest{Times}{Times}
+  \engfonttest[XITS-Bold.otf]{XITS-Regular.otf}{XITS}
+  \engfonttest[STIX-Bold.otf]{STIX-Regular.otf}{STIX}
+  \engfonttest[STIX2Text-Bold.otf]{STIX2Text-Regular.otf}{STIX Two}
+  \engfonttest[texgyretermes-bold.otf]{texgyretermes-regular.otf}{\TeX{} Gyre Termes}
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Sans Serif Fonts}
+\sffamily\upshape
+\begin{center}
+\begin{tabular}{ll}
+  \toprule
+  \engfonttest{Arial}{Arial}
+  \engfonttest{Helvetica Neue}{Helvetica Neue}
+  \engfonttest[texgyreheros-bold.otf]{texgyreheros-regular.otf}{\TeX{} Gyre Heros}
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Typewriter Fonts}
+\ttfamily\upshape
+\begin{center}
+\ifgraduate%
+  \small%
+\fi
+\begin{tabular}{ll}
+  \toprule
+  \engfonttest{Consolas}{Consolas}
+  \engfonttest{Menlo}{Menlo}
+  \engfonttest{Courier New}{Courier New}
+  \engfonttest[texgyrecursor-bold.otf]{texgyrecursor-regular.otf}{\TeX{} Gyre Cursor}
+  \bottomrule
+\end{tabular}
+\end{center}
+
+% reset Latin font shapes
+\rmfamily\upshape
+
+\section{主要数学字体测试}
+
+\newcommand\mathtest{%
+\begin{equation}%
+  F(x; \, μ, \, σ) = \frac{1}{σ \sqrt{2π}} ∫_{-∞}^x \exp \left[ -\frac{(t-μ)^2}{2σ^2} \right] \, \symup{d} t%
+\end{equation}%
+}
+
+\subsection{Latin Modern Math}
+\setmathfont{latinmodern-math.otf}[version=lm]
+\begingroup
+  \mathversion{lm}
+  \mathtest
+\endgroup
+
+\IfFontExistsTF{Cambria Math}{
+\subsection{Cambria Math}
+\setmathfont{Cambria Math}[version=Cambria]
+\begingroup
+  \mathversion{Cambria}
+  \mathtest
+\endgroup
+}{}
+
+\subsection{STIX Math}
+\setmathfont{STIXMath-Regular.otf}[version=STIX]
+\begingroup
+  \mathversion{STIX}
+  \mathtest
+\endgroup
+
+\subsection{STIX Two Math}
+\setmathfont{STIX2Math.otf}[StylisticSet=8, version=STIX2]
+\begingroup
+  \mathversion{STIX2}
+  \mathtest
+\endgroup
+
+\subsection{XITS Math}
+\setmathfont{XITSMath-Regular.otf}[StylisticSet=8, version=XITS]
+\begingroup
+  \mathversion{XITS}
+  \mathtest
+\endgroup
+
+\subsection{Fira Math (Sans Serif)}
+\setmathfont{FiraMath-Regular.otf}[StylisticSet=1, version=Fira]
+\begingroup
+  \mathversion{Fira}
+  \mathtest
+\endgroup
+
 \section{排版生僻字} \label{sec::chs_rare}
 {\songti 叧叨叭叱叴叵叺叻叼叽叾卟叿吀吁吂吅吆吇吋吒吔吖吘吙吚吜吡吢吣吤吥吧吩吪吭吮吰吱吲呐吷吺吽呁呃呄呅呇呉呋呋呌呍呎呏呐呒呓呔呕呗呙呚呛呜呝呞呟呠呡呢呣呤呥呦呧周呩呪呫呬呭呮呯呰呱呲呴呶呵呷呸呹呺呻呾呿咀咁咂咃咄咅咇咈咉咊咋咍咎咐咑咓咔咕咖咗咘咙咚咛咜咝咞咟咠咡咢咣咤咥咦咧咨咩咪咫咬咭咮咯咰咲咳咴咵咶啕咹咺咻呙咽咾咿哂哃哅哆哇哈哊哋哌哎哏哐哑哒哓哔哕哖哗哘哙哚哛哜哝哞哟哠咔哣哤哦哧哩哪哫哬哯哰唝哵哶哷哸哹哻哼哽哾哿唀唁唂唃呗唅唆唈唉唊唋唌唍唎唏唑唒唓唔唣唖唗唘唙吣唛唜唝唞唟唠唡唢唣唤唥唦唧唨唩唪唫唬唭唯唰唲唳唴唵唶唷念唹唺唻唼唽唾唿啀啁啃啄啅啇啈啉啋啌啍啎问啐啑啒启啔啕啖啖啘啙啚啛啜啝哑启啠啡唡衔啥啦啧啨啩啪啫啬啭啮啯啰啱啲啳啴啵啶啷啹啺啻啼啽啾啿喀喁喂喃善喅喆喇喈喉喊喋喌喍喎喏喐喑喒喓喔喕喖喗喙喛喞喟喠喡喢喣喤喥喦喨喩喯喭喯喰喱哟喳喴喵営喷喸喹喺喼喽喾喿嗀嗁嗂嗃嗄嗅呛啬嗈嗉唝嗋嗌嗍吗嗏嗐嗑嗒嗓嗕嗖嗗嗘嗙呜嗛嗜嗝嗞嗟嗠嗡嗢嗧嗨唢嗪嗫嗬嗭嗮嗰嗱嗲嗳嗴嗵哔嗷嗸嗹嗺嗻嗼嗽嗾嗿嘀嘁嘂嘃嘄嘅嘅嘇嘈嘉嘊嘋嘌喽嘎嘏嘐嘑嘒嘓呕嘕啧嘘嘙嘚嘛唛嘝嘞嘞嘟嘠嘡嘢嘣嘤嘥嘦嘧嘨哗嘪嘫嘬嘭唠啸囍嘴哓嘶嘷呒嘹嘺嘻嘼啴嘾嘿噀噂噃噄咴噆噇噈噉噊噋噌噍噎噏噐噑噒嘘噔噕噖噗噘噙噚噛噜咝噞噟哒噡噢噣噤哝哕噧噩噪噫噬噭噮嗳噰噱哙噳喷噵噶噷吨噺噻噼噽噾噿咛嚁嚂嚃嚄嚅嚆吓嚈嚉嚊嚋哜嚍嚎嚏尝嚑嚒嚓嚔噜嚖嚗嚘啮嚚嚛嚜嚝嚞嚟嚠嚡嚢嚣嚤呖嚧咙嚩咙嚧嚪嚫嚬嚭嚯嚰嚱亸喾嚵嘤嚷嚸嚹嚺嚻嚼嚽嚾嚿啭嗫嚣囃囄冁囆囇呓囊囋囍囎囏囐嘱囒啮囔囕囖}
 
