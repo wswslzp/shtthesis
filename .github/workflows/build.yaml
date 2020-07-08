@@ -108,8 +108,7 @@ jobs:
           Push-Location install-tl-*
           .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive-win.profile --repository ${{ env.CTAN_URL }}/systems/texlive/tlnet/
           Pop-Location
-          sed -e '/^[ \t]*#/d' DEPENDS.txt | sed 's/soft //' > DEPENDS.txt
-          &tlmgr install @(Get-Content DEPENDS.txt)
+          &tlmgr install @(sed -e '/^[ \t]*#/d' DEPENDS.txt | sed 's/soft //')
           Expand-Archive tl-win64.zip -DestinationPath ${{ github.workspace }}\tmp\texlive
           $tl_path_w64 = "${{ github.workspace }}\tmp\texlive\bin\win64;" + "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
           echo "::set-env name=PATH::$tl_path_w64"
