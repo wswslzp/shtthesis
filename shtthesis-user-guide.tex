@@ -124,6 +124,9 @@
   \def\ifundergraduate{\ifsht@undergraduate}
   \def\ifgraduate{\ifsht@graduate}
 \makeatother
+% test multi-platform CHS fonts
+\newif\iftestchsfont
+\testchsfontfalse
 
 \begin{filecontents}{reference.bib}
 @article{stamerjohanns2009mathml,
@@ -833,6 +836,7 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
 \end{tabular}
 \end{center}
 
+\iftestchsfont
 \clearpage
 \section{主要中文字体对比}
 
@@ -888,6 +892,7 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
 
 % reset Latin font shapes
 \rmfamily\upshape
+\fi
 
 \clearpage
 \section{主要英文字体对比}
