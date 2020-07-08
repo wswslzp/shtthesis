@@ -114,7 +114,7 @@ jobs:
           echo "::set-env name=PATH::$tl_path_w64"
       - name: Install Noto fonts
         run: |
-          "NotoSerifCJK-Regular", "NotoSerifCJK-Bold", "NotoSansCJK-Regular", "NotoSansCJK-Bold", "NotoSansCJK-Medium" | ForEach-Object -Process {Invoke-WebRequest -Uri "${{ env.NOTO_URL }}/$_.ttc.zip" -OutFile "$_.ttc.zip"}
+          "NotoSerifCJK", "NotoSansCJK" | ForEach-Object -Process {Invoke-WebRequest -Uri "${{ env.NOTO_URL }}/$_.ttc.zip" -OutFile "$_.ttc.zip"}
           Get-ChildItem *.ttc.zip | Expand-Archive -DestinationPath . -Force
           Copy-Item *.ttc C:\Windows\Fonts
           fc-cache -fsv

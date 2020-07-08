@@ -596,7 +596,7 @@
       \edef\unix@songti@upright{\unix@songti\space Light}
       \edef\unix@songti@bold{\unix@songti\space Medium}
     }{
-      \edef\unix@songti@upright{\unix@songti\space Regular}
+      \edef\unix@songti@upright{\unix@songti} % no `regular' for noto cjk
       \edef\unix@songti@bold{\unix@songti\space Bold}
     }
     \IfFontExistsTF{Noto Sans CJK SC}{
