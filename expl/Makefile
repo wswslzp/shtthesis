@@ -1,5 +1,6 @@
 PKG    = shtthesis
 SRC    = $(PKG).dtx
+BCF    = $(PKG).bcf
 SCRIPT = $(PKG).ins
 CLS    = $(PKG).cls $(PKG)-doc.sty
 DOC    = $(PKG).pdf
@@ -16,6 +17,8 @@ $(DOC): $(CLS)
 	xelatex -no-pdf $(SRC)
 	makeindex -s gglo.ist -o $(PKG).gls $(PKG).glo
 	makeindex -s gind.ist -o $(PKG).ind $(PKG).idx
+	biber $(BCF)
+	xelatex -no-pdf $(SRC)
 	xelatex $(SRC)
 
 $(CLS): $(SRC) $(SCRIPT)
