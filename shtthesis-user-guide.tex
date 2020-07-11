@@ -296,7 +296,7 @@
 `\prompt' tlmgr update shtthesis
 \end{shell}
 
-为避免版权问题，上传至 CTAN 的 \shtthesis{} 并不包含校徽文件，需要至项目主页下载 shanghaitech-logo.pdf\footnote{\url{https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf}}。假设用户的论文文档为 thesis.tex，参考文献数据库为 reference.bib （本文档的 bib 数据库由 \jobname.tex 自动生成），则需要将下载的校徽文件与它们放在同一目录下，下文称为\emph{工作目录}。工作目录中必要的文件包括：
+为避免版权问题，上传至 CTAN 的 \shtthesis{} 并不包含校徽文件，需要至项目主页下载 shanghaitech-emblem.pdf\footnote{\url{https://github.com/lirundong/shtthesis/raw/master/shanghaitech-emblem.pdf}}。假设用户的论文文档为 thesis.tex，参考文献数据库为 reference.bib （本文档的 bib 数据库由 \jobname.tex 自动生成），则需要将下载的校徽文件与它们放在同一目录下，下文称为\emph{工作目录}。工作目录中必要的文件包括：
 \begin{center}
   \begin{tabular}{ll}
     \toprule
@@ -304,7 +304,7 @@
     \midrule 
     thesis.tex & 论文文档 \\
     reference.bib & 参考文献数据库 \\
-    shanghaitech-logo.pdf & 上海科技大学校徽 \\
+    shanghaitech-emblem.pdf & 上海科技大学校徽 \\
     \bottomrule
   \end{tabular}
 \end{center}
@@ -740,17 +740,17 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
 《规范》要求正文中所有图形、表格标题使用中英双语。此需求可以通过 \textsf{bicaption} 宏包实现，如图~\ref{img::sht_logo} 所示。
 \begin{figure}[htb]
   \centering
-  \IfFileExists{shanghaitech-logo.pdf}{%
-    \includegraphics[width=0.5\columnwidth]{shanghaitech-logo.pdf}%
+  \IfFileExists{shanghaitech-emblem.pdf}{%
+    \includegraphics[width=0.5\columnwidth]{shanghaitech-emblem.pdf}%
   }{%
     \fbox{%
       \begin{minipage}[b][2.5cm][c]{0.75\columnwidth}%
         \centering\zihao{-5}\bfseries\sffamily\color{ShtRed}%
-        校徽文件 \texttt{shanghaitech-logo.pdf} 缺失%
+        校徽文件 \texttt{shanghaitech-emblem.pdf} 缺失%
       \end{minipage}%
     }%
   }%
-  \bicaption{上海科技大学校徽}{School logo of ShanghaiTech University}
+  \bicaption{上海科技大学校徽}{The emblem of ShanghaiTech University}
   \label{img::sht_logo}
 \end{figure}
 

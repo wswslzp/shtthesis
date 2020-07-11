@@ -373,7 +373,7 @@
 \definecolor{ShtRed}{RGB}{146,46,23}
 \def\school@logo@missing{%
   校徽文件缺失，请至\href{https://github.com/lirundong/shtthesis/raw/master/%
-  shanghaitech-logo.pdf}{项目主页}下载！%
+  shanghaitech-emblem.pdf}{项目主页}下载！%
 }
 % ------------------------------------------------------------------------------
 %   Geometry and layouts
@@ -421,8 +421,8 @@
 \def\sht@flat@title{\renewcommand\\{\space} \@title}
 \def\sht@flat@title@en{\renewcommand\\{\space} \sht@title@en}
 \newcommand\sht@head@logo{%
-  \IfFileExists{shanghaitech-logo.pdf}{%
-    \includegraphics[height=\sht@head@logo@height]{shanghaitech-logo.pdf}%
+  \IfFileExists{shanghaitech-emblem.pdf}{%
+    \includegraphics[height=\sht@head@logo@height]{shanghaitech-emblem.pdf}%
   }{%
     \fbox{%
       \begin{minipage}[b][\sht@head@logo@height][c]{0.4\columnwidth}%
@@ -1111,8 +1111,8 @@
 }
 \ExplSyntaxOff
 \newcommand\sht@schoollogo{%
-  \IfFileExists{shanghaitech-logo.pdf}{%
-    \includegraphics[width=10.48cm]{shanghaitech-logo.pdf}%
+  \IfFileExists{shanghaitech-emblem.pdf}{%
+    \includegraphics[width=10.48cm]{shanghaitech-emblem.pdf}%
   }{%
     \begin{center}%
       \fbox{%
@@ -1125,8 +1125,8 @@
 }
 \newcommand\sht@schoollogo@undergraduate{%
   \noindent%
-  \IfFileExists{shanghaitech-logo.pdf}{%
-    \includegraphics[width=5.39cm]{shanghaitech-logo.pdf}%
+  \IfFileExists{shanghaitech-emblem.pdf}{%
+    \includegraphics[width=5.39cm]{shanghaitech-emblem.pdf}%
   }{%
     \fbox{%
       \begin{minipage}[t][1.45cm][c]{0.75\columnwidth}%

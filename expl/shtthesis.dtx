@@ -1,0 +1,77 @@
+% \iffalse
+%<*driver>
+\ProvidesFile{\jobname.dtx}[2020/07/11 v0.3.2-dev An Unofficial Thesis Template for ShanghaiTech University]
+\documentclass{ltxdoc}
+\usepackage{\jobname-doc}
+
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+
+\begin{document}
+  \DocInput{\jobname.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% ^^A DoNotIndex list from thuthesis
+% ^^A https://github.com/tuna/thuthesis/blob/17acabe/thuthesis.dtx#L33-L52
+% \DoNotIndex{\newenvironment,\@bsphack,\@empty,\@esphack,\sfcode}
+% \DoNotIndex{\addtocounter,\label,\let,\linewidth,\newcounter}
+% \DoNotIndex{\noindent,\normalfont,\par,\parskip,\phantomsection}
+% \DoNotIndex{\providecommand,\ProvidesPackage,\refstepcounter}
+% \DoNotIndex{\RequirePackage,\setcounter,\setlength,\string,\strut}
+% \DoNotIndex{\textbackslash,\texttt,\ttfamily,\usepackage}
+% \DoNotIndex{\begin,\end,\begingroup,\endgroup,\par,\\}
+% \DoNotIndex{\if,\ifx,\ifdim,\ifnum,\ifcase,\else,\or,\fi}
+% \DoNotIndex{\let,\def,\xdef,\edef,\newcommand,\renewcommand}
+% \DoNotIndex{\expandafter,\csname,\endcsname,\relax,\protect}
+% \DoNotIndex{\Huge,\huge,\LARGE,\Large,\large,\normalsize}
+% \DoNotIndex{\small,\footnotesize,\scriptsize,\tiny}
+% \DoNotIndex{\normalfont,\bfseries,\slshape,\sffamily,\interlinepenalty}
+% \DoNotIndex{\textbf,\textit,\textsf,\textsc,\textup}
+% \DoNotIndex{\hfil,\par,\hskip,\vskip,\vspace,\quad}
+% \DoNotIndex{\centering,\raggedright,\ref}
+% \DoNotIndex{\c@secnumdepth,\@startsection,\@setfontsize}
+% \DoNotIndex{\ ,\@plus,\@minus,\p@,\z@,\@m,\@M,\@ne,\m@ne}
+% \DoNotIndex{\@@par,\DeclareOperation,\RequirePackage,\LoadClass}
+% \DoNotIndex{\AtBeginDocument,\AtEndDocument}
+% \DoNotIndex{\NeedsTeXFormat,\ProvidesClass}
+%
+% \GetFileInfo{\jobname.dtx}
+%
+% \title{\textup{\sffamily \jobname} \fileversion{} 用户指南}
+% \author{李润东}
+%
+% \maketitle
+%
+% \StopEventually{\PrintIndex}
+%
+% 版本 \fileversion{}。设定基本信息：
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{shtthesis}[2020/07/11 v0.3.2-dev An Unofficial Thesis Template for ShanghaiTech University]
+%    \end{macrocode}
+%
+% \begin{macro}{\ShtThesis}
+% \begin{macro}{\shtthesis}
+%  提供简单的 |\shtthesis| 命令以排版宏包名称。
+%    \begin{macrocode}
+\newcommand\ShtThesis{\textup{\sffamily ShtThesis}}
+\newcommand\shtthesis{\textup{\sffamily shtthesis}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% ^^A documentaion style
+% \iffalse
+%    \begin{macrocode}
+%<*doc>
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{shtthesis-doc}
+\RequirePackage{ctex}
+%</doc>
+%    \end{macrocode}
+% \fi
+% \Finale
+\endinput

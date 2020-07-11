@@ -1,0 +1,65 @@
+%% 
+%% shtthesis, an unofficial LaTeX thesis template for ShanghaiTech University.
+%% Copyright (C) 2020 Li Rundong <rundong.001@gmail.com>
+%% 
+%% This program is free software: you can redistribute it and/or modify
+%% it under the terms of the GNU General Public License as published by
+%% the Free Software Foundation, either version 3 of the License, or
+%% (at your option) any later version.
+%% 
+%% This program is distributed in the hope that it will be useful,
+%% but WITHOUT ANY WARRANTY; without even the implied warranty of
+%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%% GNU General Public License for more details.
+%% 
+%% You should have received a copy of the GNU General Public License
+%% along with this program.  If not, see <https://www.gnu.org/licenses/>
+%% 
+\input docstrip.tex
+\askforoverwritefalse
+\keepsilent
+
+\preamble
+
+shtthesis, an unofficial LaTeX thesis template for ShanghaiTech University.
+Copyright (C) 2020-\the\year Li Rundong <rundong.001@gmail.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>
+
+\endpreamble
+
+\usedir{tex/latex/shtthesis}
+\generate{
+  \file{\jobname.cls}{\from{\jobname.dtx}{cls}}
+  \file{\jobname-doc.sty}{\from{\jobname.dtx}{doc}}
+}
+
+\obeyspaces
+\Msg{*************************************************************}
+\Msg{*                                                           *}
+\Msg{* To finish the installation you have to move the following *}
+\Msg{* files into a directory searched by TeX:                   *}
+\Msg{*                                                           *}
+\Msg{* The recommended directory is TEXMF/tex/latex/shtthesis    *}
+\Msg{*                                                           *}
+\Msg{*     shtthesis.cls                                         *}
+\Msg{*     shanghaitech-emblem.pdf                               *}
+\Msg{*                                                           *}
+\Msg{* To produce the documentation run the files ending with    *}
+\Msg{* `.dtx' through LaTeX.                                     *}
+\Msg{*                                                           *}
+\Msg{* Happy TeXing!                                             *}
+\Msg{*************************************************************}
+
+\endbatchfile

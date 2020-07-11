@@ -1,0 +1,9 @@
+# derived files
+*.sty
+*.cls
+*.log
+*.ilg
+*.glo
+*.gls
+*.idx
+*.ind

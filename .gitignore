@@ -25,7 +25,7 @@ release*/
 
 # ignore compiled docuemnt within root
 *.pdf
-!shanghaitech-logo.pdf
+!shanghaitech-emblem.pdf
 !shtthesis-user-guide.pdf
 
 # ignore office temp files
