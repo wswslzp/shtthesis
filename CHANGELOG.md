@@ -2,6 +2,20 @@
 
 `sht-thesis` 项目派生于 `ucasthesis`，一个在 GPLv3 License 下分发的项目。根据该许可证条款，`sht-thesis` 项目列出基于 `ucasthesis` (commit `faad94b` 之后) 的所有修改条目：
 
+## Unreleased
+### Added
+1. 使用 Doc 和 DocStrip 重构项目（在 `expl` 目录下）；
+2. 在 `DEPENDS.txt` 中显式列出 TeX Live 宏包依赖；
+### Changed
+1. 数学字体替换为 STIX Two Math （原 XITS Math 字体[将不再被维护](https://github.com/alif-type/xits/releases/tag/v1.302)）；
+2. 编号定理后端切换至 ntheorem 以改善中文 `proof` 环境实现的鲁棒性。
+
+   注意：目前使用 LuaLaTeX 编译时，ntheorem `proof` 环境最后的 QED 符号（∎, `U+220E`）可能排版出错；
+3. 宋体正文（`\textup`, `\upshape`）使用 Light 字重，宋体加粗（`\textbf`, `\bfseries`）使用 Medium 字重以匹配 Windows 下中易宋体和方正书宋的排版效果；
+### Fixed
+1. 使用[更为规范的格式](https://keepachangelog.com/en/1.0.0/)记录 changelog；
+
+
 ## 2020-06-30
 > Release: v0.3.1
 

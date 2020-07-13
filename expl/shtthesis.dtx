@@ -41,7 +41,9 @@
 % \GetFileInfo{\jobname.dtx}
 %
 % \title{\ShtThesis{} \fileversion{} 用户指南}
-% \author{李润东}
+% \author{李润东\thanks{\href{mailto:rundong.001@gmail.com}{\ttfamily rundong.001@gmail.com}}}
+%
+% \changes{v0.3.2-dev}{2020/07/12}{使用 \textsf{Doc} 和 \textsf{DocStrip} 重构项目}
 %
 % \maketitle
 % 
@@ -51,6 +53,9 @@
 %   \shtthesis{} 旨在以最简实现和最小依赖完整覆盖上海科技大学本科及研究生学位论文的所有格式要求，且不为用户额外设限。使用时仅需指定 documentclass 为 \shtthesis{} 即可满足基本排版要求。文档通过 \verb|\shtsetup| 命令统一设定学位论文信息，且仅提供满足格式需求的最少额外命令以保证兼容性。用户可根据自身撰文习惯，引入额外的宏包和命令完成学位论文撰写。
 % \end{abstract}
 %
+% \tableofcontents
+%
+% \clearpage
 % \section{模板介绍}
 % \shtthesis{} (\textbf{S}hang\textbf{h}ai\textbf{T}ech University \textbf{THESIS}) 是根据《上海科技大学研究生学位论文撰写规范（初稿）》和《上海科技大学本科毕业论文（设计）工作条例（试行）》（下文统一简称《规范》）编写的、适用于上海科技大学学位论文写作的\emph{非官方} \LaTeX 模板。目前版本（\fileversion{}）提供了本科、硕士和博士学位论文排版选项，且能够自动生成用于盲审的匿名版以及最终提交的打印版论文。
 % 
@@ -115,7 +120,7 @@
 % \begin{latex}
 % \documentclass[<类参数>]{shtthesis}
 % \end{latex}
-% 即可载入模板。\shtthesis{} 接受的类参数包括：用于指定学位类型的 \texttt{\{bachelor | master | doctor\}} 选项、用于生成盲审论文的 \verb|anonymous| 选项，用于生成打印版论文的 \verb|print| 选项，以及传递给 \textsf{cexbook} 的其他选项。多个选项间以英文逗号“,”隔开。
+% 即可载入模板。\shtthesis{} 接受的类参数包括：用于指定学位类型的 \{\verb|bachelor|, \verb|master|, \verb|doctor|\} 选项、用于生成盲审论文的 \verb|anonymous| 选项，用于生成打印版论文的 \verb|print| 选项，以及传递给 \textsf{cexbook} 的其他选项。多个选项间以英文逗号“,”隔开。
 % 
 % \subsection{指定学位类型}
 % \shtthesis{} \fileversion{} 接受的学位类型包括学士（bachelor）、硕士（master）和博士（doctor），学位类型必须指定且不能同时指定多种学位。指定学位类型后，\shtthesis{} 会按照相应排版规则，生成不同的封面和正文格式。
@@ -249,9 +254,255 @@
 % 
 % 在 \verb|\shtsetup| 的 key=value 设定机制中，表示中文信息条目的 key 为 \verb|-| 连接的小写单词（例如研究生学位中文名称 \verb|degree-name|），由 \verb|*| 结尾的 key 一般表示对应的英文条目（例如研究生学位英文名称 \verb|degree-name*|）；value 可以在前后添加大括号，也可以不添加。特别需要注意 \verb|\shtsetup| 命令内\emph{不能有空行}。
 %
+% \subsection{学位信息}
+% 研究生学位论文需要额外设定的学位信息包括：学位名称（degree-name）和英文学位名称（degree-name*），具体见表~\ref{tab::degree_info}。学位类型会影响 \shtthesis{} 的中英文封面内容。
+% \begin{table}[htb]
+% \centering
+% \caption{通过\texttt{shtsetup}设定的学位信息} \label{tab::degree_info}
+% \begin{tabular}{llp{0.5\columnwidth}}
+%   \toprule
+%   key & value 样例 & 说明 \\
+%   \midrule
+%   degree-name & 学术型博士 & 中文学位名称，《规范》中学术型学位中文名称包括：\emph{学术型博士}、\emph{理学硕士}、\emph{工学硕士} \\
+%   degree-name* & Doctor~of~Philosophy & 英文学位名称，《规范》中上述学位对应的英文名称为：\emph{Doctor~of~Philosophy}、\emph{Master~of~Natural~Science}、\emph{Master~of~Science~in~Engineering} \\
+%   \bottomrule
+% \end{tabular}
+% \end{table}
+% 
+% \subsection{论文标题信息}
+% 设定论文中英文标题和涉密等级。中文标题（title）和英文标题（title*）中可以包含换行符。研究生学位论文的涉密等级（secret-level）会以“密级：\uline{XXX}”显示在中文封面右上角，未设定涉密等级则不显示相关信息。
+% 
+% \subsection{作者信息}
+% 需要设定的作者信息包括：作者中英文姓名（author 和 author*）和学校/学院中英文名称（institution 和 institution*），研究生需要设定一级学科中英文名称（discipline-level-1 和 discipline-level-1*），本科生需要设定攻读专业中英文名称（discipline 和 discipline*）。
+% 
+% 特别注意研究生和本科生的英文名格式要求不一致：研究生要求以姓氏拼音在前、名字拼音在后、中间以半角空格分隔的格式书写英文姓名：
+% \begin{latex}
+% \shtsetup{
+%   % 研究生中英文姓名格式要求
+%   author = 李润东,
+%   author* = {Li~Rundong}, % 正确写法
+%   % author* = {Rundong~Li}, % 错误写法
+% }
+% \end{latex}
+% 而本科生要求以名字拼音在前、姓氏拼音在后、中间以半角空格分隔的格式书写英文姓名：
+% \begin{latex}
+% \shtsetup{
+%   % 本科生中英文姓名格式要求
+%   author = 李润东,
+%   author* = {Rundong~Li}, % 正确写法
+%   % author* = {Li~Rundong}, % 错误写法
+% }
+% \end{latex}
+% 
+% 研究生需要设定完整的学校、学院名称，中文名称（institution）不可带换行符，英文名称（institution*）应在学院、学校名称间加入换行符，否则封面排版会出现错误：
+% \begin{latex}
+% \shtsetup{
+%   institution = 上海科技大学信息科学与技术学院,
+%   institution* = {School~of~Information~Science~and~Technology\\%
+%                   ShanghaiTech~University},
+% }
+% \end{latex}
+% 本科生则不必包含学校名称，直接设定学院名称即可，注意中英文名称中均不能包含换行符：
+% \begin{latex}
+% \shtsetup{
+%   institution = 信息科学与技术学院,
+%   institution* = {School~of~Information~Science~and~Technology},
+% }
+% \end{latex}
+% 
+% \subsection{导师信息}
+% 需要设定的导师信息包括：导师中英文姓名（supervisor 和 supervisor*）和导师单位中文名称（supervisor-institution）。注意在中文封面中，导师姓名和单位分两行显示在“指导教师”条目下。根据《规范》，导师中文姓名（supervisor）应包含导师职称，如教授、副教授、助理教授、研究员、副研究员，以一个半角空格跟随在姓名之后；导师英文姓名（supervisor*）则统一以“Professor”开头，与英文姓名以一个半角空格隔开。导师单位中文名称（supervisor-institution）不可包含换行符。
+% \begin{latex}
+% \shtsetup{
+%   supervisor = {范睿~副教授},
+%   supervisor* = {Professor~Fan~Rui},
+%   supervisor-institution = {上海科技大学信息科学与技术学院},
+% }
+% \end{latex}
+% 
+% \subsection{成文日期}
+% 通过 date 和 date* 分别设置中英文成文日期，日期内容应按照申请学位的时间节点填写，具体请参考当年《规范》。研究生成文日期格式为：
+% \begin{latex}
+% \shtsetup{
+%   date = {2020~年~6~月},
+%   date* = {June,~2020},
+% }
+% \end{latex}
+% 本科生成文日期格式为：
+% \begin{latex}
+% \shtsetup{
+%   date = {2020~年~06~月},
+%   date* = {06~/~2020},
+% }
+% \end{latex}
+% 
+% \section{前言部分}
+% 《规范》规定论文前言部分应包含论文原创性声明和授权使用声明、中英文摘要、目录，研究生论文还需包含图形、表格列表。若有需要，可加入符号列表。\shtthesis{} 会自动生成目录和图表列表，在不设置 \verb|anonymous| 选项时会自动生成声明页。\shtthesis{} 提供了摘要和符号列表环境，以便于用户生成中英文摘要和符号列表。
+% 
+% \subsection{论文摘要及关键词}
+% 论文中英文摘要在正文部分 \verb|\frontmatter| 之后、\verb|\makeindices| 之前，分别在 abstract 和 abstract* 环境中输入。摘要环境对内容没有限制：
+% \begin{latex}
+% \begin{abstract}
+%   中文摘要内容...
+% \end{abstract}
+% 
+% \begin{abstract*}
+%   English abstract content...
+% \end{abstract*}
+% \end{latex}
+% 
+% 需要注意，本科生论文要求在中英文摘要中包含论文标题。默认情况下，\shtthesis 的 abstract 和 abstract* 环境会按照 \verb|\shtsetup| 中指定的标题及其中的换行符进行排版。如果希望在摘要中显示的标题不换行，则可以向摘要环境传入 \verb|flattitle| 选项，排版时会将 title 和 title* 中的换行符替换为空格：
+% \begin{latex}
+% \begin{abstract}[flattitle]
+%   % 摘要标题排版时不换行
+%   中文摘要内容...
+% \end{abstract}
+% \end{latex}
+% 
+% 论文中英文关键词在 \verb|\shtsetup| 命令中分别以 keywords 和 keywords* 设定。注意 \shtthesis{} \fileversion{} 中尚未实现分词处理，此处输入的 value 将不经任何预处理，直接插入至正文中排版。因此，中文关键词（keywords）之间应该以中文逗号“，”隔开且不包含空格；英文关键词（keywords*）之间应该以半角逗号“,”隔开，并在每一半角逗号后跟随一个半角空格。
+% \begin{latex}
+% \shtsetup{
+%   keywords = {上海科技大学，学位论文，\LaTeX{}},
+%   keywords* = {ShanghaiTech~University, Thesis, \LaTeX{}},
+% }
+% \end{latex}
+% 
+% \subsection{目录及图形、表格、符号列表}
+% \shtthesis{} 重载了 \verb|\makeindices| 命令，可一次生成目录、图形列表和表格列表。默认目录中正文标题列出至第 3 级（即 subsection），若包含附录则目录中只列出“附录”一项（附录各级标题仍会生成 PDF 书签），图形、表格列表中列出图表标题的全部内容。对于特别长的图形、表格标题，可以在 \verb|\caption| 命令中指定短标题，从而使列表条目更为简明：
+% \begin{latex}
+% \begin{figure}
+%   \caption[出现在图形列表内的短标题]{出现在正文中的长标题}
+%   % ...
+% \end{figure}
+% \end{latex}
+% 
+% \shtthesis{} 提供了 nomenclatures 环境用于在研究生论文中生成符号列表，其使用方法为：
+% \begin{latex}
+% \begin{nomenclatures}[<标题>]
+%   \head[<单位表头>]{<符号表头>}{<描述表头>}
+%   \item[<单位>]{<符号>}{<描述>}
+%   % ...
+% \end{nomenclatures}
+% \end{latex}
+% 每次 nomenclatures 调用会分别生成一组符号列表，每一 \verb|\item| 会生成一行符号描述。若 \verb|<标题>| 不为空则会为当前组生成一个不编号的 section 级的标题。\verb|\head| 为可选指令，会为当前组生成一个“表头”，但必须在 \verb|\item| 之前列出。\verb|\item| 接受一个可选参数 \verb|<单位>| 作为符号的单位，若其不为空则在当前行右对齐出现。nomenclatures 的使用样例可以参考 \jobname.tex 中“符号列表”部分。注意在 \shtthesis{} \fileversion{} 中各 \verb|\item| 的 \verb|<描述>| 在折行后会出现排版错误，故暂时不支持较长的符号描述。
+% 
+% \section{正文部分}
+% \shtthesis{} 正文部分的书写与一般 \LaTeX 项目无异。\shtthesis{} 为研究生论文修改公式编号格式以符合《规范》要求，并提供编号定理、证明等常用数学环境。文献引用遵循 GB/T 7714-2015 《信息与文献　参考文献著录规则》标准，其中本科论文使用顺序编码制，研究生论文使用“著者-出版年”制。
+% 
+% \subsection{编号公式}
+% 在排版研究生论文时，\shtthesis{} 通过 \textsf{mathtools} 宏包在公式编号前添加 $\ldots$ 以符合《规范》对公式编号的格式要求，如：
+% \begin{equation}
+% P(A\mid B) = \frac{P(A)P(B\mid A)}{P(B)} \label{eq::bayesian}
+% \end{equation}
+% 同时重载了 |\eqref|，使得公式编号格式修改后，其引用格式仍与 \textsf{amsmath} 无异：贝叶斯定理~\eqref{eq::bayesian}。排版本科生论文时不修改公式编号格式。
+% 
+% \shtthesis{} 使用 \textsf{unicode-math} 宏包进行公式排版，因此在数学环境内既可以用标准 \LaTeX{} 宏，也可以直接输入 Unicode 符号。例如 $\oiint$ 符号可以通过 |$\oiint$| 宏录入，也可以通过 Unicode 符号 |$|$∯$|$| （对应 \verb|U+0222F| 码点） 录入。以下测试公式来自 \citet{clerkma2013unicode}，其中所有字符均直接使用对应 Unicode 符号录入。
+% \begin{align}
+% & ⊢ ∀x[(Fx ∨ Gx) → \mathord{∼}Hx] \\
+% & ⊨ ¬∃y∀x[x∈y ↔ x∉x]  \\
+% & ⊭ x ∩ (y ∪ z) ≠ (x ∩ y) ∪ (x ∩ z) \\
+% & ⊢ ⟦α⟧ = ℵ₀ → α ≇ ℘(α) \\
+% & ⌜ψ[(℩x)φx]⌝ ≝ ⌜(∃x)[φx ∧ (∀z)(φz ⊃ x=z) ∧ ψx]⌝ \\
+% & ⊢ (P ⥽ Q) ⥽ (□P ⥽ ◇Q)
+% \end{align}
+% 
+% \subsection{数学环境}
+% \shtthesis 通过 \textsf{amsthm} 宏包定义了常用的数学环境和证明环境，如表~\ref{tab::math_envs} 所列。其中，英文表示 tex 文档内调用的环境名称，中文表示排版后论文中显示的环境名称。
+% 
+% \begin{table}[htb]
+% \centering
+% \caption{\shtthesis 提供的数学环境}
+% \label{tab::math_envs}
+% \begin{tabular}{*{5}{c}}
+%   \toprule
+%   theorem & lemma & corollary & proposition & conjecture \\
+%   定理    & 引理  & 推论       & 命题        & 猜想       \\
+%   \midrule
+%   definition & axiom & example & problem & exercise \\
+%   定义       & 公理  & 例       & 问题    & 练习     \\
+%   \midrule
+%   remark & & & & \\
+%   注 & & & & \\
+%   \bottomrule
+% \end{tabular}
+% \end{table}
+% 
+% \subsection{文献引用} \label{sec::citation}
+% \shtthesis{} 通过 \textsf{biblatex} 宏包及 \textsf{biblatex-gb7714-2015} 格式支持符合 GB/T 7714-2015 标准的文献引用。本科生论文使用顺序编码制，研究生论文使用“著者-出版年”制。
+% 
+% \paragraph{顺序编码制}
+% 使用一般引用 \verb|\cite| 的编码显示为上标，例如~\cite{stamerjohanns2009mathml, yuan2012lana}。也可以使用行内引用 \verb|\inlinecite| 将引用编码排版至正文，例如 \inlinecite{Bohan1928}。参考文献列表按照各条目在正文中被引用顺序排列。
+% 
+% \paragraph{“著者-出版年”制}
+% 使用 \verb|\citet| 进行文本形式的引用 \citet{Bohan1928}，使用 \verb|\citep| 进行括号形式的引用 \citep{yuan2012lana}，使用 \verb|\citeauthor| 进行作者引用 \citeauthor{niu2013zonghe}，以及使用 \verb|\citeyear| 进行年份引用 \citeyear{walls2013drought}。参考文献列表各条目按照语言分组后，按照字母序排列。
+% 
+% \shtthesis{} 通过 \verb|\shtsetup| 的 bib-resource 选项指定参考文献数据库，例如载入 reference.bib 文件：
+% \begin{latex}
+% \shtsetup{
+%   bib-resource = {reference.bib},
+% }
+% % ...
+% \begin{document}
+%   % ...
+%   \makebiblio
+% \end{latex}
+% 
+% 需要注意若文献条目的作者姓名非英文，则需额外增加 key 字段指定作者英文姓名，并在姓氏拼英后加注音调，以确保文献条目在文末的参考文献中正确排列。例如 \citet{bravo1990comparative} 无需额外处理，而 \citet{chen1980zhongguo} 对应的 bib 条目需修改为
+% \begin{latex}
+% @incollection{chen1980zhongguo,
+%   author    = {陈晋镳 and 张惠民 and 朱士兴 and 赵震 and 王振刚},
+%   key       = {Chen2 Jing Ao Zhang1 Hui Ming Zhu1 Shi Xing Zhao4 Zhen Wang2 Zhen Gang},
+%   title     = {蓟县震旦亚界研究},
+%   editor    = {中国地质科学院天津地质矿产研究所},
+%   booktitle = {中国震旦亚界},
+%   address   = {天津},
+%   publisher = {天津科学技术出版社},
+%   year      = {1980},
+%   pages     = {56--114},
+% }
+% \end{latex}
+% 
+% \subsection{列表环境}
+% \shtthesis{} 微调了编号列表（enumerate）和非编号列表（itemize）环境，以适应中文排版惯例。编号列表默认使用数字编号，也可以在 \verb|\begin{enumerate}| 之后，以短标签（short label）形式指定编号格式。还可以通过 \verb|resume*| 参数，“继续”被中断的列表编号。关键字（description）环境在每一条目关键字后增加了加粗全角冒号“\textbf{：}”以适应中文排版惯例。
+% 
+% \section{附录及其他内容} \label{sec::backmatter}
+% 正文完成后，使用 \verb|\makebiblio| 命令可生成参考文献，若需读取自定义 bib 文件请参考第~\ref{sec::citation} 节。使用 \verb|\appendix| 命令后，即可像书写正文一样书写附录。默认目录中只显示“附录”一项，不显示附录各级标题。
+% \begin{latex}
+% \appendix
+% \chapter{...}
+% % ...
+% \end{latex}
+% 
+% 《规范》要求在文末依此列出致谢、作者简历、攻读学位期间发表的论文与研究成果。用户可使用 \shtthesis{} 提供的相应环境 acknowledgement、resume、publications、patterns 和 projects 进行排版。同时为了生成符合盲审要求的论文，\shtthesis{} 也提供了对应的\emph{匿名环境} publications*、patterns* 和 projects*。在打开 \verb|anonymous| 选项（第~\ref{sec::option_anonymous} 节）后，论文中不出现“致谢”一节，作者简历内容替换为匿名字符串，其他小节使用匿名环境内容排版。注意在第一次使用任一上述环境前，需要使用 \verb|\backmatter| 切换至后记模式。
+% 
+% \subsection{致谢}
+% 在 acknowledgement 环境内书写致谢，致谢内容在匿名模式下不显示。
+% \begin{latex}
+% \begin{acknowledgement}
+%   致谢信息……
+% \end{acknowledgement}
+% \end{latex}
+% 
+% \subsection{简历及科研成果}
+% 此部分需要依此书写个人简历（resume 环境）、已发表（或正式接受）的学术论文（publications 和 publications* 环境）、申请或已获得的专利（patterns 和 patterns* 环境）、参加的研究项目及获奖情况（projects 和 projects*）。根据是否匿名分别显示非匿名环境内容和匿名环境内容。
+% \begin{latex}
+% \begin{resume}
+%   个人简历…… （仅非匿名环境显示）
+% \end{resume}
+% 
+% \begin{publications}
+%   论文发表记录…… （非匿名时显示）
+% \end{publications}
+% 
+% \begin{publications*}
+%   论文发表记录…… （匿名时显示）
+% \end{publications*}
+% % ...
+% \end{latex}
+%
 % \printbibliography
 % 
-% \StopEventually{\PrintIndex}
+% \StopEventually{\PrintChanges\PrintIndex}
 % \clearpage
 % \section{实现细节}
 %
@@ -283,8 +534,10 @@
 \RequirePackage{ctable}
 \RequirePackage{listings}
 \RequirePackage{hologo}
+\RequirePackage[normalem]{ulem}
+\RequirePackage{amsmath}
 \RequirePackage{unicode-math}
-\RequirePackage[natbib=true, hyperref=manual]{biblatex}
+\RequirePackage[natbib=true, hyperref=manual, style=gb7714-2015]{biblatex}
 \RequirePackage{hyperref}
 
 \geometry{
@@ -292,9 +545,8 @@
   includeheadfoot,
   top = 1.5cm,
   bottom = 1.75cm,
-  headheight = 1.17cm,
-  headsep = \baselineskip,
-  footskip = 0.79cm,
+  inner = 3.17cm,
+  outer = 3.17cm,
 }
 \setmainfont{texgyrepagella}[
   Extension      = .otf,
@@ -311,7 +563,7 @@
   ItalicFont     = *-Italic,
   Ligatures      = TeX,
 ]
-\setmonofont{Sarasa Mono SC}[
+\setmonofont{Sarasa Mono Slab SC}[
   UprightFont    = * Light,
   BoldFont       = *,
   ItalicFont     = * Light Italic,
@@ -319,7 +571,7 @@
   Ligatures      = CommonOff,
 ]
 \setmathfont{texgyrepagella-math.otf}
-\setCJKmonofont{Sarasa Mono SC}[
+\setCJKmonofont{Sarasa Mono Slab SC}[
   UprightFont    = * Light,
   BoldFont       = *,
   ItalicFont     = * Light Italic,
