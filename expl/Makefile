@@ -1,4 +1,8 @@
 PKG    = shtthesis
+TEX    = xetex
+IDX    = makeindex
+BIB    = biber
+LATEX  = $(TEX) -fmt=xelatex
 SRC    = $(PKG).dtx
 BCF    = $(PKG).bcf
 SCRIPT = $(PKG).ins
@@ -14,15 +18,15 @@ doc: $(DOC)
 cls: $(CLS)
 
 $(DOC): $(CLS)
-	xelatex -no-pdf $(SRC)
-	makeindex -s gglo.ist -o $(PKG).gls $(PKG).glo
-	makeindex -s gind.ist -o $(PKG).ind $(PKG).idx
-	biber $(BCF)
-	xelatex -no-pdf $(SRC)
-	xelatex $(SRC)
+	$(LATEX) -no-pdf $(SRC)
+	$(IDX)   -s gglo.ist -o $(PKG).gls $(PKG).glo
+	$(IDX)   -s gind.ist -o $(PKG).ind $(PKG).idx
+	$(BIB)   $(BCF)
+	$(LATEX) -no-pdf $(SRC)
+	$(LATEX) $(SRC)
 
 $(CLS): $(SRC) $(SCRIPT)
-	xetex $(SCRIPT)
+	$(TEX) $(SCRIPT)
 
 clean-all: clean
 	rm -f $(DOC) $(CLS)

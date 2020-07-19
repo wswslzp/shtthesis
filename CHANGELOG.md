@@ -12,9 +12,10 @@
 
    注意：目前使用 LuaLaTeX 编译时，ntheorem `proof` 环境最后的 QED 符号（∎, `U+220E`）可能排版出错；
 3. 宋体正文（`\textup`, `\upshape`）使用 Light 字重，宋体加粗（`\textbf`, `\bfseries`）使用 Medium 字重以匹配 Windows 下中易宋体和方正书宋的排版效果；
+4. 将校徽文件重命名为 shanghaitech-emblem.pdf；
 ### Fixed
 1. 使用[更为规范的格式](https://keepachangelog.com/en/1.0.0/)记录 changelog；
-
+2. 将研究生论文“申请或已获得的专利”环境重命名为 `patent`；
 
 ## 2020-06-30
 > Release: v0.3.1

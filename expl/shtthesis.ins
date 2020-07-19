@@ -54,11 +54,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 \Msg{*                                                           *}
 \Msg{* The recommended directory is TEXMF/tex/latex/shtthesis    *}
 \Msg{*                                                           *}
-\Msg{*     shtthesis.cls                                         *}
-\Msg{*     shanghaitech-emblem.pdf                               *}
+\Msg{*   shtthesis.cls                                           *}
+\Msg{*   shanghaitech-emblem.pdf                                 *}
 \Msg{*                                                           *}
 \Msg{* To produce the documentation run the files ending with    *}
-\Msg{* `.dtx' through LaTeX.                                     *}
+\Msg{* `.dtx' through XeLaTeX and Biber:                         *}
+\Msg{*                                                           *}
+\Msg{*   $ xelatex   shtthesis.dtx                               *}
+\Msg{*   $ makeindex -s gglo.ist -o shtthesis.gls shtthesis.glo  *}
+\Msg{*   $ makeindex -s gind.ist -o shtthesis.ind shtthesis.idx  *}
+\Msg{*   $ biber     shtthesis.bcf                               *}
+\Msg{*   $ xelatex   shtthesis.dtx                               *}
+\Msg{*   $ xelatex   shtthesis.dtx                               *}
 \Msg{*                                                           *}
 \Msg{* Happy TeXing!                                             *}
 \Msg{*************************************************************}
