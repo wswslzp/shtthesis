@@ -34,7 +34,7 @@
   supervisor-institution = {上海科技大学信息科学与技术学院},
   discipline-level-1 = {计算机科学与技术},
   discipline-level-1* = {Computer~Science~and~Technology},
-  bib-resource = {reference.bib},
+  bib-resource = {\jobname.bib},
 }
 
 % undergraduate setup
@@ -128,7 +128,7 @@
 \newif\iftestchsfont
 \testchsfontfalse
 
-\begin{filecontents}{reference.bib}
+\begin{filecontents}{\jobname.bib}
 @article{stamerjohanns2009mathml,
     title={{MathML}-aware article conversion from {LaTeX}},
     author={Stamerjohanns, Heinrich and Ginev, Deyan and David, Catalin and Misev, Dimitar and Zamdzhiev, Vladimir and Kohlhase, Michael},
@@ -1048,13 +1048,13 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
   论文发表…… （匿名环境）
 \end{publications*}
 
-\begin{patterns}
+\begin{patents}
   专利申请或授权记录…… （非匿名环境）
-\end{patterns}
+\end{patents}
 
-\begin{patterns*}
+\begin{patents*}
   专利申请或授权记录…… （匿名环境）
-\end{patterns*}
+\end{patents*}
 
 \begin{projects}
   个人参与的科研项目、获奖情况…… （仅非匿名环境显示）
