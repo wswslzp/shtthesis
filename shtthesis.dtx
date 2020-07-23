@@ -2818,10 +2818,10 @@
 \geometry{
   a4paper,
   includeheadfoot,
-  top = 1.5cm,
+  top    = 1.5cm,
   bottom = 1.5cm,
-  inner = 3.17cm,
-  outer = 3.17cm,
+  inner  = 3.17cm,
+  outer  = 3.17cm,
 }
 \raggedbottom
 \setmainfont{texgyrepagella}[
@@ -2850,7 +2850,10 @@
      ItalicFont  = FandolKai-Regular,
   ItalicFeatures = {Extension = .otf},
 ]
-\setCJKsansfont{Noto Sans CJK SC}
+\setCJKsansfont{Noto Sans CJK SC}[
+  UprightFont = * Regular,
+  BoldFont    = * Medium,
+]
 \setCJKmonofont{Sarasa Mono Slab SC}[
   UprightFont    = * Light,
   BoldFont       = *,
@@ -2859,7 +2862,10 @@
   Ligatures      = CommonOff,
 ]
 \setCJKfamilyfont{zhsong}{Noto Serif CJK SC}
-\setCJKfamilyfont{zhhei}{Noto Sans CJK SC}
+\setCJKfamilyfont{zhhei}{Noto Sans CJK SC}[
+  UprightFont = * Regular,
+  BoldFont    = * Medium,
+]
 \setCJKfamilyfont{zhkai}{FandolKai-Regular.otf}
 \setCJKfamilyfont{zhfs}{FandolFang-Regular.otf}
 \providecommand{\songti}{\CJKfamily{zhsong}}
@@ -2919,9 +2925,9 @@
 \lstnewenvironment{shell}{\lstset{style=lstStyleShell}}{}
 \hypersetup{
   colorlinks = true,
-  linkcolor = fdu@link,
-  urlcolor = fdu@url,
-  citecolor = fdu@cite,
+  linkcolor  = fdu@link,
+  urlcolor   = fdu@url,
+  citecolor  = fdu@cite,
 }
 \addbibresource{\jobname.bib}
 \BiblatexManualHyperrefOn
