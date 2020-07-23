@@ -116,18 +116,18 @@
 % \end{center}
 % 
 % \subsection{文档编译}
-% \shtthesis{} 支持使用 \hologo{XeLaTeX} 和 \hologo{LuaLaTeX} 引擎编译（注意，\emph{不支持} \hologo{pdfLaTeX}）。推荐在最新的 \hologo{TeX} Live 环境下，使用 |latexmk| 工具进行编译。Windows 及 Linux 用户请下载安装 \href{https://www.tug.org/texlive/}{\hologo{TeX} Live}，macOS 用户请下载安装 \href{https://www.tug.org/mactex/}{Mac\hologo{TeX}}。\emph{非常不推荐}使用 $\mathbb{C}$\TeX 发行版（\emph{大人，时代变了}）。
+% \shtthesis{} 支持使用 \hologo{XeTeX} 和 \hologo{LuaTeX} 引擎编译（注意，\emph{不支持} \hologo{pdfTeX}）。推荐在最新的 \hologo{TeX} Live 环境下，使用 |latexmk| 工具进行编译。Windows 及 Linux 用户请下载安装 \href{https://www.tug.org/texlive/}{\hologo{TeX} Live}，macOS 用户请下载安装 \href{https://www.tug.org/mactex/}{Mac\hologo{TeX}}。\emph{非常不推荐}使用 $\mathbb{C}$\TeX 发行版（\emph{大人，时代变了}）。
 % 
-% 在完成环境配置后，即可使用 |latexmk| 工具完成编译。打开终端（Windows 用户打开 CMD）切换至工作目录，使用 \hologo{XeLaTeX} 引擎进行编译：
+% 在完成环境配置后，即可使用 |latexmk| 工具完成编译。打开终端（Windows 用户打开 CMD）切换至工作目录，使用 \hologo{XeTeX} 引擎进行编译：
 % \begin{shell}
 % `\prompt' latexmk -pdfxe
 % \end{shell}
-% 若偏好使用 \hologo{LuaLaTeX} 引擎，则编译命令为：
+% 若偏好使用 \hologo{LuaTeX} 引擎，则编译命令为：
 % \begin{shell}
 % `\prompt' latexmk -pdflua
 % \end{shell}
 % 
-% 一般来说，\hologo{XeLaTeX} 引擎的编译速度较快且占用资源较少，而 \hologo{LuaLaTeX} 引擎的编译结果似乎有更好的跨平台规范性。
+% 一般来说，\hologo{XeTeX} 引擎的编译速度较快且占用资源较少，而 \hologo{LuaTeX} 引擎的编译结果似乎有更好的跨平台规范性。
 %
 % \section{模板设定}
 % \subsection{载入\shtthesis 模板类}
@@ -415,7 +415,7 @@
 % \DescribeEnv{exercise}
 % \DescribeEnv{remark}
 % \DescribeEnv{proof}
-% \shtthesis 通过 \textsf{ntheorem} 宏包定义了常用的数学环境和证明环境，如表~\ref{tab::math_envs} 所列。其中，英文表示 tex 文档内调用的环境名称，中文表示排版后论文中显示的环境名称。注意，在使用 \hologo{LuaLaTeX} 编译时，证明环境结尾的 QED 符号 $\QED$ 可能会排版出错。
+% \shtthesis 通过 \textsf{ntheorem} 宏包定义了常用的数学环境和证明环境，如表~\ref{tab::math_envs} 所列。其中，英文表示 tex 文档内调用的环境名称，中文表示排版后论文中显示的环境名称。注意，在使用 \hologo{LuaTeX} 引擎编译时，证明环境结尾的 QED 符号 $\QED$ 可能会排版出错。
 % 
 % \begin{table}[htb]
 % \centering
@@ -618,7 +618,7 @@
 % \end{macro}
 % \end{macro}
 %
-% 准备文档类报错信息和内部工具宏，并检查编译引擎是否为 \hologo{XeLaTeX} 或 \hologo{LuaLaTeX}。
+% 准备文档类报错信息和内部工具宏，并检查编译引擎是否为 \hologo{XeTeX} 或 \hologo{LuaTeX}。
 %    \begin{macrocode}
 %<*cls>
 \def\sht@compile@err@help{%
@@ -628,7 +628,7 @@
 \newcommand\sht@warning[1]{\ClassWarning{shtthesis}{#1}}
 \RequirePackage{iftex}
 \ifluatex\else\ifxetex\else%
-  \sht@error{shtthesis only works with LuaLaTeX or XeLaTeX}%
+  \sht@error{shtthesis only works with LuaTeX or XeTeX}%
 \fi\fi
 %</cls>
 %    \end{macrocode}
@@ -1340,7 +1340,7 @@
 %</cls>
 %    \end{macrocode}
 %
-% Linux/UNIX 环境下的中文字体选择逻辑比较繁琐，主要原因是 \hologo{XeLaTeX} 引擎无法使用字体名称（family name 或 full name）调用 \TeX{} Live 内置字体。目前（\fileversion）的中文字体设置流程为：
+% Linux/UNIX 环境下的中文字体选择逻辑比较繁琐，主要原因是 \hologo{XeTeX} 引擎无法使用字体名称（family name 或 full name）调用 \TeX{} Live 内置字体。目前（\fileversion）的中文字体设置流程为：
 % \begin{enumerate}
 % \item 检测思源宋体、黑体是否安装，若未检测到则使用 Fandol 宋体、黑体；
 %   \begin{enumerate}
@@ -1348,8 +1348,8 @@
 %   \item 若不存在，则使用 Regular 和 Bold 字重，记录字体全名；
 %   \end{enumerate}
 % \item 检测方正楷体、仿宋是否安装，若未检测到则使用 Fandol 楷体、仿宋；
-% \item 若编译引擎为 \hologo{LuaLaTeX}，则使用包含字重的字体全名（full name）设定字体，完成设置；
-% \item 若编译引擎为 \hologo{XeLaTeX} ，有可能需要使用字体文件名（font file path）调用字体。根据宋体、黑体的字体全名：
+% \item 若编译引擎为 \hologo{LuaTeX}，则使用包含字重的字体全名（full name）设定字体，完成设置；
+% \item 若编译引擎为 \hologo{XeTeX} ，有可能需要使用字体文件名（font file path）调用字体。根据宋体、黑体的字体全名：
 %   \begin{enumerate}
 %   \item 若使用 Fandol 宋体、黑体，则强制使用 Fandol 楷体、仿宋。按照 Fandol 在 \TeX{} Live 内的文件名设定字体，完成设置；
 %   \item 若使用思源宋体、黑体：
@@ -2846,8 +2846,11 @@
   BoldItalicFont = * Italic,
   Ligatures      = CommonOff,
 ]
-\setCJKmainfont{Source Han Serif SC}[ItalicFont=FZKai-Z03]
-\setCJKsansfont{Source Han Sans SC}
+\setCJKmainfont{Noto Serif CJK SC}[
+     ItalicFont  = FandolKai-Regular,
+  ItalicFeatures = {Extension = .otf},
+]
+\setCJKsansfont{Noto Sans CJK SC}
 \setCJKmonofont{Sarasa Mono Slab SC}[
   UprightFont    = * Light,
   BoldFont       = *,
@@ -2857,8 +2860,8 @@
 ]
 \setCJKfamilyfont{zhsong}{Source Han Serif SC}
 \setCJKfamilyfont{zhhei}{Source Han Sans SC}
-\setCJKfamilyfont{zhkai}{FZKai-Z03}
-\setCJKfamilyfont{zhfs}{FZFangSong-Z02}
+\setCJKfamilyfont{zhkai}{FandolKai-Regular.otf}
+\setCJKfamilyfont{zhfs}{FandolFang-Regular.otf}
 \providecommand{\songti}{\CJKfamily{zhsong}}
 \providecommand{\heiti}{\CJKfamily{zhhei}}
 \providecommand{\kaishu}{\CJKfamily{zhkai}}
