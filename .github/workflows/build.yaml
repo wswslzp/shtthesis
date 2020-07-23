@@ -20,9 +20,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install Noto and Sarasa fonts
         run: |
-          sudo apt-get update
-          sudo apt-get install --yes fonts-noto-cjk fonts-noto-cjk-extra
-          curl -OL ${{ env.SARASA_URL }} && 7z x sarasa-*.7z && mkdir -p $HOME/.fonts && mv *.ttc $HOME/.fonts/
+          for i in NotoSerifCJK NotoSansCJK; do curl -O ${{ env.NOTO_URL }}/$i.ttc.zip; done
+          unzip -o "*.zip"
+          curl -OL ${{ env.SARASA_URL }} && 7z x sarasa-*.7z && mkdir -p $HOME/.fonts && cp -vf *.ttc $HOME/.fonts/
       - name: Install TeX Live
         run: |
           export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
@@ -82,8 +82,8 @@ jobs:
         run: |
           "NotoSerifCJK", "NotoSansCJK" | ForEach-Object -Process {Invoke-WebRequest -Uri "${{ env.NOTO_URL }}/$_.ttc.zip" -OutFile "$_.ttc.zip"}
           Get-ChildItem *.ttc.zip | Expand-Archive -DestinationPath . -Force
-          Invoke-WebRequest -Uri ${{ env.SARASA_URL }} -OutFile sarasa-gothic-ttc-0.12.11.7z
-          7z x sarasa-gothic-ttc-0.12.11.7z
+          Invoke-WebRequest -Uri ${{ env.SARASA_URL }} -OutFile sarasa-gothic-ttc.7z
+          7z x sarasa-gothic-ttc.7z
           Copy-Item *.ttc C:\Windows\Fonts
       - name: Install TeX Live
         run: |
