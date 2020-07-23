@@ -9,7 +9,7 @@ env:
   NOTO_URL: https://noto-website-2.storage.googleapis.com/pkgs
   SARASA_URL: https://github.com/be5invis/Sarasa-Gothic/releases/download/v0.12.11/sarasa-gothic-ttc-0.12.11.7z
   SED_REP_WITH_CLS_ARGS: s/\\documentclass\[\(.*\)\]/\\documentclass\[\1, fontset=none\]/
-  DOC_DEPENDENCE: ctable listings hologo libertinus-fonts tex-gyre-math 
+  DOC_DEPENDENCE: ctable listings hologo libertinus-fonts tex-gyre-math makeindex 
 
 jobs:
   build-ubuntu:
@@ -78,6 +78,13 @@ jobs:
           choco install ghostscript --version=9.52
           $util_path = "C:\Program Files\gs\gs9.52\bin;" + ${env:PATH}
           echo "::set-env name=PATH::$util_path"
+      - name: Install Noto and Sarasa fonts
+        run: |
+          "NotoSerifCJK", "NotoSansCJK" | ForEach-Object -Process {Invoke-WebRequest -Uri "${{ env.NOTO_URL }}/$_.ttc.zip" -OutFile "$_.ttc.zip"}
+          Get-ChildItem *.ttc.zip | Expand-Archive -DestinationPath . -Force
+          Invoke-WebRequest -Uri ${{ env.SARASA_URL }} -OutFile sarasa-gothic-ttc-0.12.11.7z
+          7z x sarasa-gothic-ttc-0.12.11.7z
+          Copy-Item *.ttc C:\Windows\Fonts
       - name: Install TeX Live
         run: |
           ${env:PATH} = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
@@ -91,15 +98,6 @@ jobs:
           Expand-Archive tl-win64.zip -DestinationPath ${{ github.workspace }}\tmp\texlive
           $tl_path_w64 = "${{ github.workspace }}\tmp\texlive\bin\win64;" + "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
           echo "::set-env name=PATH::$tl_path_w64"
-      - name: Install Noto and Sarasa fonts
-        run: |
-          "NotoSerifCJK", "NotoSansCJK" | ForEach-Object -Process {Invoke-WebRequest -Uri "${{ env.NOTO_URL }}/$_.ttc.zip" -OutFile "$_.ttc.zip"}
-          Get-ChildItem *.ttc.zip | Expand-Archive -DestinationPath . -Force
-          Invoke-WebRequest -Uri ${{ env.SARASA_URL }} -OutFile sarasa-gothic-ttc-0.12.11.7z
-          7z x sarasa-gothic-ttc-0.12.11.7z
-          Copy-Item *.ttc C:\Windows\Fonts
-          fc-cache -fsv
-          luaotfload-tool -fuv
       - name: Build class and document
         run: |
           sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-example.tex
