@@ -32,6 +32,7 @@ release: cls doc example
 	cp        $(EXAMPLE).pdf $(PKG)/
 	cp        README.md      $(PKG)/
 	cp        LICENSE        $(PKG)/
+	cp        DEPENDS.txt    $(PKG)/
 	zip  -rq9 $(PKG).zip     $(PKG)/
 	rm   -rf  $(PKG)/
 

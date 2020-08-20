@@ -1,63 +1,113 @@
-% shtthesis, an unofficial LaTeX thesis template for ShanghaiTech University.
-% Copyright (C) 2020 Li Rundong <rundong.001@gmail.com>
+% ==============================================================================
+% shtthesis: 上海科技大学学位论文模板.
+% 
+% 注意：
+%   0. 若您不太熟悉 LaTeX, 请使用上传至 Overleaf 的 shtthesis 模板, 并忽略下一条
+%      注意事项;
+%   1. 使用 UTF-8 编码保存本文件, 并以 XeTeX 或 LuaTeX 引擎编译;
+%   2. 使用前请通读模板文档 shtthesis.pdf;
+%   3. 对 shtthesis 项目的任何使用、修改、重分发需遵循 GPLv3 许可证 (见下文).
 %
-% This program is free software: you can redistribute it and/or modify
-% it under the terms of the GNU General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
+% 许可证:
+%   shtthesis, an unofficial LaTeX thesis template for ShanghaiTech University.
+%   Copyright (C) 2020 Li Rundong <rundong.001@gmail.com>
+%  
+%   This program is free software: you can redistribute it and/or modify
+%   it under the terms of the GNU General Public License as published by
+%   the Free Software Foundation, either version 3 of the License, or
+%   (at your option) any later version.
+%  
+%   This program is distributed in the hope that it will be useful,
+%   but WITHOUT ANY WARRANTY; without even the implied warranty of
+%   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%   GNU General Public License for more details.
+%  
+%   You should have received a copy of the GNU General Public License
+%   along with this program.  If not, see <https://www.gnu.org/licenses/>
 %
-% This program is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU General Public License for more details.
+% ------------------------------------------------------------------------------
+% 载入模板类并设定类选项.
 %
-% You should have received a copy of the GNU General Public License
-% along with this program.  If not, see <https://www.gnu.org/licenses/>
-
-% graduate setup
-\documentclass[master]{shtthesis}
+% 类选项:
+%  - {bachelor | master | doctor}: 学位类型. 必要选项;
+%  - [comfort]: 改善本科论文的排版一致性和可读性. 仅当 bachelor 被设定时生效;
+%  - [anonymous]: 生成用于盲审的匿名化论文. 仅当 master 或 doctor 被设定时生效;
+%  - [print]: 生成适合打印的最终论文;
+%  - [*]: 其他类选项会传递给实际用于排版的 ctexbook 类;
+%
+% 例:
+%   \documentclass[bachelor, comfort]{shtthesis}  % 本科论文，改善排版一致性
+    \documentclass[master]{shtthesis}             % 硕士论文
+%   \documentclass[doctor]{shtthesis}             % 博士论文
+%
+% ------------------------------------------------------------------------------
+% 通过 \shtsetup 设定论文必要信息.
+%
+% 使用 key=value 方式设定论文信息, 可以一次设置完成, 也可以多次设置. 注意中间
+% 不能有空行.
+%
+% 参数:
+%  - {author, author*}: 作者姓名. 注意 bachelor 和 master/doctor 对于英文名的
+%      拼写要求不同;
+%  - [author-id]: 作者学号, 仅 bachelor 需要设置;
+%  - {bib-resource}: 参考文献数据库 (.bib 文件) 路径;
+%  - {date, date*}: 成文日期;
+%  - [degree-name, degree-name*]: 学位名称. 仅 master 和 doctor 需要设置;
+%  - [discipline, discipline*]: 专业名称. 仅 bachelor 需要设置;
+%  - [discipline-level-1, discipline-level-1*]: 一级专业名称. 仅 master 和
+%      doctor 需要设置;
+%  - [entrance-year]: 入学年份. 仅 bachelor 需要设置;
+%  - {institution, institution*}: 所在学院/研究所. 仅 master 和 doctor 需要设置;
+%  - {keywords, keywords*}: 关键词;
+%  - [secret-level]: 密级. 仅 master 和 doctor 需要设置;
+%  - {supervisor, supervisor*}: 导师姓名;
+%  - [supervisor-institution]: 导师单位. 仅需中文. 仅 master 和 doctor 需要设置;
+%  - {title, title*}: 论本标题;
+%
+% 例:
+%  - 本科论文信息设定:
+%  \shtsetup{
+%    title = {\ShtThesis{}~v\version{}\\使用说明},
+%    title* = {A~User's~Guide~to\\\ShtThesis{}~v\version{}},
+%    keywords = {上海科技大学，学位论文，\LaTeX{}},
+%    keywords* = {ShanghaiTech~University, Thesis, \LaTeX{}},
+%    date = {2020~年~06~月},
+%    date* = {06~/~2020},
+%    author = {李润东},
+%    author* = {Rundong~Li},
+%    author-id = {36273800},
+%    entrance-year = {2017},
+%    institution = {信息科学与技术学院},
+%    institution* = {School~of~Information~Science~and~Technology},
+%    supervisor = {范睿},
+%    supervisor* = {Rui~Fan},
+%    discipline = {计算机科学与技术},
+%    discipline* = {Computer~Science~and~Technology},
+%    bib-resource = {reference.bib},
+%  }
+%
+%  - 研究生论文信息设定:
 \shtsetup{
   degree-name = {工学硕士},
   degree-name* = {Master~of~Science~in~Engineering},
-  secret-level = {白给},
-  title = {\ShtThesis{}~v\version{}~使用说明},
-  title* = {A~User's~Guide\\to\\\ShtThesis{}~v\version{}},
+  title = {\ShtThesis{}~v\version{}~使用样例},
+  title* = {Example~of~Usage\\of\\\ShtThesis{}~v\version{}},
   keywords = {上海科技大学，学位论文，\LaTeX{}},
   keywords* = {ShanghaiTech~University, Thesis, \LaTeX{}},
-  author = {李润东},
-  author* = {Li~Rundong},
+  author = {你的名字},
+  author* = {Severus~Snape},
   institution = {上海科技大学信息科学与技术学院},
   institution* = {School~of~Information~Science~and~Technology\\%
                   ShanghaiTech~University},
-  supervisor = {范睿~副教授},
-  supervisor* = {Professor~Fan~Rui},
+  supervisor = {导师的名字},
+  supervisor* = {Professor~Albus~Percival~Wulfric~Brian~Dumbledore},
   supervisor-institution = {上海科技大学信息科学与技术学院},
   discipline-level-1 = {计算机科学与技术},
   discipline-level-1* = {Computer~Science~and~Technology},
   bib-resource = {\jobname.bib},
 }
-
-% undergraduate setup
-% \documentclass[bachelor, comfort]{shtthesis}
-% \shtsetup{
-%   title = {\ShtThesis{}~v\version{}\\使用说明},
-%   title* = {A~User's~Guide~to\\\ShtThesis{}~v\version{}},
-%   keywords = {上海科技大学，学位论文，\LaTeX{}},
-%   keywords* = {ShanghaiTech~University, Thesis, \LaTeX{}},
-%   date = {2020~年~06~月},
-%   date* = {06~/~2020},
-%   author = {李润东},
-%   author* = {Rundong~Li},
-%   author-id = {36273800},
-%   entrance-year = {2017},
-%   institution = {信息科学与技术学院},
-%   institution* = {School~of~Information~Science~and~Technology},
-%   supervisor = {范睿},
-%   supervisor* = {Rui~Fan},
-%   discipline = {计算机科学与技术},
-%   discipline* = {Computer~Science~and~Technology},
-%   bib-resource = {reference.bib},
-% }
+%
+% ------------------------------------------------------------------------------
 
 % `latex' and `shell' environments are adapted from `thuthesis'
 \usepackage{listings}

@@ -915,6 +915,7 @@
   scheme = plain,
 }{ctexbook}
 \PassOptionsToPackage{
+  backend     = biber,
   hyperref    = manual,
   gbpub       = false,
   gbcitelocal = chinese,
@@ -2847,8 +2848,7 @@
   Ligatures      = CommonOff,
 ]
 \setCJKmainfont{Noto Serif CJK SC}[
-  ItalicFont     = FandolKai-Regular,
-  ItalicFeatures = {Extension = .otf},
+  ItalicFont = FZKai-Z03,
 ]
 \setCJKsansfont{Noto Sans CJK SC}[
   UprightFont = * Regular,
@@ -2866,8 +2866,8 @@
   UprightFont = * Regular,
   BoldFont    = * Medium,
 ]
-\setCJKfamilyfont{zhkai}{FandolKai-Regular.otf}
-\setCJKfamilyfont{zhfs}{FandolFang-Regular.otf}
+\setCJKfamilyfont{zhkai}{FZKai-Z03}
+\setCJKfamilyfont{zhfs}{FZFangSong-Z02}
 \providecommand{\songti}{\CJKfamily{zhsong}}
 \providecommand{\heiti}{\CJKfamily{zhhei}}
 \providecommand{\kaishu}{\CJKfamily{zhkai}}
