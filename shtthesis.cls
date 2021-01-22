@@ -17,8 +17,8 @@
 % Identification
 % ==============================================================================
 \NeedsTeXFormat{LaTeX2e}
-\newcommand\version{0.3.1}
-\newcommand\versiondate{2020/06/30}
+\newcommand\version{0.3.2}
+\newcommand\versiondate{2021/01/23}
 \ProvidesClass{shtthesis}[%
   \versiondate\space%
   v\version\space%
@@ -313,7 +313,7 @@
 \RequirePackage{indentfirst}
 \RequirePackage[normalem]{ulem}
 \RequirePackage{fancyhdr}
-\RequirePackage{pageslts}
+\RequirePackage{lastpage}
 \RequirePackage{tocvsec2}
 \RequirePackage{letltxmacro}
 \RequirePackage{fontspec}
@@ -373,7 +373,7 @@
 \definecolor{ShtRed}{RGB}{146,46,23}
 \def\school@logo@missing{%
   校徽文件缺失，请至\href{https://github.com/lirundong/shtthesis/raw/master/%
-  shanghaitech-logo.pdf}{项目主页}下载！%
+  shanghaitech-emblem.pdf}{项目主页}下载！%
 }
 % ------------------------------------------------------------------------------
 %   Geometry and layouts
@@ -421,8 +421,8 @@
 \def\sht@flat@title{\renewcommand\\{\space} \@title}
 \def\sht@flat@title@en{\renewcommand\\{\space} \sht@title@en}
 \newcommand\sht@head@logo{%
-  \IfFileExists{shanghaitech-logo.pdf}{%
-    \includegraphics[height=\sht@head@logo@height]{shanghaitech-logo.pdf}%
+  \IfFileExists{shanghaitech-emblem.pdf}{%
+    \includegraphics[height=\sht@head@logo@height]{shanghaitech-emblem.pdf}%
   }{%
     \fbox{%
       \begin{minipage}[b][\sht@head@logo@height][c]{0.4\columnwidth}%
@@ -432,11 +432,12 @@
   }
 }
 \pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \fancypagestyle{Plain}{}
 \fancypagestyle{RomanNumbered}{
   \fancyhf{}
   \pagenumbering{Roman}
-  \fancyhead[OC]{\footnotesize\nouppercase\leftmark}
+  \fancyhead[OC]{\footnotesize\nouppercase 第~\thechapter~章\hspace*{\ccwd}\leftmark}
   \fancyhead[EC]{\footnotesize\nouppercase\sht@flat@title}
   \fancyfoot[C]{\footnotesize\thepage}
   \renewcommand{\headrulewidth}{0.8pt}
@@ -444,7 +445,7 @@
 }
 \fancypagestyle{LRNumbered}{
   \fancyhf{}
-  \fancyhead[OC]{\footnotesize\nouppercase\leftmark}
+  \fancyhead[OC]{\footnotesize\nouppercase 第~\thechapter~章\hspace*{\ccwd}\leftmark}
   \fancyhead[EC]{\footnotesize\nouppercase\sht@flat@title}
   \fancyfoot[OR]{\footnotesize\thepage}
   \fancyfoot[EL]{\footnotesize\thepage}
@@ -475,7 +476,7 @@
   \fancyhead[R]{\zihao{-5}\sffamily\sht@flat@title}
   \fancyfoot[C]{%
     \footnotesize%
-    第~\thepage~页\hspace*{1\ccwd}共~\lastpageref*{VeryLastPage}~页%
+    第~\thepage~页\hspace*{1\ccwd}共~\pageref*{LastPage}~页%
   }
   \renewcommand{\headrulewidth}{0.8pt}
   \renewcommand{\footrulewidth}{0pt}
@@ -499,12 +500,12 @@
   \else%
     \pagestyle{LRNumbered}%
   \fi%
-  \pagenumbering{arabic}%
-  \setcounter{page}{1}%
+  % \pagenumbering{arabic}%
+  % \setcounter{page}{1}%
 }
-\AtBeginDocument{%
-  \pagenumbering{arabic}%
-}
+% \AtBeginDocument{%
+%   \pagenumbering{arabic}%
+% }
 % ------------------------------------------------------------------------------
 %   Font utilities
 % ------------------------------------------------------------------------------
@@ -1095,8 +1096,8 @@
 }
 \ExplSyntaxOff
 \newcommand\sht@schoollogo{%
-  \IfFileExists{shanghaitech-logo.pdf}{%
-    \includegraphics[width=10.48cm]{shanghaitech-logo.pdf}%
+  \IfFileExists{shanghaitech-emblem.pdf}{%
+    \includegraphics[width=10.48cm]{shanghaitech-emblem.pdf}%
   }{%
     \begin{center}%
       \fbox{%
@@ -1109,8 +1110,8 @@
 }
 \newcommand\sht@schoollogo@undergraduate{%
   \noindent%
-  \IfFileExists{shanghaitech-logo.pdf}{%
-    \includegraphics[width=5.39cm]{shanghaitech-logo.pdf}%
+  \IfFileExists{shanghaitech-emblem.pdf}{%
+    \includegraphics[width=5.39cm]{shanghaitech-emblem.pdf}%
   }{%
     \fbox{%
       \begin{minipage}[t][1.45cm][c]{0.75\columnwidth}%
@@ -1517,7 +1518,7 @@
     毕业论文（设计）。
 
     \hspace*{6\ccwd}\textbf{保\hspace*{1\ccwd}密}$\square$，%
-    在\uline{\hspace*{2\ccwd}}年解密后适用本授权书。
+    在\uline{\mbox{\hspace*{2\ccwd}}}年解密后适用本授权书。
 
     本论文属于
 
@@ -1544,8 +1545,8 @@
   }
   \clearpage
   % P4: empty
-  \thispagestyle{empty}
-  \cleardoublepage
+  % \thispagestyle{empty}
+  % \cleardoublepage
 }
 % ------------------------------------------------------------------------------
 %   Abstract

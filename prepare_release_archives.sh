@@ -29,7 +29,7 @@ BASE_CONTENT="\
   "
 OVER_LEAF_CONTENT="\
   ${BASE_CONTENT}
-  shanghaitech-logo.pdf
+  shanghaitech-emblem.pdf
   "
 CTAN_CONTENT="\
   ${BASE_CONTENT}
