@@ -156,8 +156,7 @@ jobs:
           echo "${{ github.workspace }}\tmp\texlive\bin\win32" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
       - name: Update CTeX/LuaTeX and install utilities
         run: |
-          tlmgr update --self
-          tlmgr update ctex luatexja
+          tlmgr update --self ctex luatexja
           choco install sed
           choco install ghostscript --version=9.53.3
           echo "C:\Program Files\gs\gs9.53.3\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
