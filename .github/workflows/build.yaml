@@ -51,7 +51,7 @@ jobs:
           7z x ${{ env.DOWNLOAD_DIR }}/texlive2020.iso -o${{ env.EXTRACT_DIR }}
           chmod +x ${{ env.EXTRACT_DIR }}/install-tl
           ./${{ env.EXTRACT_DIR }}/install-tl --profile .github/workflows/texlive.profile
-          echo "::set-env name=PATH::/tmp/texlive/bin/x86_64-linux:$PATH"
+          echo "/tmp/texlive/bin/x86_64-linux" >> $GITHUB_PATH
       - name: Build user document (LuaLaTeX)
         run: |
           sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
@@ -103,7 +103,7 @@ jobs:
           7z x ${{ env.DOWNLOAD_DIR }}/texlive2020.iso -o${{ env.EXTRACT_DIR }}
           chmod +x ${{ env.EXTRACT_DIR }}/install-tl
           ./${{ env.EXTRACT_DIR }}/install-tl --profile .github/workflows/texlive.profile
-          echo "::set-env name=PATH::/tmp/texlive/bin/x86_64-darwin:$PATH"
+          echo "/tmp/texlive/bin/x86_64-darwin" >> $GITHUB_PATH
       - name: Build user document (LuaLaTeX)
         run: |
           gsed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
@@ -152,16 +152,15 @@ jobs:
           .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive-win.profile
           Pop-Location
           7z x ${{ env.DOWNLOAD_DIR }}/tl-win64.zip -o${{ github.workspace }}/tmp/texlive
-          $tl_path = "${{ github.workspace }}\tmp\texlive\bin\win64;" + "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
-          echo "::set-env name=PATH::$tl_path"
+          echo "${{ github.workspace }}\tmp\texlive\bin\win64" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          echo "${{ github.workspace }}\tmp\texlive\bin\win32" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
       - name: Update CTeX/LuaTeX and install utilities
         run: |
           tlmgr update --self
           tlmgr update ctex luatexja
           choco install sed
-          choco install ghostscript --version=9.52
-          $util_path = "C:\Program Files\gs\gs9.52\bin;" + ${env:PATH}
-          echo "::set-env name=PATH::$util_path"
+          choco install ghostscript --version=9.53.3
+          echo "C:\Program Files\gs\gs9.53.3\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
       - name: Install Noto fonts
         run: |
           "NotoSerifCJK-Regular", "NotoSerifCJK-Bold", "NotoSansCJK-Regular", "NotoSansCJK-Bold", "NotoSansCJK-Medium" | ForEach-Object -Process {Invoke-WebRequest -Uri "${{ env.NOTO_URL }}/$_.ttc.zip" -OutFile "$_.ttc.zip"}
