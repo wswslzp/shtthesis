@@ -432,12 +432,11 @@
   }
 }
 \pagestyle{fancy}
-\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \fancypagestyle{Plain}{}
 \fancypagestyle{RomanNumbered}{
   \fancyhf{}
   \pagenumbering{Roman}
-  \fancyhead[OC]{\footnotesize\nouppercase 第~\thechapter~章\hspace*{\ccwd}\leftmark}
+  \fancyhead[OC]{\footnotesize\nouppercase\leftmark}
   \fancyhead[EC]{\footnotesize\nouppercase\sht@flat@title}
   \fancyfoot[C]{\footnotesize\thepage}
   \renewcommand{\headrulewidth}{0.8pt}
@@ -445,7 +444,7 @@
 }
 \fancypagestyle{LRNumbered}{
   \fancyhf{}
-  \fancyhead[OC]{\footnotesize\nouppercase 第~\thechapter~章\hspace*{\ccwd}\leftmark}
+  \fancyhead[OC]{\footnotesize\nouppercase\leftmark}
   \fancyhead[EC]{\footnotesize\nouppercase\sht@flat@title}
   \fancyfoot[OR]{\footnotesize\thepage}
   \fancyfoot[EL]{\footnotesize\thepage}
@@ -495,17 +494,15 @@
 \LetLtxMacro{\TmpMainmatter}{\mainmatter}
 \renewcommand{\mainmatter}{%
   \TmpMainmatter%
+  \renewcommand{\chaptermark}[1]{%
+    \markboth{第~\thechapter~章\hspace{1\ccwd}##1}{}%
+  }%
   \ifsht@undergraduate%
     \pagestyle{MNNumberedWithLogo}%
   \else%
     \pagestyle{LRNumbered}%
   \fi%
-  % \pagenumbering{arabic}%
-  % \setcounter{page}{1}%
 }
-% \AtBeginDocument{%
-%   \pagenumbering{arabic}%
-% }
 % ------------------------------------------------------------------------------
 %   Font utilities
 % ------------------------------------------------------------------------------
@@ -1545,8 +1542,8 @@
   }
   \clearpage
   % P4: empty
-  % \thispagestyle{empty}
-  % \cleardoublepage
+  \thispagestyle{empty}
+  \cleardoublepage
 }
 % ------------------------------------------------------------------------------
 %   Abstract
@@ -1677,6 +1674,9 @@
 \renewcommand{\backmatter}{%
   \origin@backmatter%
   \settocdepth{chapter}%
+  \renewcommand{\chaptermark}[1]{%
+    \markboth{##1}{}%
+  }%
   \ifsht@undergraduate%
     \pagestyle{MNNumberedWithLogo}%
   \else%
