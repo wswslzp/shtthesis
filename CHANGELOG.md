@@ -6,7 +6,8 @@
 > Release: v0.3.2
 
 1. 修复 TexLive 2020 宏包升级后 ulem 的兼容性问题，使用更为鲁棒的 lastpage 实现本科生论文*第X页 共Y页*的排版需求；
-2. 更新文档内校徽文件下载链接。
+2. 更新文档内校徽文件下载链接；
+3. 修复 issue [#1](https://github.com/lirundong/shtthesis/issues/1) 关于本科生论文格式的问题；
 
 ## 2020-06-30
 > Release: v0.3.1

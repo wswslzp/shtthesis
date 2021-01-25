@@ -418,8 +418,11 @@
 % ------------------------------------------------------------------------------
 %   Headers and footers
 % ------------------------------------------------------------------------------
-\def\sht@flat@title{\renewcommand\\{\space} \@title}
-\def\sht@flat@title@en{\renewcommand\\{\space} \sht@title@en}
+\def\sht@flat@title{\renewcommand\\{\space} \sht@title}
+\def\sht@flat@title@upper@en{%
+  \renewcommand\\{\space}%
+  \MakeUppercase{\sht@title@en}%
+}
 \newcommand\sht@head@logo{%
   \IfFileExists{shanghaitech-emblem.pdf}{%
     \includegraphics[height=\sht@head@logo@height]{shanghaitech-emblem.pdf}%
@@ -1563,8 +1566,15 @@
     \end{center}%
     \vspace*{\baselineskip}%
     \ctexset{chapter/format += \zihao{4}, chapter/beforeskip = 0pt}%
+    \ifsht@comfort%
+      \def\sht@abstract@name{摘\hspace{1\ccwd}要}
+    \else%
+      \def\sht@abstract@name{摘要}
+    \fi
+  \else%
+    \def\sht@abstract@name{摘\hspace{1\ccwd}要}
   \fi
-  \intobmk\chapter*{摘\hspace{1\ccwd}要}%
+  \intobmk\chapter*{\sht@abstract@name}%
 }{%
   \vspace{\baselineskip}%
   \ifsht@undergraduate%
@@ -1580,7 +1590,7 @@
 \newenvironment{abstract*}[1][\sht@null@arg]{%
   \cleardoublepage%
   \ifthenelse{\equal{#1}{flattitle}}{%
-    \def\sht@abs@title@en{\sht@flat@title@en}%
+    \def\sht@abs@title@en{\sht@flat@title@upper@en}%
   }{%
     \def\sht@abs@title@en{\sht@title@en}%
   }%
@@ -1593,7 +1603,7 @@
     \vspace*{\baselineskip}%
     \ctexset{chapter/format += \zihao{4}\rmfamily, chapter/beforeskip = 0pt}%
   \fi
-  \intobmk\chapter*{Abstract}%
+  \intobmk\chapter*{ABSTRACT}%
 }{%
   \vspace{\baselineskip}%
   \ifsht@undergraduate%
