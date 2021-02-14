@@ -19,7 +19,7 @@
 \shtsetup{
   degree-name = {工学硕士},
   degree-name* = {Master~of~Science~in~Engineering},
-  % secret-level = {白给},
+  secret-level = {白给},
   title = {\ShtThesis{}~v\version{}~使用说明},
   title* = {A~User's~Guide\\to\\\ShtThesis{}~v\version{}},
   keywords = {上海科技大学，学位论文，\LaTeX{}},
@@ -44,8 +44,8 @@
 %   title* = {A~User's~Guide~to\\\ShtThesis{}~v\version{}},
 %   keywords = {上海科技大学，学位论文，\LaTeX{}},
 %   keywords* = {ShanghaiTech~University, Thesis, \LaTeX{}},
-%   date = {2020~年~06~月},
-%   date* = {06~/~2020},
+%   date = {2021~年~02~月},
+%   date* = {02~/~2021},
 %   author = {李润东},
 %   author* = {Rundong~Li},
 %   author-id = {36273800},
@@ -268,7 +268,7 @@
 
 本文档将尽量详细地阐释 \shtthesis{} 的使用方法和技巧。同时本文档直接使用 \shtthesis{} 排版，其源代码文件 \jobname.tex 也可以作为一个实际样例以供读者参考使用。
 
-我们计划在 \shtthesis{} 后续版本中加入本科学位论文的排版选项，因此亟需有上海科技大学本科论文排版经验的同学参与到 \shtthesis{} 项目中。我们也计划将该使用说明和模板文件 shtthesis.cls 使用 \textsf{DocStrip} 统一重构，并逐步向 \LaTeX3 迁移。我们非常希望得到用户宝贵的反馈和建议，若您有意为 \shtthesis{} 贡献 issues 和 pull requests，请移步至项目主页 \url{https://github.com/lirundong/shtthesis}。
+目前 \shtthesis{} 已\emph{试验性地}加入对本科学位论文的支持，但仍亟需有上海科技大学本科论文排版经验的同学参与到 \shtthesis{} 项目中。我们也计划将该使用说明和模板文件 shtthesis.cls 使用 \textsf{DocStrip} 统一重构，并逐步向 \LaTeX3 迁移。我们非常希望得到用户宝贵的反馈和建议，若您有意为 \shtthesis{} 贡献 issues 和 pull requests，请移步至项目主页 \url{https://github.com/lirundong/shtthesis}。
 
 \section*{文档排版样式说明}
 本文档针对各部分不同内容使用不同的排版样式：文档正文使用宋体和英文衬线体（serif），\emph{强调部分}使用\emph{楷体}和英文意大利体（\emph{italic}），宏包名称使用英文无衬线体（\textsf{sans serif}，例如 \textsf{hyperref}），代码及选项使用英文等宽体（\texttt{typewriter}）和\texttt{仿宋体}排版。
@@ -604,7 +604,7 @@ P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
 \end{align}
 同时重载了 \verb|\eqref|，使得公式编号格式修改后，其引用格式仍与 \textsf{amsmath} 无异：贝叶斯定理~\eqref{eq::bayesian}。排版本科生论文时不修改公式编号格式。
 
-\shtthesis{} 使用 \textsf{unicode-math} 宏包进行公式排版，因此在数学环境内既可以用标准 \LaTeX{} 宏，也可以直接输入 Unicode 符号。例如 $\oiint$ 符号可以通过 \verb|\oiint| 宏录入，也可以通过 Unicode 符号 $∯$ （对应 \verb|U+0222F| 码点） 录入。以下测试公式来自 \citet{clerkma2013unicode}，其中所有字符均直接使用对应 Unicode 符号录入。
+\shtthesis{} 使用 \textsf{unicode-math} 宏包进行公式排版，因此在数学环境内既可以用标准 \LaTeX{} 宏，也可以直接输入 Unicode 符号。例如 $\oiint$ 符号可以通过 \verb|$\oiint$| 录入，也可以直接使用 Unicode 符号 \verb|$|$∯$\verb|$| （对应 \verb|U+0222F| 码点） 录入。以下测试公式来自 \citet{clerkma2013unicode}，其中所有字符均直接使用对应 Unicode 符号录入。
 \begin{align}
 & ⊢ ∀x[(Fx ∨ Gx) → \mathord{∼}Hx] \\
 & ⊨ ¬∃y∀x[x∈y ↔ x∉x]  \\

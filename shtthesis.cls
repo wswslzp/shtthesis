@@ -1602,8 +1602,10 @@
     \end{center}%
     \vspace*{\baselineskip}%
     \ctexset{chapter/format += \zihao{4}\rmfamily, chapter/beforeskip = 0pt}%
+    \intobmk\chapter*{ABSTRACT}%
+  \else
+    \intobmk\chapter*{Abstract}%
   \fi
-  \intobmk\chapter*{ABSTRACT}%
 }{%
   \vspace{\baselineskip}%
   \ifsht@undergraduate%
