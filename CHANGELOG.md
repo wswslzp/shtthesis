@@ -2,7 +2,7 @@
 
 `sht-thesis` 项目派生于 `ucasthesis`，一个在 GPLv3 License 下分发的项目。根据该许可证条款，`sht-thesis` 项目列出基于 `ucasthesis` (commit `faad94b` 之后) 的所有修改条目：
 
-## 2020-02-14
+## 2021-02-14
 > Release: v0.3.2
 
 1. 修复 TexLive 2020 宏包升级后 ulem 的兼容性问题，使用更为鲁棒的 lastpage 实现本科生论文*第X页 共Y页*的排版需求；

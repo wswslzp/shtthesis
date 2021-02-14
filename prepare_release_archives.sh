@@ -2,7 +2,7 @@
 set -e
 
 # shtthesis, an unofficial LaTeX thesis template for ShanghaiTech University.
-# Copyright (C) 2020 Li Rundong <rundong.001@gmail.com>
+# Copyright (C) 2021 Li Rundong <rundong.001@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

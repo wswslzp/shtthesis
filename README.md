@@ -31,7 +31,7 @@
     tlmgr update shtthesis
     ```
 
-    **Note**: `shtthesis` package on CTAN does not include the university logo file. Please download [`shanghaitech-logo.pdf`](https://github.com/lirundong/shtthesis/raw/master/shanghaitech-logo.pdf) from this repository and put it in the root of your project directory.
+    **Note**: `shtthesis` package on CTAN does not include the university logo file. Please download [`shanghaitech-emblem.pdf`](https://github.com/lirundong/shtthesis/raw/master/shanghaitech-emblem.pdf) from this repository and put it in the root of your project directory.
   - [Overleaf](https://www.overleaf.com/latex/templates/shanghaitech-university-thesis-template/mskbxkmfxqpt): Please compile with XeLaTeX. Since compilation time for Overleaf free-plan is limited to *1 minute*, you might encounter with timeout issue if compiling with LuaLaTeX
   - GitHub Release: Please refer to the [release](https://github.com/lirundong/sht-thesis/releases) page and download required files based on release information
 - Develop version: Directly clone the GitHub repo
@@ -57,5 +57,5 @@ After cloning or downloading this template, please
 2. Open the document source file [shtthesis-user-guide.tex](shtthesis-user-guide.tex) and enjoy TeXing :smirk:
 
 ## License
-- The copyright of ShanghaiTech University logo (`shanghaitech-logo.pdf`) is owned by ShanghaiTech University
+- The copyright of ShanghaiTech University logo (`shanghaitech-emblem.pdf`) is owned by ShanghaiTech University
 - The rest of `shtthesis` project is licensed under GNU Public License v3, see [LICENSE](LICENSE) for details
