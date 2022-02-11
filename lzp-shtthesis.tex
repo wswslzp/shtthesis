@@ -316,7 +316,26 @@ NLOS成像模型是绝大多数NLOS成像算法的核心基础，指导着算法
 
 回到本文在\ref{sec:backgd}节中提到的NLOS成像技术目前存在的三大挑战，本文\ref{sec:img_sys}节介绍的各类新兴的成像系统基本克服了第一个挑战，使得高精度NLOS成像系统可以在实验室部署。本文\ref{sec:img_algo}节介绍的各类更高效的成像算法则在第二个挑战上取得重大突破，尤其最近两年在快速NLOS成像算法上的突破使得实时NLOS成像成为可能。
 
-第三个挑战近年来也有不少研究工作探索出时间复杂度和空间复杂度上更优化的算法，然而由于NLOS成像问题其在本质上的复杂性，导致其成像算法在通用计算机上的性能仍然无法满足实时成像的速率。如前文所述，即使GPU加速目前最高效的NLOS成像算法之一的光锥变换算法，其所能达到的速率也仅仅5 FPS，距离肉眼无法分辨的视频帧率（约24 FPS\cite{read2000restoration}）还很远。因此，实现实时NLOS成像还需要进一步的研究。
+第三个挑战近年来也有不少研究工作探索出时间复杂度和空间复杂度上更优化的算法，然而由于NLOS成像问题其在本质上的复杂性，导致其成像算法在通用计算机上的性能仍然无法满足实时成像的速率。表\ref{tab:algo_perf_comp}对比了本文前述的几个快速的NLOS成像算法的重构所需时间以及运行速度。如前文所述，即使GPU加速目前最高效的NLOS成像算法之一的LCT算法，其所能达到的速率也仅仅5 FPS，距离肉眼无法分辨的视频帧率（约24 FPS\cite{read2000restoration}）还很远。因此，实现实时NLOS成像还需要进一步的研究。
+
+\begin{table*}[!tb]
+    \centering
+    \caption{NLOS重构算法性能比较}
+    \label{tab:algo_perf_comp}
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{@{}cccccc@{}}
+    \toprule
+    算法     & 重构时间 (s) & 分辨率            & 速度 (voxel/s) & 硬件平台            & 数据采集方式            \\ \midrule
+    FBP \cite{Velten2012}           & 1873.34                 & $162\times 162\times 162$ & 2269.9           & i7 CPU              & 非共焦            \\
+    Fast FBP \cite{Arellano2017}      & 19.37                   & $162\times 162\times 162$ & $2.15\times 10^5$           & GTX 1060            & 非共焦             \\
+    LCT \cite{Otoole2018}           & 1                       & $64\times 64\times 512$   & $2.1\times 10^6$            & i7 CPU              & 共焦                 \\
+    LCT \cite{Otoole2018}           & 0.2                     & $64\times 64\times 512$   & $1.05\times 10^7$           & GPU                 & 共焦                 \\
+    FK Migration \cite{DavidB.Lindell2019}  & 80                      & $512\times 512\times 512$ & $1.6\times 10^6$            & Xeon E5-2690 v4 CPU & 共焦                 \\
+    原始的RSD \cite{Liu}  & 2.4   & $128\times 128\times 69$  & $4.7\times 10^5$            & R7 4800HS CPU   & 非共焦 \& 共焦 \\
+    优化的RSD & 0.8   & $128\times 128\times 69$  & $1.41\times 10^6$           & R7 4800HS CPU   & 非共焦 \& 共焦 \\
+    优化的RSD & \textbf{0.04}  & $128\times 128\times 69$  & $\mathbf{2.83\times 10^7}$           & Stratix 10 FPGA     & 非共焦 \& 共焦 \\ \bottomrule
+    \end{tabular}}
+\end{table*}
 
 本文提出一种基于现场可编程门阵列（FPGA）的，专用于加速NLOS成像算法的电路架构，能够在较低的时钟频率（50 MHz）前提下，以25 FPS的帧率重构场景，实现分辨率为128$\times$128的实时NLOS成像。为了能够将算法实现在资源有限的FPGA平台上，本文使用了两种对原算法的优化技术，使得算法的复杂度进一步降低，并充分利用FPGA定制数据流的特点来提高成像算法的吞吐率。截止到目前尚未有研究者使用FPGA或者专用领域集成电路（ASIC）的形式来加速NLOS成像，我们希望本文的研究工作可以作为未来相关工作的一个起点。
 
@@ -326,24 +345,73 @@ NLOS成像模型是绝大多数NLOS成像算法的核心基础，指导着算法
 
 \chapter{基于RSD的成像重构算法}
 
+基于RSD的NLOS重构算法使用RSD积分来近似光的传播，对共焦和非共焦的NLOS数据均适用\cite{Elten2019}。
+
 \section{原始的RSD重构算法}
 
+原始的基于RSD的NLOS重构算法的基本思想，是将抵达探测器光圈的光反向传播回到隐藏场景，从而将NLOS成像问题转化为LOS成像问题，而后者则可以使用一个基于衍射的RSD求解器快速解决\cite{Liu}。
+
+RSD重构算法流程的简要概念如图\ref{fig:ori_algo_concept}所示。\textcolor{red}{相关的细节可以在\cite{Liu,Liu2019}。}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.9\textwidth]{figure/ori_algo_concept.pdf}
+  \caption{基于RSD的NLOS重构算法的基本概念}
+  \label{fig:ori_algo_concept}
+\end{figure}
+令$P(x_c,y_c,t)$为SPAD探测器在时刻$t$时捕捉到的瞬态图像。RSD算法将瞬态图像的傅里叶域
+\begin{equation}
+  P_F(x_c,y_c,\omega) = \sum_t P(x_c,y_c,t)e^{-j\omega t}
+\end{equation}
+作为输入。这里，$x_c$和$y_c$为图像中的像素的坐标，$t$则为该图像对应的时间戳，$\omega$属于傅里叶域中所选择的采样频率的集合$\Omega$。
+
+RSD积分定义了一个名为RSD衍射核的四维张量
+\begin{equation}\label{eq:kernel}
+  G(x_c,y_c,\hat{z},\omega) = \frac{\exp\left[-i2\pi\cdot\hat{z}^2/(\eta^2)\cdot\sqrt{\hat{r}^2/\hat{z}^2+1}\right]}{\sqrt{\hat{r}^2/\hat{z}^2+1}}
+\end{equation}
+且
+\begin{align}
+  \hat{r} &= \sqrt{x_c^2+y_c^2}\label{eq:rxy}\\
+  \eta^2 &= \frac{\mathbf{c}\hat{z}}{\delta\omega}
+\end{align}
+其中，$\delta$属于离散深度集合$D$，$\mathbf{c}$为光速而$\delta$则表示空间采样间隔。
+
+典型的RSD积分的第一步是将$P_F(x_c,y_c,\omega)$和$G(x_c,y_c,\hat{z},\omega)$，在每个特定的$\omega$和$\hat{z}$上做对$(x_c,y_c)$二维空间卷积。这些二维卷积可以在傅里叶域上如下表示
+\begin{equation}\label{eq:conv}
+  P_F(x_v, y_v, \hat{z}, \omega) = \mathcal{F}^{-1}\left\{\mathcal{F}\left[P_F(x_c, y_c, \omega)\right]\cdot \mathcal{F}\left[G(x_c, y_c, \hat{z}, \omega)\right]\right\}
+\end{equation}
+其中，$\mathcal{F}$表示了二维傅里叶变换（FT），$\mathcal{F}^{-1}$表示二维反傅里叶变换（IFT）。为了得到最终重构的结果，需要对$P_F$在所有采样频率上做一次积分
+\begin{equation}
+  I(x_v, y_v, \hat{z}) = \sum_{\omega \in  {\Omega}}\sum_{l=1}^{L} T_l(\omega, \hat{z}) P_F(x_v, y_v, \hat{z}, \omega)
+\end{equation}
+且
+\begin{align}
+    &T_l(\omega, \hat{z}) = \exp\left[i\frac{\omega}{c}(\hat{z}+B_l)\right]\label{eq:ts} \\
+    &B_l =\tilde{\mathbf{D}} + (l-1)\cdot \mathbf{c}\cdot \frac{\sigma}{0.15}
+\end{align}
+这里，$T_l$为时移因子，用于补偿光的球形传播导致的相位差，且其中$B_l$表示第$l$个平面所对应的位移；$\tilde{\mathbf{D}}$为校准系数，对于理想系统$\tilde{\mathbf{D}}=0$；$\sigma$表示脉冲宽度。$I(x_v,y_v,\hat{z})$代表了带有场景深度$\hat{z}$的最终三维重构结果，表示隐藏的场景及物体。
+
 \section{优化的RSD重构算法}
-% \shtthesis{} 支持使用 \hologo{XeLaTeX} 和 \hologo{LuaLaTeX} 编译（注意，\emph{不支持} \hologo{pdfLaTeX}）。推荐在最新的 \hologo{TeX} Live 环境下，使用 \verb|latexmk| 工具进行编译。Windows 及 Linux 用户请下载安装 \hologo{TeX} Live (\url{https://www.tug.org/texlive/})，macOS 用户请下载安装 Mac\hologo{TeX} (\url{https://www.tug.org/mactex/})。\emph{非常不推荐}使用 $\mathbb{C}$\TeX 发行版（大人，时代变了），也不推荐在 overleaf 等在线平台编译使用 \shtthesis{} （免费版用户编译时长被限制在 1 分钟，不一定能够编译完上百页的大论文）。项目主页不接受与 $\mathbb{C}$\TeX、overleaf 相关的 issues。
 
-% 在完成环境配置后，即可使用 \verb|latexmk| 工具完成编译。打开终端（Windows 用户打开 CMD）切换至工作目录，使用 \hologo{XeLaTeX} 引擎进行编译：
-% \begin{shell}
-% `\prompt' latexmk -pdfxe
-% \end{shell}
-% 若偏好使用 \hologo{LuaLaTeX} 引擎，则编译命令为：
-% \begin{shell}
-% `\prompt' latexmk -pdflua
-% \end{shell}
+尽管相比于现有的NLOS成像算法，RSD重构算法是目前适用于非共焦NLOS数据的最快速的成像算法，其依然存在大量的计算和存储需求。令$N_\Omega$为采样频率集合$\Omega$的势，$N_D$为离散深度集合$D$的势，那么重构一个隐藏的三维场景需要做$N_\Omega\times N_D$次二维卷积。如式（\ref{eq:conv}），每次卷积需要做两次二维傅里叶变换以及一次二维傅里叶反变换，因此重构一次场景所需的傅里叶变换次数（包括反变换）为$3\times N_\Omega \times N_D$。令输入瞬态图像的分辨率为$K\times K$，那么存储所有的RSD核所需的容量为$N_\Omega\times N_D\times K\times K$。另外，为了执行二维卷积，处理器需要大量访问存储单元来获取一个$K\times K$的RSD核。众所周知，对于现代的数字电子系统而言，存储访问耗费大量时间和能量从而往往成为系统的性能瓶颈\cite{Bai2018}。
 
-% 一般来说，\hologo{XeLaTeX} 引擎的编译速度较快且占用资源较少，而 \hologo{LuaLaTeX} 引擎的编译结果似乎有更好的跨平台规范性。在 \shtthesis{} 开发过程中，曾出现过在 macOS 下 \hologo{XeLaTeX} 编译的 PDF 在 Windows 下无法打开，而 \hologo{LuaLaTeX} 编译结果正常的情况。若使用 LuaHB\hologo{TeX} 引擎编译，还可进一步使用 Emoji 等功能。LuaHB\hologo{TeX} 引擎是 \hologo{TeX} Live 2020 中 \hologo{LuaLaTeX} 的默认实现，在 \hologo{TeX} Live 2019 下使用 LuaHB\hologo{TeX} 的方法为：
-% \begin{shell}
-% `\prompt' latexmk -pdflua -pdflualatex=lualatex-dev
-% \end{shell}
+\begin{figure}[!tb]
+    \centering
+    \subfloat[]{\includegraphics[width=.2\textwidth]{figure/kabs_gray.jpg}} \hspace{10mm} 
+    \subfloat[]{\includegraphics[width=.2\textwidth]{figure/kang_gray.jpg}}
+    \caption{(a) RSD核幅度图 (b) RSD核相量图。}
+    \label{fig:kernel}
+\end{figure}
+
+从式（\ref{eq:kernel}）和（\ref{eq:rxy}）中可以看出RSD核具有径向对称的特性。如图\ref{fig:kernel}，我们也能从RSD核的幅度和相位分布看出这种径向对称的特性。因此，我们可以利用RSD核的这种径向对称性以及傅里叶变换的线性性质，可以显著地减少存储需求以及存储访问次数。图\ref{fig:opt_algo}展示了优化RSD重构算法的基本概念。首先是利用一组RSD核的基函数——半径不同的单位环形脉冲函数——和每个基函数对应的系数，来实时构成傅里叶域的RSD核。同时，如图\ref{fig:opt_algo}(b)通过进一步在径向上采样，基函数可以进一步被一个一维向量重构。最后的结果显示，RSD重构算法执行过程中，总的存储需求以及存储访问次数有了大幅降低。本文将在下面两个小节将详细介绍以上提到上述的两种环形采样和径向采样技术。
+
+\begin{figure}[!tb]
+    \centering
+    \subfloat[]{\includegraphics[width=.45\textwidth]{figure/opt_algo.pdf}}\\ \vspace{6pt}
+    \subfloat[]{\includegraphics[width=.45\textwidth]{figure/addrmap1.pdf}}
+    \caption{优化RSD重构算法的基本概念。 (a) 利用单位环形脉冲和对应的系数来重构RSD核。 (b) 利用地址重映射来重构单位环形脉冲。}
+    \label{fig:opt_algo}
+\end{figure}
+
 \subsection{环形脉冲采样技术}
 
 \subsection{径向采样技术}
