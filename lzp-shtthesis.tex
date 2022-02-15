@@ -156,7 +156,9 @@
   language=[LaTeX]TeX}
 \lstnewenvironment{latex}{\lstset{style=lstStyleLaTeX}}{}
 \lstnewenvironment{shell}{\lstset{style=lstStyleShell}}{}
-
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
 \usepackage{hologo}
 \usepackage{subcaption}
 \usepackage{ctable}
@@ -222,7 +224,7 @@
 \begin{figure}[tb]
   \centering
   \includegraphics[width=.9\textwidth]{figure/nlos-scene.pdf}
-  \caption{非视域成像的典型场景}
+  \bicaption{非视域成像的典型场景}{Typical application scenario of NLOS imaging.}
   \label{fig:nlos_scene}
 \end{figure}
 
@@ -355,7 +357,7 @@ RSD重构算法流程的简要概念如图\ref{fig:ori_algo_concept}所示。\te
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.9\textwidth]{figure/ori_algo_concept.pdf}
-  \caption{基于RSD的NLOS重构算法的基本概念}
+  \bicaption{基于RSD的NLOS重构算法的基本概念}{Basic concept of RSD-based NLOS reconstruction.}
   \label{fig:ori_algo_concept}
 \end{figure}
 令$P(x_c,y_c,t)$为SPAD探测器在时刻$t$时捕捉到的瞬态图像。RSD算法将瞬态图像的傅里叶域
@@ -398,7 +400,7 @@ RSD积分定义了一个名为RSD衍射核的四维张量
     \centering
     \subfloat[]{\includegraphics[width=.45\textwidth]{figure/kabs_gray.jpg}} \hspace{10mm} 
     \subfloat[]{\includegraphics[width=.45\textwidth]{figure/kang_gray.jpg}}
-    \caption{(a) RSD核幅度图 (b) RSD核相量图。}
+    \bicaption{(a) RSD核幅度图 (b) RSD核相量图。}{(a) The magnitude of an RSD kernel. (b) The phase of an RSD kernel.}
     \label{fig:kernel}
 \end{figure}
 
@@ -408,7 +410,7 @@ RSD积分定义了一个名为RSD衍射核的四维张量
     \centering
     \subfloat[]{\includegraphics[width=.9\textwidth]{figure/opt_algo.pdf}}\\ \vspace{6pt}
     \subfloat[]{\includegraphics[width=.9\textwidth]{figure/addrmap1.pdf}}
-    \caption{优化RSD重构算法的基本概念。 (a) 利用单位环形脉冲和对应的系数来重构RSD核。 (b) 利用地址重映射来重构单位环形脉冲。}
+    \bicaption{优化RSD重构算法的基本概念。 (a) 利用单位环形脉冲和对应的系数来重构RSD核。 (b) 利用地址重映射来重构单位环形脉冲。}{Basic concept of the optimized RSD algorithm. (a) Reconstruction of RSD kernels using unit ring impulses and corresponding coefficients. (b) Reconstruction of unit rings using address mapping.}
     \label{fig:opt_algo}
 \end{figure}
 
@@ -444,38 +446,165 @@ RSD积分定义了一个名为RSD衍射核的四维张量
 
 \subsection{径向采样技术}
 
+利用径向对称的函数其二维傅里叶变换后的函数同样也是径向对称的性质\cite{baddour2011two}，我们可以仅仅利用频域上的单位环形脉冲函数的径向上的值来重构整个函数。这样我们对于单位环形脉冲函数的存储从原来的二维矩阵缩减到了仅仅半径上的一个一维向量，如图\ref{fig:imp_rad}。
+\begin{figure}[!tb]
+    \centering
+    \includegraphics[width=.95\textwidth]{figure/imp30.pdf}
+    \bicaption{单位环形脉冲函数在半径上的采样。}{Radius sampling of unit ring impulses.}
+    \label{fig:imp_rad}
+\end{figure}
+
+如图\ref{fig:opt_algo}（b）所示，若要从一个沿半径采样获得的一维向量中重构出完整的二维单位环形脉冲函数的频域，需要一个二维地址映射从一维向量中找到二维单位环形脉冲函数矩阵中每个元素的值。这一地址映射将矩阵元素的笛卡尔坐标转换为相应的用于描述单位环形脉冲函数的极坐标。理论上，这个地址映射不会有任何影响，但由于这一操作在实际运行时是离散的，我们使用的地址映射函数$M(x,y)$定义如下
+\begin{align}
+    &s=\sqrt{(x-K/2)^2+(y-K/2)^2}  \\
+    &\rho = M(x, y) = round\left( s\cdot \frac{N_{\rho}-1}{\frac{\sqrt{2}}{2}K} \right)+1\label{eq:mapping_func}
+\end{align}
+其中，$s$是采样点到一个原始的$K\times K$的矩阵中心点的距离，$N_\rho$是半径上采样点的个数。注意到，由于映射函数$M(x,y)$及其操作的对象是离散的，因此利用它来重构RSD核会导致一定程度上的精度损失。图\ref{fig:smp_comp}展示了随着在半径上的采样点个数从10到200的变化，优化后的RSD重构算法所得结果与原始算法结果的相似度变化。这里所用的相似度的测量算法是结构相似度（Structural Similarity，SSIM）。两个图片之间的SSIM值越大表明两者越相似，最大为1时表示两张图片完全相同。从图\ref{fig:smp_comp}中我们可以看到在采样点个数达到了100个以上后，相似度基本持平在0.9左右，而若采样点从100下降到10时，相似度将迅速下降到0.5以下。
+\begin{figure}[!tb]
+    \centering
+    \includegraphics[width=.9\textwidth]{figure/smp_Nrho_comp_ssim.pdf}
+    \bicaption{不同的半径采样点个数下，径向采样的重构结果与原始算法的重构结果的相似度对比。}{Similarity measurement between the radius-sampled results and original results, against different numbers of sampling points $N_{\rho}$.}
+    \label{fig:smp_comp}
+\end{figure}
+
+同样可以看到这一地址映射操作不仅仅可以用在单位环形脉冲函数上，也可以用在RSD核重构上，即地址映射操作在算法处理流程中的次序不会影响到最终RSD核的重构结果。经过径向采样技术对算法的优化，存储单位环形脉冲函数所需的容量从$K\times K$减少到$\frac{\sqrt{2}}{2}K$。
+
+\subsection{优化后的RSD重构算法}\label{sec:opt_algo}
+
+\begin{table}[!t]
+    \centering
+    \bicaption{原始算法和优化后算法的复杂度比较}{Complexity Comparison between Original and Optimized RSD Algorithms}
+    \label{tab:fuzadu_comp}
+    % \resizebox{.98\textwidth}{!}{%
+        \begin{tabular}{@{}ccc@{}}
+            \toprule
+            算法               & 计算量 & 存储访问 \\ \midrule
+            原始RSD算法 & $O(N_DN_{\Omega}K^2\log K)$          & $O(N_DN_{\Omega}K^2)$             \\
+            优化后的RSD算法& $O(N_DN_{\Omega}K^2)$              & $O(N_{\Omega}K^2)$             \\ \bottomrule
+        \end{tabular}%
+    % }
+\end{table}
+
+经过前述两节介绍的优化技巧，优化后的基于RSD的NLOS重构算法由两部分组成：（i）运行前的算法以及（ii）运行时的算法。前者包括单位环形脉冲函数集和相应的线性组合系数的预计算，可以存储在硬件设备上；后者则是利用预计算的数据和实时采集的NLOS成像数据来重构隐藏场景的成像算法，需要在硬件上实时运行。因此这里作为预计算部分的前者不会实际影响到成像系统的整体性能。这两部分的算法伪代码在算法\ref{algo:b_rt}和算法\ref{algo:rt}中有详细说明。
+
+表格\ref{tab:fuzadu_comp}分别展示了原始算法和优化后算法的RSD算法的计算复杂度和存储访问量。如前面章节所讨论的，原始算法中大量的二维傅里叶变换是其瓶颈所在。因此，重构RSD核所需的计算量和存储量在衡量和比较原始算法和优化后的算法之间的复杂度时必须考虑进去。
+
+\begin{algorithm}[!t]
+    \caption{运行前算法}
+    \label{algo:b_rt}
+    \begin{algorithmic}[1] % The number tells where the line numbering should start
+        \Require 采样深度$\hat{z}$； 采样频率$\Omega$； 采样半径$r$。
+        \Ensure 预计算数据%\\
+        \State 求解输入信号的频率响应：
+        \For{$q \gets 1, N_{\Omega}$}
+            \State $ P_F(x_c, y_c, \omega_q) \gets \sum_t[P(x_c, y_c, t)e^{-i\omega_q t}] $
+        \EndFor
+        \State 计算单位环形脉冲函数的傅里叶表示：
+        \For{$j \gets 1, N_{R}$}
+            \For{$k \gets 1, N_{ {\rho}}$}
+                \State $$ \delta_{\mathcal{F}}(\rho_k, r_j) \gets \int_0^{2\pi}r_je^{-2\pi r_j \rho_k \cos \theta} d\theta $$
+            \EndFor
+        \EndFor
+        \State 计算线性组合系数：
+        \For{$q \gets 1, N_{\Omega}$}
+            \For{$p \gets 1, N_D$}
+                \For{$k \gets 1, N_R$}
+                    \State $$\hat{G}(r_k, \hat{z}_p, \omega_q) \gets \frac{\exp{\left[-i2\pi\cdot\hat{z}_p^2/(\eta^2)\cdot\sqrt{r_k^2/\hat{z}_p^2+1}\right]}}{\sqrt{r_k^2/\hat{z}_p^2+1}}$$
+                    \State $$ \hat{G}(r_k, \hat{z}_p, \omega_q) \gets \hat{G}(r_k, \hat{z}_p, \omega_q) \cdot \exp\left[i\frac{\omega_q}{c}(\hat{z}_p+B_l)\right] $$
+                \EndFor
+            \EndFor
+        \EndFor
+        % \State Generate address mapping matrix 
+        % $$
+        %     M_{xy} \gets round\left( \frac{\sqrt{(x-K/2)^2+(y-K/2)^2}}{K/2*\sqrt{2}/(N_{ {r}}-1)} \right)+1
+        % $$
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm*}[!t]
+    \caption{Algorithm at runtime}
+    \label{algo:rt}
+    \begin{algorithmic}[1]
+        \Require 瞬态图像$P_F$; 环形脉冲$\delta_{\mathcal{F}}$; 组合系数$\hat{G}$
+        \Ensure 重构结果$I$
+        \Procedure{Reconstruction}{$P_F, \delta_{\mathcal{F}}, \hat{G}$}
+        \For{$i \gets 1, N_{ {D}}$}\Comment{循环1:采样深度上迭代}
+            \For{$j \gets 1, N_{ {\Omega}}$}\Comment{循环2: 采样频率上迭代}
+                \State $\mathcal{P}_F(x, y, \omega_j) \gets FFT2(P_F(x, y, \omega_j))$
+                \For{$k \gets 1, N_{ {R}}$}\Comment{不同半径上迭代}
+                    \For{$l \gets 1, N_{\rho}$}\Comment{所有径向采样点上迭代}
+                        \State $G(\rho_l, \hat{z}_i, \omega_j) \gets G(\rho_l, \hat{z}_i, \omega_j) + \hat{G}(r_k, \hat{z}_i, \omega_j)\cdot \delta_{\mathcal{F}}(r, r_k) $
+                    \EndFor
+                \EndFor
+                \For{$x \gets 1, K$} \Comment{在所有坐标上迭代}
+                    \For{$y \gets 1, K$}
+                        \State $G^{\prime}(x, y, \hat{z}_i, \omega_j) \gets G(M(x, y), \hat{z}_i, \omega_j)$ \Comment{地址映射}
+                        \State $ S_F(x, y, \hat{z}_i, \omega_j) \gets \mathcal{P}_F(x, y, \omega_j) \cdot G^{\prime}(x, y, \hat{z}_i, \omega_j) $ 
+                    \EndFor
+                \EndFor
+                \State $I_F(x, y, \hat{z}_i) \gets I_F(x, y, \hat{z}_i) + S_F(x, y, \hat{z}_i, \omega_j)$ \Comment{对所有采样频率累加}
+            \EndFor
+            \State $I(x, y, \hat{z}_i) \gets IFFT2 \left[ I_F(x, y, \hat{z}_i) \right]$ \EndFor 
+        % Do 2D inverse Fourier transformation
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm*}
+
 \chapter{RSD重构算法加速电路设计}
-% \shtthesis{} v\version{} 接受的学位类型包括学士（bachelor）、硕士（master）和博士（doctor），学位类型必须指定且不能同时指定多种学位。指定学位类型后，\shtthesis{} 会按照相应排版规则，生成不同的封面和正文格式。
-
-% 需要注意的是，教务处给出的本科生论文排版规范~\citep{bachelor2019} 中包含一些非常费解的内容，且一并发布的 Word 和 \LaTeX{} 模板有相当多相互矛盾的格式规范，\shtthesis{} v\version{} 中本科生论文的排版默认以教务处 Word 模板为准。
-
-% 2020 年学位申请时，本科生收到过包含下述内容的通知：
-% \begin{quotation}
-% “如果是使用Latex版模板，保证封面与学校的word版要求完全一致，正文中的格式不要求在字号等细节方面与Word版要求严格一致，但要做到自己的论文自统一并且符合常用规范。”
-% \end{quotation}
-% 因此 \shtthesis{} 为本科生论文额外提供了 \verb|comfort| 选项，在保证封面符合规范的同时优化正文的排版细节，使最终论文视觉上更为舒适统一且正式。推荐排版本科论文时使用：
-% \begin{latex}
-% \documentclass[bachelor, comfort]{shtthesis}
-% \end{latex}
+这一章将对实时NLOS重构算法\ref{algo:rt}进行深入分析，并讨论其引入的一些设计上的挑战。
 
 \section{重构算法的分析} 
-% 为方便生成研究生论文盲审时所需的匿名版论文，传入 \verb|anonymous| 类参数即可将论文中英文封面的作者信息、导师信息，以及附录中的作者简历替换为匿名字符串，将作者论文发表、专利申请记录替换为匿名版本，并隐去文末的致谢部分：
-% \begin{latex}
-% \documentclass[anonymous]{shtthesis}
-% \end{latex}
-% \shtthesis{} 默认的匿名字符串为连续的三个英文星号“***”，该字符串可使通过 \verb|\shtsetup| 的 \verb|anonymous-str| 选项修改：
-% \begin{latex}
-% \shtsetup{
-%   anonymous-str = XXX, % 作者、导师姓名在匿名环境下显示为 XXX
-% }
-% \end{latex}
-% \verb|\shtsetup| 命令的使用方法详见第~\ref{sec::setup_info} 节。
+
+\subsection{任务流程分析}
+运行时NLOS重构算法的流程图如图\ref{fig:tsk_flow}所示。整个算法流程中存在四个计算密集和存储访问密集的任务：
+\begin{enumerate}
+  \item 由单位环形脉冲函数和线性组合系数重构RSD核。
+  \item 对输入瞬态图像的二维傅里叶变换。
+  \item RSD核与瞬态图像的频域做的乘累加操作。
+  \item 对累加结果的二维反傅里叶变换。
+\end{enumerate}
+\begin{figure}[!tb]
+    \centering
+    \includegraphics[width=.99\textwidth]{figure/taskflow.pdf}
+    \bicaption{运行时重构算法的流程图}{Flowchart of the runtime reconstruction algorithm.}
+    \label{fig:tsk_flow}
+\end{figure}
+
+整个重构过程可以被分割成$N_D\times N_\Omega$个执行周期。其中每个执行周期用深度计数器和频率计数器的值以$(d,f)$形式标记，因此整个重构过程由执行周期$(0,0)$开始，一直迭代到最后一个执行周期$(N_D-1,N_\Omega-1)$。在以上四个任务中，任务1到任务3在每个执行周期均会被执行，而任务4则只在频率计数器$f$计数至$N_\Omega$时执行。我们可以看到任务1和任务2时相互独立的，因此它们可以被并行执行。而任务3——乘累加任务——则是对任务1和任务2的结果有所依赖。一旦频率计数器计满至$N_\Omega$，任务3乘累加的结果被输入给任务4，以重构相应于深度计数器值的深度的隐藏场景。输入的瞬态图像可以表示为一个多通道的图像，一个$K\times K\times N_\Omega$的张量，单位环形脉冲函数总体表示为一个$N_R\times N_\rho$的矩阵，其线性组合系数则可以表示为一个$N_D\times N_\Omega\times N_R$张量。
+
+对每一个执行周期，二维傅里叶变换处理器需要读取$K\times K$个像素，并输出其傅里叶变换后的结果。假设瞬态图像的输入通道的传输速率为每个时钟周期传送一个像素，那么一共需要$K\times K\times N_D\times N_\Omega$个时钟周期来读取整个瞬态图像。对于一个典型的NLOS成像系统配置\cite{Liu2020}，其中各个参数配置为$K=128, N_D=51, N_\Omega=69$，读取瞬态图像一共需要耗费57655296个时钟周期。我们可以自然地想到一个解决这一问题的想法，即仅仅对所有采样频率点上的瞬态图像做一次二维傅里叶变换，并将其结果存储在本地，随后的执行周期复用这一结果即可。这样一来，好处是可以将读取时间降低至$K\times K\times N_\Omega$个时钟周期，而坏处则是需要更大的片上存储单元来缓存中间结果。
+
+\subsection{线性组合系数分解}
+
+在章节\ref{sec:opt_algo}分析优化后的基于RSD的NLOS重构算法时，我们将线性组合系数的计算放在运行前算法部分，作为与计算的结果存储在本地供运行时算法使用。好处是可以降低运行时的计算负载，但坏处则是引入很大的存储需求。这里，为了进一步降低片上存储单元的使用量，微调了两部分算法的切分，将一部分线性组合系数的计算转移至运行时。注意到，由于傅里叶变换的线性性质，时移因子$T_l$可以被合并至线性组合系数$\hat{G}$里。因此，对应于单位环形脉冲函数的线性组合系数\ref{eq:ori_coef}可以被重新定义为
+\begin{align} \label{eq:coef}
+    \hat{G}(r, \hat{z}, \omega) & = \frac{\exp{\left[-i2\pi\cdot\frac{\delta \omega\hat{z}}{\mathbf{c}}\cdot\sqrt{r^2/\hat{z}^2+1}\right]}}{\sqrt{r^2/\hat{z}^2+1}}\\
+    \tilde{G}(r, \hat{z}, \omega) & = \hat{G}(r, \hat{z}, \omega) \cdot T_l 
+\end{align}
+这里，我们引入三个独立的中间变量来进一步分解上述定义的线性组合系数，
+\begin{equation}
+    W(r, \hat{z}) = \sqrt{\frac{r^2}{\hat{z}^2}+1}
+\end{equation}
+\begin{equation}
+    D(\omega, \hat{z}) = \frac{\delta \omega \hat{z}}{\mathbf{c}}
+\end{equation}
+\begin{equation}
+    T(\omega, \hat{z}) = T_l= \exp \left[ i\frac{\omega}{\mathbf{c}}(\hat{z}+B_l) \right]
+\end{equation}
+这三个中间变量可以利用选取好的采样深度$\hat{z}$，采样频率$\omega$，以及不同的环形半径$r$来预先计算，并存储为三个可以被深度计数器$d$和频率计数器$f$索引的矩阵。在本文中，我们将这三个变量$W,D,T$分别命名为\textit{wave, distance}和\textit{timeshift}. 而上述重新定义的线性组合系数可以被这三个中间变量重新组合
+\begin{equation}
+    \tilde{G}(r, \omega, \hat{z}) = \frac{\exp(-i2\pi W(r, \hat{z}) \cdot D(\omega, \hat{z}))}{W(r, \hat{z})} \cdot T(\omega, \hat{z})
+\end{equation}
+
+在运行时，加速器将会在每个执行周期读取$D$和$T$的一个元素，并在频率计数器$f=0$的执行周期，$(0,0),(1,0)$……$(N_D-1,0)$内读取$W$的一列元素。对系数的重新组合过程可以由一些基本的运算部件来承担，如两个乘法器、一个除法器以及一个处理特殊函数
+\begin{equation}
+    f(t) = e^{-i2\pi t}
+\end{equation}
+的计算单元。这里的系数分解方法仅仅是为了在设计复杂度、片上存储单元面积大小以及存储访问次数之间取得均衡所做的取舍，同时在不对系统造成性能上的负面影响的前提下尽量提升功耗和面积效率的一种手段。
 
 \section{设计空间探索}
-% 传入 \verb|print| 选项后，论文中所有超链接变为黑色（包括文献引用、URL 等），以避免黑白打印后彩色链接内容呈浅灰色影响观感；同时将奇数页、偶数页的内侧页边距分别增加 0.63 厘米以便于装订。
-% \begin{latex}
-% \documentclass[print]{shtthesis}
-% \end{latex}
+
+本章节将会引入一些主要的NLOS成像加速器设计参数来定量化的描述设计空间，以探索数据流优化的最佳参数配置。
 
 \chapter{加速电路的微架构设计}
 % \shtthesis{} 实际使用 \CTeX 宏包提供的 \textsf{ctexbook} 文档类排版，除上述选项外的类参数会传递给 \textsf{ctexbook}。其中需要注意的选项为 \verb|fontset|，即设定论文所用的字体集。\CTeX 宏包自身能够根据编译平台选择合适的字体集，也可以手动设置相应的 fontset，例如在 Windows 平台下设置 \verb|fontset=windows|，在 macOS 平台下设置 \verb|fontset=mac|：
