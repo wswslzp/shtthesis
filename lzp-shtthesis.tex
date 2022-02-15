@@ -344,7 +344,7 @@ NLOS成像模型是绝大多数NLOS成像算法的核心基础，指导着算法
 本文的内容将按照如下方式进行编排：第一章为绪论部分，简要介绍了非视域成像的研究背景及研究意义，并概述了国内外对于非视域成像领域的相关研究，其中主要包括传感器以及成像算法的两个方面。第二章本文将主要介绍基于瑞利索末菲衍射（RSD）的非视域成像重构算法，包括原始的算法以及针对硬件设计而做的算法优化的两种技巧。第三章进一步分析优化后的基于RSD的非视域成像重构算法的结构和流程，研究针对它的硬件设计可能性，并探索硬件设计空间。第四章基于算法的分析和设计空间探索的结果，详细介绍了NLOS成像加速电路的微架构设计，包括整个算法加速系统以及下面的各个子模块设计。第五章展示了加速电路的微架构在FPGA上实现的结果，也包括优化后的成像算法和原算法的比较。第六章是对本文的工作的总结以及对未来的展望。
 
 \chapter{基于RSD的成像重构算法}
-
+ 
 基于RSD的NLOS重构算法使用RSD积分来近似光的传播，对共焦和非共焦的NLOS数据均适用\cite{Elten2019}。
 
 \section{原始的RSD重构算法}
@@ -396,8 +396,8 @@ RSD积分定义了一个名为RSD衍射核的四维张量
 
 \begin{figure}[!tb]
     \centering
-    \subfloat[]{\includegraphics[width=.2\textwidth]{figure/kabs_gray.jpg}} \hspace{10mm} 
-    \subfloat[]{\includegraphics[width=.2\textwidth]{figure/kang_gray.jpg}}
+    \subfloat[]{\includegraphics[width=.45\textwidth]{figure/kabs_gray.jpg}} \hspace{10mm} 
+    \subfloat[]{\includegraphics[width=.45\textwidth]{figure/kang_gray.jpg}}
     \caption{(a) RSD核幅度图 (b) RSD核相量图。}
     \label{fig:kernel}
 \end{figure}
@@ -406,13 +406,41 @@ RSD积分定义了一个名为RSD衍射核的四维张量
 
 \begin{figure}[!tb]
     \centering
-    \subfloat[]{\includegraphics[width=.45\textwidth]{figure/opt_algo.pdf}}\\ \vspace{6pt}
-    \subfloat[]{\includegraphics[width=.45\textwidth]{figure/addrmap1.pdf}}
+    \subfloat[]{\includegraphics[width=.9\textwidth]{figure/opt_algo.pdf}}\\ \vspace{6pt}
+    \subfloat[]{\includegraphics[width=.9\textwidth]{figure/addrmap1.pdf}}
     \caption{优化RSD重构算法的基本概念。 (a) 利用单位环形脉冲和对应的系数来重构RSD核。 (b) 利用地址重映射来重构单位环形脉冲。}
     \label{fig:opt_algo}
 \end{figure}
 
 \subsection{环形脉冲采样技术}
+
+从图\ref{fig:kernel}中可以看出，RSD核是径向对称的，因此其可以如图\ref{fig:opt_algo}（a）被表达为一组有不同半径长度的单位环形脉冲函数的线性组合
+\begin{equation}
+    G(x, y, \hat{z}, \omega) = \sum_{i=1}^{N_R}\hat{G}(r_i, \hat{z}, \omega)\delta(x, y, r_i)
+\end{equation}
+其中，单位环形脉冲函数定义为
+\begin{equation}
+    \delta(x, y, r_i) = \begin{cases}
+      1, & \sqrt{x^2+y^2} = r_i\\
+      0, & \sqrt{x^2+y^2} \neq r_i
+    \end{cases}\label{eq:ring_imp}
+\end{equation}
+而对应于不同半径的单位环形脉冲函数的线性组合系数为
+\begin{equation} \label{eq:ori_coef}
+    \hat{G}(r_i, \hat{z}, \omega) = \frac{\exp{\left[-i2\pi\cdot\hat{z}^2/(\eta^2)\cdot\sqrt{r_i^2/\hat{z}^2+1}\right]}}{\sqrt{r_i^2/\hat{z}^2+1}}
+\end{equation}
+其中，$r_i$是半径长度集合$R$中的第$i$个单位环形脉冲函数的半径。利用傅里叶变换的线性性质，RSD核的傅里叶频域表示为
+\begin{equation}
+    \mathcal{F}\left[G(x, y, \hat{z}, \omega)\right] = \sum_{i=1}^{N_{ {R}}}\hat{G}(r_i, \hat{z}, \omega)\mathcal{F}\left[\delta(x, y, r_i)\right]
+\end{equation}
+其中，$\mathcal{F}$表示针对$xy$平面的二维傅里叶变换。根据式（\ref{eq:ring_imp}）定义，单位环形脉冲函数可以由$\delta(x,y,r_i)$重新表示为$\delta(r,r_i)$。对于第$i$个单位环形脉冲函数，其傅里叶频域表达为
+\begin{equation}
+    \begin{split}
+        \delta_{\mathcal{F}}(\rho, r_i)&=\int_0^{+\infty}\left(\int_0^{2\pi}e^{-2\pi r\rho \cos (\theta)}d\theta\right)\delta(r, r_i)rdr\\
+        &=\int^{2\pi}_0e^{-2\pi r_i\rho \cos \theta}d\theta \cdot r_i = \mathcal{F}\left[ \delta(r,r_i) \right]
+    \end{split}
+\end{equation}
+注意到，只要单位环形脉冲函数的半径$r_i$确定，其对应的频域$\delta_{\mathcal{F}}(\rho,r_i)$的值就是确定的。利用这一点，我们可以预计算好单位环形脉冲函数的频域的值，并存储起来以省略去这一部分的傅里叶变换的计算，从而大大减少算法运行时所需的计算量。由此，RSD核的频域表示可以通过将每个半径的单位环形脉冲函数的频域表示乘以对应半径的线性系数，并将乘积在半径上进行累加来重构。这样的优化可以使得计算RSD核所需的总存储量以及存储访问量大大减少。
 
 \subsection{径向采样技术}
 

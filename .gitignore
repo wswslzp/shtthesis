@@ -36,7 +36,6 @@ release*/
 !shanghaitech-emblem.pdf
 
 # ignore generated files from dtx and ins
-*.bib
 shtthesis.cls
 shtthesis-doc.sty
 
