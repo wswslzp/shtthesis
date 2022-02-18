@@ -201,10 +201,15 @@
 
 \begin{nomenclatures}[缩写]
   \header{缩写}{全称}
-  \item{CFD}{Computational Fluid Dynamics}
-  \item{CFL}{Courant-Friedrichs-Lewy}
-  \item{WENO}{Weighted Essentially Non-oscillatory}
-  \item{ZND}{Zel'dovich-von Neumann-Doering}
+  \item{NLOS}{Non-Line-Of-Sight}
+  \item{ToF}{Time-of-Flight}
+  \item{SPAD}{Single Photon Avalanche Diode}
+  \item{RSD}{Rayleigh-Sommerfeld Diffraction}
+  \item{FBP}{Filtered Back-Projection}
+  \item{LCT}{Linear Cone Transformation}
+  \item{FPGA}{Field Programmable Gate Array}
+  \item{ASIC}{Application Specific Integrated Circuit}
+  \item{FFT}{Fast Fourier Transformation}
 \end{nomenclatures}
 
 % \begin{nomenclatures}[算子 \& 说明]
@@ -224,7 +229,7 @@
 \begin{figure}[tb]
   \centering
   \includegraphics[width=.9\textwidth]{figure/nlos-scene.pdf}
-  \bicaption{非视域成像的典型场景}{Typical application scenario of NLOS imaging.}
+  \bicaption{非视域成像的典型场景。}{Typical application scenario of NLOS imaging.}
   \label{fig:nlos_scene}
 \end{figure}
 
@@ -357,7 +362,7 @@ RSD重构算法流程的简要概念如图\ref{fig:ori_algo_concept}所示。\te
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.9\textwidth]{figure/ori_algo_concept.pdf}
-  \bicaption{基于RSD的NLOS重构算法的基本概念}{Basic concept of RSD-based NLOS reconstruction.}
+  \bicaption{基于RSD的NLOS重构算法的基本概念。}{Basic concept of RSD-based NLOS reconstruction.}
   \label{fig:ori_algo_concept}
 \end{figure}
 令$P(x_c,y_c,t)$为SPAD探测器在时刻$t$时捕捉到的瞬态图像。RSD算法将瞬态图像的傅里叶域
@@ -551,9 +556,10 @@ RSD积分定义了一个名为RSD衍射核的四维张量
 \end{algorithm*}
 
 \chapter{RSD重构算法加速电路设计}
-这一章将对实时NLOS重构算法\ref{algo:rt}进行深入分析，并讨论其引入的一些设计上的挑战。
+本章讨论对前述的优化后的基于RSD的NLOS重构算法，包括其任务流程的分析和针对硬件架构设计的进一步优化和取舍。基于对算法的分析，我们使用定量化方法来探索硬件架构的设计空间，以作为后面电路微架构设计的理论基础。
 
 \section{重构算法的分析} 
+本章节将对实时NLOS重构算法\ref{algo:rt}进行深入分析，并讨论其引入的一些设计上的挑战以及相应的解决方案。
 
 \subsection{任务流程分析}
 运行时NLOS重构算法的流程图如图\ref{fig:tsk_flow}所示。整个算法流程中存在四个计算密集和存储访问密集的任务：
@@ -572,11 +578,11 @@ RSD积分定义了一个名为RSD衍射核的四维张量
 
 整个重构过程可以被分割成$N_D\times N_\Omega$个执行周期。其中每个执行周期用深度计数器和频率计数器的值以$(d,f)$形式标记，因此整个重构过程由执行周期$(0,0)$开始，一直迭代到最后一个执行周期$(N_D-1,N_\Omega-1)$。在以上四个任务中，任务1到任务3在每个执行周期均会被执行，而任务4则只在频率计数器$f$计数至$N_\Omega$时执行。我们可以看到任务1和任务2时相互独立的，因此它们可以被并行执行。而任务3——乘累加任务——则是对任务1和任务2的结果有所依赖。一旦频率计数器计满至$N_\Omega$，任务3乘累加的结果被输入给任务4，以重构相应于深度计数器值的深度的隐藏场景。输入的瞬态图像可以表示为一个多通道的图像，一个$K\times K\times N_\Omega$的张量，单位环形脉冲函数总体表示为一个$N_R\times N_\rho$的矩阵，其线性组合系数则可以表示为一个$N_D\times N_\Omega\times N_R$张量。
 
-对每一个执行周期，二维傅里叶变换处理器需要读取$K\times K$个像素，并输出其傅里叶变换后的结果。假设瞬态图像的输入通道的传输速率为每个时钟周期传送一个像素，那么一共需要$K\times K\times N_D\times N_\Omega$个时钟周期来读取整个瞬态图像。对于一个典型的NLOS成像系统配置\cite{Liu2020}，其中各个参数配置为$K=128, N_D=51, N_\Omega=69$，读取瞬态图像一共需要耗费57655296个时钟周期。我们可以自然地想到一个解决这一问题的想法，即仅仅对所有采样频率点上的瞬态图像做一次二维傅里叶变换，并将其结果存储在本地，随后的执行周期复用这一结果即可。这样一来，好处是可以将读取时间降低至$K\times K\times N_\Omega$个时钟周期，而坏处则是需要更大的片上存储单元来缓存中间结果。
+对每一个执行周期，二维快速傅里叶变换（FFT）处理器需要读取$K\times K$个像素，并输出其傅里叶变换后的结果。假设瞬态图像的输入通道的传输速率为每个时钟周期传送一个像素，那么一共需要$K\times K\times N_D\times N_\Omega$个时钟周期来读取整个瞬态图像。对于一个典型的NLOS成像系统配置\cite{Liu2020}，其中各个参数配置为$K=128, N_D=51, N_\Omega=69$，读取瞬态图像一共需要耗费57655296个时钟周期。我们可以自然地想到一个解决这一问题的想法，即仅仅对所有采样频率点上的瞬态图像做一次二维傅里叶变换，并将其结果存储在本地，随后的执行周期复用这一结果即可。这样一来，好处是可以将读取时间降低至$K\times K\times N_\Omega$个时钟周期，而坏处则是需要更大的片上存储单元来缓存中间结果。
 
 \subsection{线性组合系数分解}
 
-在章节\ref{sec:opt_algo}分析优化后的基于RSD的NLOS重构算法时，我们将线性组合系数的计算放在运行前算法部分，作为与计算的结果存储在本地供运行时算法使用。好处是可以降低运行时的计算负载，但坏处则是引入很大的存储需求。这里，为了进一步降低片上存储单元的使用量，微调了两部分算法的切分，将一部分线性组合系数的计算转移至运行时。注意到，由于傅里叶变换的线性性质，时移因子$T_l$可以被合并至线性组合系数$\hat{G}$里。因此，对应于单位环形脉冲函数的线性组合系数\ref{eq:ori_coef}可以被重新定义为
+在章节\ref{sec:opt_algo}分析优化后的基于RSD的NLOS重构算法时，我们将线性组合系数的计算放在运行前算法部分，作为与计算的结果存储在本地供运行时算法使用。好处是可以降低运行时的计算负载，但坏处则是引入很大的存储需求。这里，为了进一步降低片上存储单元的使用量，微调了两部分算法的切分，将一部分线性组合系数的计算转移至运行时。注意到，由于傅里叶变换的线性性质，时移因子$T_l$可以被合并至线性组合系数$\hat{G}$里。因此，对应于单位环形脉冲函数的线性组合系数（\ref{eq:ori_coef}）可以被重新定义为
 \begin{align} \label{eq:coef}
     \hat{G}(r, \hat{z}, \omega) & = \frac{\exp{\left[-i2\pi\cdot\frac{\delta \omega\hat{z}}{\mathbf{c}}\cdot\sqrt{r^2/\hat{z}^2+1}\right]}}{\sqrt{r^2/\hat{z}^2+1}}\\
     \tilde{G}(r, \hat{z}, \omega) & = \hat{G}(r, \hat{z}, \omega) \cdot T_l 
@@ -602,164 +608,129 @@ RSD积分定义了一个名为RSD衍射核的四维张量
 \end{equation}
 的计算单元。这里的系数分解方法仅仅是为了在设计复杂度、片上存储单元面积大小以及存储访问次数之间取得均衡所做的取舍，同时在不对系统造成性能上的负面影响的前提下尽量提升功耗和面积效率的一种手段。
 
-\section{设计空间探索}
+\section{设计空间探索}\label{sec:dse}
 
-本章节将会引入一些主要的NLOS成像加速器设计参数来定量化的描述设计空间，以探索数据流优化的最佳参数配置。
+本章节将会引入一些主要的NLOS成像加速器设计参数来定量化的描述设计空间，以探索数据流优化的最佳参数配置。另外，这里还介绍了一个数据复用的方法以跳过一些冗余的计算过程。
+
+这部分关于设计空间探索的讨论目的仅仅是为了尝试不同的架构，并使用对应重构任务的计算时间来衡量其性能。因此，此处仅仅是不包含任何具体微架构实现细节的理论分析。最终的微架构及数据流的设计抉择均基于这部分的分析结果以及架构的硬件可实现性。本文所提出的电路微架构将在下一章中详细讨论。
+
+\subsection{重构延时}
+
+在讨论设计参数之前，我们首先讨论算法按照流程图\ref{fig:tsk_flow}顺序执行时，所占用的运行时间，即任务的总延时。对于章节\ref{sec:opt_algo}所讨论的优化后RSD算法，算法\ref{algo:rt}的延时可以定量化的表达为
+\begin{equation} \label{eq:no_opt_lat}
+    T_{total} = N_D \{ N_{\Omega}[ \max (T_{FFT}, N_RN_{\rho}T_{ACG}+K^2T_M)+ K^2T_{mul}+T_{ACS} ] + T_{IFFT}\}
+\end{equation}
+这里，我们假设FFT模块和RSD核生成模块是相互独立运行的，因此它们可以并行执行。式（\ref{eq:no_opt_lat}）中，$T_{FFT}$和$T_{IFFT}$分别表示FFT操作和IFFT操作的延时。通常，FFT模块以每个时钟周期接收一个像素作为输入，因此$T_{FFT}$和$T_{IFFT}$至少需要$K^2$个时钟周期。$T_{ACG}$和$T_{ACS}$则是分别是每次累加$G$和$S_F$所耗费的延时，也就是一个正常的加法器的延时。$T_{mul}$则是乘法的延时和$T_M$则是地址映射操作所需的延时。不失一般性的，我们假设$T_{ACG},T_{ACS},T_{mul},T_M$均为一个时钟周期。
+
+我们考虑一个典型的基于RSD的NLOS重构算法的成像系统\cite{Liu2020}，其中各参数配置为$N_D=51, N_\Omega=69, N_R=68, N_\rho=101, K=128$。将这些参数代入式（\ref{eq:no_opt_lat}）中可以算出$T_{total}=140318187$时钟周期。这意味着对于一个运行在时钟频率为100MHz的加速器，也需要至少1.4秒才能重构一帧三维隐藏场景，而这样的成像速率无法满足实时NLOS成像的要求。
+
+\subsection{展开因子}
+
+从式（\ref{eq:no_opt_lat}）中我们可以看到，算法中的关键路径在于输入瞬态图像做的二维FFT以及RSD核的生成。从算法\ref{algo:rt}中可以看到这部分计算来自于内部循环的迭代。因此若要硬件加速算法的执行，需要从这部分循环的执行开始着手。在此为了定量化描述硬件对算法的加速，我们引入展开因子作为参量，表明循环是如何被展开以使得循环内的操作可以被全部或部分的并行化执行。例如，若有一个需要做$N$次迭代的循环，给它设立一个展开因子$P$，那么这一循环的执行时间减少至$\lceil N/P \rceil$。
+
+对算法\ref{algo:rt}中每个循环，我们都设立一个对应的展开因子，分别为$P_D$, $P_\Omega$, $P_R$, $P_\rho$, $P_x$, $P_y$。那么考虑上这些展开因子后，式（\ref{eq:no_opt_lat}）重新写为
+\begin{equation}
+    \begin{split}
+        T_{tot} &= \frac{N_D}{P_D} \Biggl\{ \frac{N_{\Omega}}{P_{\Omega}} \Bigl[ \max (T_{FFT}, \frac{N_{ {R}}N_{\rho}}{P_{ {R}}P_{\rho}} T_{ACG}+\frac{K^2}{P_xP_y}T_M)\\ &+ \frac{K^2}{P_xP_y}T_{mul}+T_{ACS} \Bigr] + T_{IFFT}\Biggr\} \label{eq:opt_lat}
+    \end{split}
+\end{equation}
+
+式（\ref{eq:opt_lat}）描述了重构任务的总延时和展开因子之间的关系。我们可以说这六个展开因子部分地构成了加速器架构的设计空间。利用式（\ref{eq:opt_lat}）我们可以在设计空间中找出一个合适的参数组合，使得对应的重构任务的总延时可以满足特定应用下实时NLOS成像的基本要求。当然，我们可以通过穷尽所有可能的展开因子组合以遍历整个设计空间，但这样做不仅仅耗费大量的时间，而且不适当的展开因子的组合往往导致不规整的架构设计，从而导致复杂的控制结构和数据流，增加了设计的复杂度。循环的展开往往意味着一部分运算部件的复制或流水线的切分，即导致更大的硬件资源或面积消耗。% 后面讲到内部循环的展开往往复制的电路会更小一点，这一句不一定对。
+
+\subsection{数据复用}
+
+对于算法\ref{algo:rt}，尽管利用精心组合的展开因子对其进行循环展开是一个关键的优化加速手段，算法中仍然存在一些本身就会耗费大量计算时间的操作需要进一步优化，如FFT和IFFT。不像乘法亦或加法这类代数操作往往最多仅仅需要几个时钟周期即可完成，这类运算模块由于其数据带宽等硬件的限制往往需要上千个时钟周期来完成操作。
+
+算法\ref{algo:rt}中，对输入瞬态图像的二维FFT在循环1和循环2中一共需要迭代$N_D\times N_\Omega$次。然而，可以看到输入的瞬态图像$P_F(x,y,\omega_j)$仅仅和循环2的下标$j$相关而与循环1的下标$i$无关，即其经过二维FFT后的结果对循环1的每次迭代均相同。如果我们缓存这部分结果在片上存储单元并在随后循环1的迭代中复用这部分数据即可大大减少冗余的计算量。因此，重构任务的总延时可以重新描述为
+\begin{equation}
+    \begin{split}
+        &T_{tot} = \frac{N_D}{P_D} \Biggl\{ \frac{N_{\Omega}}{P_{\Omega}} \Bigl[ \frac{N_{ {R}}N_{\rho}}{P_{ {R}}P_{\rho}} T_{ACG}+\frac{K^2}{P_xP_y}T_M \\ &+ \frac{K^2}{P_xP_y}T_{mul}+T_{ACS} \Bigr] + T_{IFFT}\Biggr\} + \frac{N_{\Omega}}{P_{\Omega}} T_{FFT} \label{eq:tt}
+    \end{split}
+\end{equation}
+这里，我们略微修改了算法的执行过程，以存储中间结果并在之后的执行中进行数据的复用，从而避免了二维FFT的延时。由于循环1的每次迭代所用的FFT的结果都和第一次迭代所用的相同，因此这一复用不会影响算法最后的重构结果。在此基础上，再根据特定的应用场景下实时NLOS成像的要求以及所选择的硬件实现平台的资源限制，选择一个合适的展开因子组合。所选择的展开因子越大，重构任务所耗费的总延时就越小而所消耗的硬件资源就越多。
+
+本文的工作目标即是设计一个可以实时NLOS成像的硬件加速器，一个可以输出重构好的隐藏场景的视频流的加速器。根据现有的资料表明，当视频帧率超过24 FPS后，人的肉眼将无法分辨帧与帧之间的突变而将之视为连续的变动。因此，这里我们经过大量实验，选择了一组合适的展开因子，$P_D=P_\Omega=P_R=P_x=1$，$P_\rho=N_\rho$，$P_y=K$，作为加速器架构设计的最终方案。对于前面所述的一个典型的NLOS成像系统的配置，经由这一架构所加速后的重构任务的理论总延时为1978251个时钟周期。这样，一个时钟频率仅为50MHz的加速器重构一帧三维隐藏场景仅仅需要40毫秒（25 FPS），超过了上述提到的最低帧率要求24 FPS，满足了我们所需达到的实时NLOS成像的设计要求。%这样，一个时钟频率为100MHz的加速器重构一帧三维隐藏场景仅仅需要20毫秒，而即使降频到50MHz这样一个相对较低的时钟频率，也能获得25 FPS这样的满足实时视频播放的最低帧率。这样的选择就满足了我们所需达到的实时NLOS成像的设计要求。
 
 \chapter{加速电路的微架构设计}
-% \shtthesis{} 实际使用 \CTeX 宏包提供的 \textsf{ctexbook} 文档类排版，除上述选项外的类参数会传递给 \textsf{ctexbook}。其中需要注意的选项为 \verb|fontset|，即设定论文所用的字体集。\CTeX 宏包自身能够根据编译平台选择合适的字体集，也可以手动设置相应的 fontset，例如在 Windows 平台下设置 \verb|fontset=windows|，在 macOS 平台下设置 \verb|fontset=mac|：
-% \begin{latex}
-% \documentclass[fontset=windows]{shtthesis}
-% \end{latex}
-% 不同字体集所用字体见表~\ref{tab::fonts}。在 Linux/UNIX 环境下对于宋体和黑体，会首先检测思源宋体/黑体（Source Han 字体或 Noto CJK 字体）是否安装，若未检测到则回退至 Fandol 宋体/黑体；对于楷体和仿宋，则会依次检测方正楷体/仿宋-GBK 是否安装，若未检测到则退回至 Fandol 楷体/仿宋。
 
-% \begin{table}[htb]
-%   \centering
-%   \caption{不同字符集下 \shtthesis{} 所用字体}
-%   \label{tab::fonts}
-%   \begin{subtable}{\columnwidth}
-%     \centering
-%     \caption{\shtthesis{} 所用中文字体}
-%     \label{tab::chs_fonts}
-%     \begin{tabular}{*{3}{c}}
-%       \toprule
-%       Windows & macOS & Linux/UNIX \\
-%       \midrule
-%       \songti   中易宋体 & \songti   华文宋体简体 & \songti   思源宋体 $\to$ Fandol 宋体 \\
-%       \heiti    中易黑体 & \heiti    华文黑体简体 & \heiti    思源黑体 $\to$ Fandol 黑体 \\
-%       \kaishu   中易楷体 & \kaishu   华文楷体简体 & \kaishu   方正楷体-GBK $\to$ Fandol 楷体 \\
-%       \fangsong 中易仿宋 & \fangsong 华文仿宋简体 & \fangsong 方正仿宋-GBK $\to$ Fandol 仿宋 \\
-%       \bottomrule
-%     \end{tabular}
-%   \end{subtable}
-%   \newline
-%   \vspace{12pt}
-%   \newline
-%   \begin{subtable}{\columnwidth}
-%     \centering
-%     \caption{\shtthesis{} 所用英文字体（全平台一致）}
-%     \label{tab::eng_fonts}
-%     \begin{tabular}{*{3}{c}}
-%       \toprule
-%       \textrm{Serif} & \textsf{Sans Serif} & \texttt{Typewriter} \\
-%       \midrule
-%       \textrm{\TeX{} Gyre Termes} & \textsf{\TeX{} Gyre Heros} & \texttt{\TeX{} Gyre Cursor} \\
-%       \bottomrule
-%     \end{tabular}
-%   \end{subtable}
-% \end{table}
-
-% 需要注意 Fandol 系列字体虽然为 \TeX{} Live 自带，但其字符覆盖有限，对于生僻字可能出现缺字情况。可以通过查看附录~\ref{sec::chs_rare} 确认当前编译环境所用的字体库是否有缺字风险。思源宋体\footnote{\url{https://source.typekit.com/source-han-serif/cn/}}、思源黑体\footnote{\url{https://github.com/adobe-fonts/source-han-sans}}、方正楷体-GBK\footnote{\url{https://www.foundertype.com/index.php/FontInfo/index/id/137}}和方正仿宋-GBK\footnote{\url{https://www.foundertype.com/index.php/FontInfo/index/id/128}} 均为免费字体且完整覆盖简繁扩展 (GBK) 字符集，非常推荐 Linux/UNIX 用户安装使用。
+基于上一章对算法的分析和设计空间的探索，本章详述满足实时NLOS成像的基于RSD重构算法的加速器的微架构。
 
 \section{微架构概述} \label{sec::setup_info}
-% 知晓学位类型后，\shtthesis{} 还需其他必要信息才能进行进一步排版：根据《规范》，博士学位论文和硕士学位论文需要在中英文封面中，依次列出论文密级、论文标题、作者姓名、导师信息、学位类别、一级学科、学校/学院名称及论文完成时间；根据\citet{bachelor2019}，本科生学位论文需要在中英文封面中依次列出论文题目、学生姓名、学号、入学年份、学院、专业、指导教师及论文完成时间。以上信息均可通过 \verb|\shtsetup| 命令，在论文导言区（即 \verb|\documentclass| 之后、\verb|\begin{document}| 之前）以 key=value 方式统一设定。用户可以一次性调用 \verb|\shtsetup| 设定所有信息，也可分多次设定。
 
-% 研究生论文信息设定样例为：
-% \begin{latex}
-% \shtsetup{
-%   degree-name = {工学硕士},
-%   degree-name* = {Master~of~Science~in~Engineering},
-%   secret-level = {白给},
-%   title = {\ShtThesis{}~v\version{}~使用说明},
-%   title* = {A~User's~Guide\\to\\\ShtThesis{}~v\version{}},
-%   keywords = {非视域成像，瑞利索墨菲散射，硬件加速，现场可编程逻辑门阵列},
-%   keywords* = {Non-light-of-sight imaging (NLOS), Rayleigh-Sommerfeld Diffraction (RSD), Hardware accelerator, Field programmable gate array (FPGA)},
-%   author = {李润东},
-%   author* = {Li~Rundong},
-%   institution = {上海科技大学信息科学与技术学院},
-%   institution* = {School~of~Information~Science~and~Technology\\%
-%                   ShanghaiTech~University},
-%   supervisor = {范睿~副教授},
-%   supervisor* = {Professor~Fan~Rui},
-%   supervisor-institution = {上海科技大学信息科学与技术学院},
-%   discipline-level-1 = {计算机科学与技术},
-%   discipline-level-1* = {Computer~Science~and~Technology},
-%   date = {2020~年~6~月},
-%   date* = {June,~2020},
-%   bib-resource = {reference.bib},
-% }
-% \end{latex}
+基于RSD算法的NLOS成像加速器微架构如图\ref{fig:arch}所示，架构整体用NLOSI Core标识。从图中可以看到，NLOSI Core主要包括了四个子模块（染以不同的颜色），分别是二维FFT处理模块（FFT2D Core），RSD核生成模块（RSD GenCore），乘累加阵列（MAC array）以及后处理模块（Post processing），以处理算法的不同部分。加速器接受来自外部的两种输入，一个是输入图像的通道，传送来自传感器的瞬态图像，另一路则是通过AXI总线接受预计算的单位环形脉冲函数以及三个中间变量（\textit{wave, distance, timeshift}）的数据。输入的瞬态图像在进入到加速器之前经过了必要的预处理环节，并被量化为16比特的定点复数，随后送入FFT2D Core处理。而单位环形脉冲函数以及三个中间变量则存储在数据加载单元（Load Unit，LU）内的片上存储器中。
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=.98\textwidth]{figure/arch.pdf}
+    \bicaption{NLOS成像加速器微架构图。}{Architecture of the NLOS reconstruction accelerator.}
+    \label{fig:arch}
+\end{figure}
 
-% 本科生论文信息设定样例为：
-% \begin{latex}
-% \shtsetup{
-%   title = {\ShtThesis{}~v\version{}\\使用说明},
-%   title* = {A~User's~Guide~to\\\ShtThesis{}~v\version{}},
-%   keywords = {上海科技大学，学位论文，\LaTeX{}},
-%   keywords* = {ShanghaiTech~University, Thesis, \LaTeX{}},
-%   date = {2020~年~06~月},
-%   date* = {06~/~2020},
-%   author = {李润东},
-%   author* = {Rundong~Li},
-%   author-id = {36273800},
-%   entrance-year = {2017},
-%   institution = {信息科学与技术学院},
-%   institution* = {School~of~Information~Science~and~Technology},
-%   supervisor = {范睿},
-%   supervisor* = {Rui~Fan},
-%   discipline = {计算机科学与技术},
-%   discipline* = {Computer~Science~and~Technology},
-%   bib-resource = {reference.bib},
-% }
-% \end{latex}
+顶层控制模块包含深度计数器$d$和频率计数器$f$来确定当前的执行周期$(d,f)$，并依据当前所处的执行周期来控制其他模块的行为。当$d=0$时，如图\ref{fig:tg_d0}所示，加速器开始处理对应于第一个采样深度的瞬态图像，由于输入数据带宽限制，这一阶段存在很大的数据加载延迟。RSD GenCore在变量\textit{wave}加载完毕后开始计算RSD核，缓存结果并等待到FFT2D Core的结果就绪。控制模块将协调好FFT2D Core和RSD GenCore的输出时刻，二者同步输出至MAC Array。同时FFT2D Core的结果，即瞬态图像的频域被存储在内部片上存储器中。当$d>0$时，如图\ref{fig:tg_d1}所示，加速器复用FFT2D Core中存储的结果，并对前一个采样深度的累加结果计算二维IFFT。同时，数据加载单元读取下一个执行周期恢复RSD核所需的数据，并由RSD GenCore计算下一个RSD核。算好的RSD核，以及被复用的瞬态图像的频域图，被控制模块协调以同步输送到MAC array里。在每个采样深度$d$的最后一个执行周期里，从MAC array中累加完毕的结果输送回FFT2D Core进行二维IFFT操作，其结果对应于最后重构的三维场景中深度为$d$的二维切片图。
+\begin{figure*}[!tb]
+    \centering
+    \includegraphics[width=\textwidth]{figure/d0f0_tg.pdf}
+    \bicaption{执行周期(d0, f*)的时序图。}{Timing graph for execution cycles (d0, f*).}
+    \label{fig:tg_d0}
+\end{figure*}
+\begin{figure*}[!tb]
+    \centering
+    \includegraphics[width=\textwidth]{figure/d1fm_tg.pdf}
+    \bicaption{执行周期(d1, fm)到(d2, f0)的时序图}{Timing graph for execution cycles (d1, fm) to (d2, f0).}
+    \label{fig:tg_d1}
+\end{figure*}
 
-% 在 \verb|\shtsetup| 的 key=value 设定机制中，表示中文信息条目的 key 为 \verb|-| 连接的小写单词（例如研究生学位中文名称 \verb|degree-name|），由 \verb|*| 结尾的 key 一般表示对应的英文条目（例如研究生学位英文名称 \verb|degree-name*|）；value 可以在前后添加大括号，也可以不添加。特别需要注意 \verb|\shtsetup| 命令内\emph{不能有空行}。
+\section{RSD核生成模块}
 
-\section{RSD卷积核生成器}
-% 研究生学位论文需要额外设定的学位信息包括：学位名称（degree-name）和英文学位名称（degree-name*），具体见表~\ref{tab::degree_info}。学位类型会影响 \shtthesis{} 的中英文封面内容。
-% \begin{table}[htb]
-% \centering
-% \caption{通过\texttt{shtsetup}设定的学位信息} \label{tab::degree_info}
-% \begin{tabular}{llp{0.5\columnwidth}}
-%   \toprule
-%   key & value 样例 & 说明 \\
-%   \midrule
-%   degree-name & 学术型博士 & 中文学位名称，《规范》中学术型学位中文名称包括：\emph{学术型博士}、\emph{理学硕士}、\emph{工学硕士} \\
-%   degree-name* & Doctor~of~Philosophy & 英文学位名称，《规范》中上述学位对应的英文名称为：\emph{Doctor~of~Philosophy}、\emph{Master~of~Natural~Science}、\emph{Master~of~Science~in~Engineering} \\
-%   \bottomrule
-% \end{tabular}
-% \end{table}
+RSD GenCore负责利用数据加载单元中的数据来生成分辨率为$K\times K$的RSD核。数据加载单元，一旦数据加载单元中的数据准备妥当，便立刻会输送至RSD GenCore。RSD GenCore利用接收到的数据，即一个特定的采样深度$\hat{z}$，一个特定的采样频率$\omega$和一组环形半径长度$r$计算出该执行周期所需的一组线性组合系数。计算好的系数随后和先前存储的单位环形脉冲函数做乘累加生成RSD核，并缓存至寄存器组。如前所述，此处计算的仅仅是半径上的RSD核的值。因此，模块包含一个地址映射模块，将同一列的像素地址，映射至寄存器组的下标地址，以从RSD核寄存器组读取相应的像素值，来恢复完整的$K\times K$的RSD核的特定一列。列地址计数器由顶层控制模块控制启动，每个时钟周期递增列地址。RSD GenCore每个时钟周期输出一个RSD核的一列像素，节拍与FFT2D模块输出瞬态图像的频域结果的每一列一致，因此经过$K$个时钟周期即可将一张图输出完毕。
 
-\section{二维快速傅里叶变换模块}
-% 设定论文中英文标题和涉密等级。中文标题（title）和英文标题（title*）中可以包含换行符。研究生学位论文的涉密等级（secret-level）会以“密级：\uline{XXX}”显示在中文封面右上角，未设定涉密等级则不显示相关信息。
+\begin{figure}[!tb]
+    \centering
+    \includegraphics[width=.98\textwidth]{figure/rsdgen.pdf}
+    \bicaption{RSD核生成模块。}{RSD kernel generator.}
+    \label{fig:rkg}
+\end{figure}
+
+RSD GenCore生成RSD核的部分主要结构如图\ref{fig:rkg}所示。四个数据加载单元分别提供计算RSD核的单位环形脉冲函数的值和三个中间变量的值。在每个执行周期，\textit{Distance}加载单元和\textit{Timeshift}加载单元分别读取\textit{distance}和\textit{timeshift}的一个元素到子模块\textit{CoefGenCore}。\textit{Wave}加载单元输送对应于每个环形半径$r$的\textit{wave}给\textit{CoefGenCore}，因此生成的系数串行地输出并广播至一组乘累加单元。正如章节\ref{sec:dse}所讨论的，在径向采样点上迭代的循环被完全展开，故乘累加单元在这里复制了$N_\rho$份来并行计算，以加速RSD核的生成。因此，这组乘累加单元每个执行周期需消耗$N_R$时钟周期来生成RSD核。
+
+为了降低设计的复杂度，这里指数函数模块\textit{ExpFunc}利用查找表（LUT）的方式来实现。显然指数函数$e^{-i2\pi t}$的周期为1，因此查找表只需在区间$[0,1]$做即可，任何区间外的值都可以通过平移操作移至$[0,1]$内。
+
+生成好的半径方向上的RSD核的值存储在本地的寄存器组里。恢复出完整的RSD核即可以通过将每个RSD核每个像素的横纵坐标经由地址映射模块\textit{AddrMap}转换为寄存器组地址，以此坐标索引寄存器组的内存储的值得到，如图\ref{fig:addrmap}所示。
+\begin{figure}[!tb]
+    \centering
+    \includegraphics[width=.98\textwidth]{figure/addrmap.pdf}
+    \bicaption{地址映射操作，从径向上RSD核的采样恢复出RSD核的完整的一列。}{Address mapping: recover the RSD kernel from its radial samples.}
+    \label{fig:addrmap}
+\end{figure}
+
+\section{FFT2D Core}
+
+FFT2D Core由一个二维FFT模块和用于存储结果的128块存储块构成。二维FFT模块同时负责对输入的瞬态图像做二维FFT和对从MAC array累加的结果做二维IFFT。存储块缓存每个采样频率的瞬态图像的FFT结果，使之能在随后的执行周期里复用。FFT2D Core的结果输出方式和RSD核的输出方式一致，每个时钟周期输出一列像素。
+
+其中的二维FFT模块的大致结构如图\ref{fig:fft_arch}所示。输入的瞬态图像的像素经由移位寄存器完成串转并操作。输入通道以一个时钟周期一个像素的速率串行地输入每个像素，移位寄存器则以一个时钟周期一列像素的速率并行的输出至一个二选一MUX。MUX的另一端则是接收来自MAC array输出的累加结果。累加结果的输入速率同样是每个时钟周期并行地送入一列像素。图中所示的MUX选择信号\textit{mode}是一个单比特信号，不仅仅用于选择输入数据是瞬态图像还是累加结果，也用于设置二维FFT模块工作模式：FFT模式或者IFFT模式。在FFT模式下，输入瞬态图像的傅里叶域是并行输出的，而在IFFT模式下，乘累加结果由傅里叶域转换为空间域且输出形式是串行的，即一个时钟周期一个像素。共轭模块在IFFT模式下激活。此处二维FFT模块并未做循环展开，其中的一维FFT子模块通过切分多级流水线来增加吞吐率。
+\begin{figure}[!tb]
+    \centering
+    \includegraphics[width=.9\textwidth]{figure/fft2d.pdf}
+    \bicaption{二维FFT模块电路结构。}{\small FFT2D module circuit structure.}
+    \label{fig:fft_arch}
+\end{figure}
+
+另外一个重要的部分是内部的存储块阵列。阵列中包含$K$个片上存储器（这里$K=128$），每块存储器可以存储$K\times N_\Omega$个像素点。如此分块使得可以同时写入二维FFT的结果中的一列，而后面的执行周期复用这一结果时也可以一个时钟周期读取一列结果。存储块中的数据格式如图\ref{fig:ram_array}所示。
+\begin{figure}[!tb]
+    \centering
+    \includegraphics[width=.95\textwidth]{figure/ramarray.pdf}
+    \bicaption{存储器阵列中的数据格式。}{Data format in the memory array.}
+    \label{fig:ram_array}
+\end{figure}
 
 \section{乘累加阵列}
-% 需要设定的作者信息包括：作者中英文姓名（author 和 author*）和学校/学院中英文名称（institution 和 institution*），研究生需要设定一级学科中英文名称（discipline-level-1 和 discipline-level-1*），本科生需要设定攻读专业中英文名称（discipline 和 discipline*）。
 
-% 特别注意研究生和本科生的英文名格式要求不一致：研究生要求以姓氏拼音在前、名字拼音在后、中间以半角空格分隔的格式书写英文姓名：
-% \begin{latex}
-% \shtsetup{
-%   % 研究生中英文姓名格式要求
-%   author = 李润东,
-%   author* = {Li~Rundong}, % 正确写法
-%   % author* = {Rundong~Li}, % 错误写法
-% }
-% \end{latex}
-% 而本科生要求以名字拼音在前、姓氏拼音在后、中间以半角空格分隔的格式书写英文姓名：
-% \begin{latex}
-% \shtsetup{
-%   % 本科生中英文姓名格式要求
-%   author = 李润东,
-%   author* = {Rundong~Li}, % 正确写法
-%   % author* = {Li~Rundong}, % 错误写法
-% }
-% \end{latex}
-
-% 研究生需要设定完整的学校、学院名称，中文名称（institution）不可带换行符，英文名称（institution*）应在学院、学校名称间加入换行符，否则封面排版会出现错误：
-% \begin{latex}
-% \shtsetup{
-%   institution = 上海科技大学信息科学与技术学院,
-%   institution* = {School~of~Information~Science~and~Technology\\%
-%                   ShanghaiTech~University},
-% }
-% \end{latex}
-% 本科生则不必包含学校名称，直接设定学院名称即可，注意中英文名称中均不能包含换行符：
-% \begin{latex}
-% \shtsetup{
-%   institution = 信息科学与技术学院,
-%   institution* = {School~of~Information~Science~and~Technology},
-% }
-% \end{latex}
+每个执行周期对应于一个特定的采样深度$d$和一个采样频率$f$。每个乘累加单元将对应特定$d$和$f$的RSD核与FFT结果相乘，在所有的采样频率上做累加。MAC array中所有的乘累加单元是并行工作的，使得一列上所有像素的乘法和加法操作可以同时执行。累加结果存在内部片上存储器中，并在累加结束后送至FFT2D Core做最后的二维IFFT。MAC array的电路结构如图\ref{fig:macarr}所示。
+\begin{figure}[!tb]
+    \centering
+    \includegraphics[width=.98\textwidth]{figure/macarr.pdf}
+    \bicaption{MAC array电路结构。}{Structure of the MAC array.}
+    \label{fig:macarr}
+\end{figure}
 
 \section{后处理模块}
 % 需要设定的导师信息包括：导师中英文姓名（supervisor 和 supervisor*）和导师单位中文名称（supervisor-institution）。注意在中文封面中，导师姓名和单位分两行显示在“指导教师”条目下。根据《规范》，导师中文姓名（supervisor）应包含导师职称，如教授、副教授、助理教授、研究员、副研究员，以一个半角空格跟随在姓名之后；导师英文姓名（supervisor*）则统一以“Professor”开头，与英文姓名以一个半角空格隔开。导师单位中文名称（supervisor-institution）不可包含换行符。
