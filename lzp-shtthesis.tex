@@ -224,22 +224,22 @@
 
 \section{研究背景}\label{sec:backgd}
 
-非视域成像（Non-light-of-sight Imaging，NLOS Imaging）技术是一种近年来计算成像领域研究的热门。传统的成像技术，通过图像传感器收集被成像物体表面一次直接反射的光信号，随后经过特定的图像信号处理（ISP）算法加工，最后输出肉眼可识别的图像。这一类经典的成像方式，需要传感器可以直接看到被成像物体的方式，被称为视域成像（Light-of-sight Imaging，LOS Imaging）。与之相反，非视域成像代表了一类新颖的成像方式，其中传感器无法直接看到被成像物体，而只能间接的收集到被成像物体的信息。其典型的应用场景如图\ref{fig:nlos_scene}所示。图\ref{fig:nlos_scene}中同时也展示了非视域成像系统的组成。一个皮秒级激光器发射一束光子流到一面反射墙上，光子在墙上经过一次反射后进入房间内，并与房间内物体进行二次反射后回到反射墙面上，经由第三次反射后被房间外的传感器采集。因此，非视域成像技术可以给被遮挡的物体成像，重构出被遮挡隐藏的室内场景。在诸如机器人视觉、自动驾驶导航、工业检测、灾后救援、军事情报等视域成像技术无法应用的场景下，非视域成像技术有重要实用意义。%由于其庞大的应用潜力，TODO%在\cite{velten2013femto}首次提出了非视域成像技术后，大量相关研究开始从非视域成像技术的各个方面开始不断优化，非视域成像日益实用化。
+非视域成像（Non-light-of-sight Imaging，NLOS Imaging）技术是一种近年来计算成像领域研究的热门。传统的成像技术，通过图像传感器收集被成像物体表面一次直接反射的光信号，随后经过特定的图像信号处理（ISP）算法加工，最后输出肉眼可识别的图像。这一类经典的成像方式，需要传感器可以直接看到被成像物体的方式，被称为视域成像（Light-of-sight Imaging，LOS Imaging）。与之相反，非视域成像代表了一类新颖的成像方式，其中传感器无法直接看到被成像物体，而只能间接的收集到被成像物体的信息。其典型的应用场景如图\ref{fig:nlos_scene}所示。图\ref{fig:nlos_scene}中同时也展示了非视域成像系统的组成。一个皮秒级激光器发射一束光子流到一面反射墙上，光子在墙上经过一次反射后进入房间内，并与房间内物体进行二次反射后回到反射墙面上，经由第三次反射后被房间外的传感器采集。因此，非视域成像技术可以给被遮挡的物体成像，重构出被遮挡隐藏的室内场景。在诸如机器人视觉、自动驾驶导航、工业检测、灾后救援、军事情报等视域成像技术无法应用的场景下，非视域成像技术有重要实用意义。%由于其庞大的应用潜力，TODO%在\citep{velten2013femto}首次提出了非视域成像技术后，大量相关研究开始从非视域成像技术的各个方面开始不断优化，非视域成像日益实用化。
 
 \begin{figure}[tb]
   \centering
-  \includegraphics[width=.9\textwidth]{figure/nlos-scene.pdf}
+  \includegraphics[width=\textwidth]{figure/nlos-scene.pdf}
   \bicaption{非视域成像的典型场景。}{Typical application scenario of NLOS imaging.}
   \label{fig:nlos_scene}
 \end{figure}
 
 非视域成像在技术上仍然存在不少困难。第一个困难来自于传感器的设计要求。传感器记录下的所有光子里，只有一小部分携带有可以重构出隐藏场景和物体的信息。本来从单一的散射点直接反射回来的光子数即反比于到传感器距离的平方，经过多次散射的光子其信号强度相比于前者更是小了数个量级。因此，若想鲁棒地检测到这少数的间接多次散射的光子，尤其在直接反射的光子强度更高的情形下，需要单光子传感器具有高动态范围或者具有开关能力（gating capabilities）。第二个困难来自于非视域成像问题，即在仅仅有光强测量的情况下如何重构被遮挡的3D场景，难以被表达为清晰的数学形式。要想较为彻底的解决非视域成像问题，需要有精确到皮秒级时间分辨率的高级成像系统，被成像场景的一些先验知识或数学假设以及其他的一些非传统方法。第三个困难在于，解决上述非视域成像问题的规模极大，相应的成像算法的复杂度极高。因此，研究能在单一计算设备上的高效的非视域成像算法对于非视域成像的实用化有重要的意义。
 
-最近十年里，国内外研究者们提出了不同的方法来尝试解决非视域成像问题。一部分研究者集中在探索新的成像装置，比如使用飞秒级和皮秒级时间分辨率的传感器\cite{Velten2012,Otoole2018,Liu2019,DavidB.Lindell2019}，使用干涉测量技术\cite{bertolotti2012non,katz2014non}，声学成像系统\cite{lindell2019acoustic}，被动成像系统\cite{bouman2017turning,saunders2019computational,boger2019passive}或者热成像系统。
+最近十年里，国内外研究者们提出了不同的方法来尝试解决非视域成像问题。一部分研究者集中在探索新的成像装置，比如使用飞秒级和皮秒级时间分辨率的传感器\citep{Velten2012,Otoole2018,Liu2019,DavidB.Lindell2019}，使用干涉测量技术\citep{bertolotti2012non,katz2014non}，声学成像系统\citep{lindell2019acoustic}，被动成像系统\citep{bouman2017turning,saunders2019computational,boger2019passive}或者热成像系统。
 
-时间分辨（time-resolved）成像系统是最具实用潜力的非视域成像系统之一。这一成像系统的组成如图\ref{fig:nlos_scene}所示，通常有一个脉冲激光器和一个单光子探测器组成。探测器的时域分辨率必须足够高到能捕捉到光的动态传播，而这是时间分辨成像系统的关键要求之一\cite{faccio2018trillion}。光在100ps内可以传播3cm，而这则确定了成像系统所希望达到的时间分辨率。
+时间分辨（time-resolved）成像系统是最具实用潜力的非视域成像系统之一。这一成像系统的组成如图\ref{fig:nlos_scene}所示，通常有一个脉冲激光器和一个单光子探测器组成。探测器的时域分辨率必须足够高到能捕捉到光的动态传播，而这是时间分辨成像系统的关键要求之一\citep{faccio2018trillion}。光在100ps内可以传播3cm，而这则确定了成像系统所希望达到的时间分辨率。
 
-同时，另外一部分研究者则进一步探索光传播模型，包括给被成像物体或场景假设某些特定属性，如反射率，并在此基础上设计新的非视域成像算法用以重构出隐藏场景。在对非视域成像问题进行理论分析后\cite{ramesh20085d}，各类不同的非视域成像重构算法相继诞生。全3D非视域成像的第一次实现，使用的是滤波反投影方法（filtered back-projection，FBP）\cite{Velten2012}。随后出现了一批基于FBP算法的优化算法，如误差反投影法（error back-projection）\cite{LaManna2019}、快速反投影法（fast back-projection）\cite{Arellano2017}、高斯-拉普拉斯算子反投影法（Laplacian of Gaussian back-projection）\cite{Laurenzis2014}，这几种算法针对高分辨率的隐藏场景的重构，但算法的计算复杂度较高。还有一些同样计算复杂度较高的迭代式算法，如卷积近似方法\cite{Ahn2019}、表面优化方法\cite{Tsai2019}、瞬时渲染方法\cite{Iseringhausen2018}。另外还有一些几何方法也能用于NLOS重构\cite{Tsai2017,Xin2019}。除此以外，也有一些基于线性反演方法的算法，如光锥变换（light-cone transform）\cite{Otoole2018}、fast F-K migration\cite{DavidB.Lindell2019}。最近新兴的一些基于波动光学的方法，如相量场方法\cite{Liu2019,Teichman2019,Dove2019,Liu2020}。在此基础上，研究者提出了一种基于RSD的快速非视域成像算法\cite{Liu}。这种算法让实时非视域成像有了实际落地的可能性。
+同时，另外一部分研究者则进一步探索光传播模型，包括给被成像物体或场景假设某些特定属性，如反射率，并在此基础上设计新的非视域成像算法用以重构出隐藏场景。在对非视域成像问题进行理论分析后\citep{ramesh20085d}，各类不同的非视域成像重构算法相继诞生。全3D非视域成像的第一次实现，使用的是滤波反投影方法（filtered back-projection，FBP）\citep{Velten2012}。随后出现了一批基于FBP算法的优化算法，如误差反投影法（error back-projection）\citep{LaManna2019}、快速反投影法（fast back-projection）\citep{Arellano2017}、高斯-拉普拉斯算子反投影法（Laplacian of Gaussian back-projection）\citep{Laurenzis2014}，这几种算法针对高分辨率的隐藏场景的重构，但算法的计算复杂度较高。还有一些同样计算复杂度较高的迭代式算法，如卷积近似方法\citep{Ahn2019}、表面优化方法\citep{Tsai2019}、瞬时渲染方法\citep{Iseringhausen2018}。另外还有一些几何方法也能用于NLOS重构\citep{Tsai2017,Xin2019}。除此以外，也有一些基于线性反演方法的算法，如光锥变换（light-cone transform）\citep{Otoole2018}、fast F-K migration\citep{DavidB.Lindell2019}。最近新兴的一些基于波动光学的方法，如相量场方法\citep{Liu2019,Teichman2019,Dove2019,Liu2020}。在此基础上，研究者提出了一种基于RSD的快速非视域成像算法\citep{Liu}。这种算法让实时非视域成像有了实际落地的可能性。
 
 可以看到，非视域成像问题是一个多领域交叉问题，跨越了物理、信号处理、光学和电子工程等多个领域。大量各个领域的研究者均做出相应的贡献以推进非视域成像问题的解决。然而，这一问题仍需要从理论基础和实验装置上的突破。
 
@@ -249,22 +249,22 @@
 
 \section{非视域成像系统}\label{sec:img_sys}
 
-实际上，NLOS成像所用到的瞬态成像（transient imaging）技术早在1960年代便已经发明。当时，研究者发明非线性光学开关技术以开发一种超快速快门，用以取代高速相机中的应用的传统的机械快门。七十年代，一种基于标准全息技术的成像技术为真正的瞬态成像铺平了道路\cite{faccio2018trillion,hariharan2002basics}。当然，这些技术在相应领域取得了一定的成功，其应用也只能用于成像极其简单的场景。
+实际上，NLOS成像所用到的瞬态成像（transient imaging）技术早在1960年代便已经发明。当时，研究者发明非线性光学开关技术以开发一种超快速快门，用以取代高速相机中的应用的传统的机械快门。七十年代，一种基于标准全息技术的成像技术为真正的瞬态成像铺平了道路\citep{faccio2018trillion,hariharan2002basics}。当然，这些技术在相应领域取得了一定的成功，其应用也只能用于成像极其简单的场景。
 
-使用Time-of-Flight（ToF）相机来获得一个场景的3D图像的瞬态成像技术同样可以用在NLOS成像\cite{kadambi2013coded,kadambi2013coded,peters2015solving}。ToF相机的一个显著优势既是它的低成本。一个商用的成熟的ToF相机通常只需\$100。这些相机用正弦调制（通常为10-100 MHz或更高）光束照亮场景。根据参考正弦波解调返回信号，从中提取相位延迟，该相位延迟与飞行时间直接相关，因此与场景中的传播距离直接相关\cite{jarabo2017recent}。尽管ToF相机拥有成本优势，其时间分辨率以及光灵敏度仍然有待提升。而这两点则是NLOS成像的关键参数。
+使用Time-of-Flight（ToF）相机来获得一个场景的3D图像的瞬态成像技术同样可以用在NLOS成像\citep{kadambi2013coded,kadambi2013coded,peters2015solving}。ToF相机的一个显著优势既是它的低成本。一个商用的成熟的ToF相机通常只需\$100。这些相机用正弦调制（通常为10-100 MHz或更高）光束照亮场景。根据参考正弦波解调返回信号，从中提取相位延迟，该相位延迟与飞行时间直接相关，因此与场景中的传播距离直接相关\citep{jarabo2017recent}。尽管ToF相机拥有成本优势，其时间分辨率以及光灵敏度仍然有待提升。而这两点则是NLOS成像的关键参数。
 
-更高的时间分辨率和更好的光灵敏度，通常需要更复杂和更昂贵的相机。例如首次全3D NLOS成像的演示中使用的条纹相机（streak camera），可以精确的重构一个小人像\cite{Velten2012}。这种相机依靠光电阴极将入射光子转化为电子。然后，电子可以被时变电场“划过”，从而将时间映射到横向位置。在荧光屏上重新转换成光子后，条纹电子在标准电荷耦合器件（CCD）相机上被检测到。对时间条纹使用一个空间维度意味着这些相机一次只能看到一行场景，非视距成像中这一限制可以通过扫描照明激光光斑来抵消\cite{velten2013femto}。实际上，利用目前已经实现的技术完全可以使打开输入狭缝成为可能，并且通过与来自CCD的数据进行计算融合，即可实现在不需要任何扫描的情况下获得完整的2D图像\cite{gao2014single,mikami2016ultrafast,zhu2016space}。不过有趣的是，这些全成像方法尚未应用于NLOS成像。
+更高的时间分辨率和更好的光灵敏度，通常需要更复杂和更昂贵的相机。例如首次全3D NLOS成像的演示中使用的条纹相机（streak camera），可以精确的重构一个小人像\citep{Velten2012}。这种相机依靠光电阴极将入射光子转化为电子。然后，电子可以被时变电场“划过”，从而将时间映射到横向位置。在荧光屏上重新转换成光子后，条纹电子在标准电荷耦合器件（CCD）相机上被检测到。对时间条纹使用一个空间维度意味着这些相机一次只能看到一行场景，非视距成像中这一限制可以通过扫描照明激光光斑来抵消\citep{velten2013femto}。实际上，利用目前已经实现的技术完全可以使打开输入狭缝成为可能，并且通过与来自CCD的数据进行计算融合，即可实现在不需要任何扫描的情况下获得完整的2D图像\citep{gao2014single,mikami2016ultrafast,zhu2016space}。不过有趣的是，这些全成像方法尚未应用于NLOS成像。
 
-瞬态成像的另一种方法是使用增强型CCD相机（iCCD）。瞬态成像的另一种方法是使用增强型CCD摄像机（iCCD）。iCCD依赖于电子选通的微型通道板，因此输入光电阴极产生的电子在重新转换回荧光屏上的光并在CCD或互补金属氧化物半导体（CMOS）相机上检测之前，仅在短选通时间内被放大。典型的选通时间为纳秒量级，但也可以短至100 ps，甚至更短。与本文介绍的所有成像技术一样，iCCD也可用于NLOS成像\cite{laurenzis2014nonline}。
+瞬态成像的另一种方法是使用增强型CCD相机（iCCD）。瞬态成像的另一种方法是使用增强型CCD摄像机（iCCD）。iCCD依赖于电子选通的微型通道板，因此输入光电阴极产生的电子在重新转换回荧光屏上的光并在CCD或互补金属氧化物半导体（CMOS）相机上检测之前，仅在短选通时间内被放大。典型的选通时间为纳秒量级，但也可以短至100 ps，甚至更短。与本文介绍的所有成像技术一样，iCCD也可用于NLOS成像\citep{laurenzis2014nonline}。
 
-除了第一次基于条纹相机的三维NLOS成像，改进的成像系统集中在克服成像过程中遇到的一些限制。首先是提高数据采集速度。上述的成像系统往往需要数个小时的数据采集时间，因此不适合用于实时非视域成像的应用，尤其要获得常见视频的采集帧率，如24 FPS以上\cite{read2000restoration}。其次，增强相机的光灵敏度，使得成像区域可以扩大到整个房间，并观察人类大小的物体。然后是可移植性，即整个成像系统可以缩小其体积，使之可以部署在便携式设备内。最后是其成本，即最好是在克服了上述三个限制后的相机，其价格可以和ToF相机相似。一个最有可能突破上述限制的技术，是最近被广泛研究的单光子雪崩二极管。
+除了第一次基于条纹相机的三维NLOS成像，改进的成像系统集中在克服成像过程中遇到的一些限制。首先是提高数据采集速度。上述的成像系统往往需要数个小时的数据采集时间，因此不适合用于实时非视域成像的应用，尤其要获得常见视频的采集帧率，如24 FPS以上\citep{read2000restoration}。其次，增强相机的光灵敏度，使得成像区域可以扩大到整个房间，并观察人类大小的物体。然后是可移植性，即整个成像系统可以缩小其体积，使之可以部署在便携式设备内。最后是其成本，即最好是在克服了上述三个限制后的相机，其价格可以和ToF相机相似。一个最有可能突破上述限制的技术，是最近被广泛研究的单光子雪崩二极管。
 
-单光子雪崩二极管（SPAD）是一种类似于光电二极管的半导体器件，但具有较大的偏置电压，这会导致载流子倍增：单光子的吸收会导致雪崩击穿，从而产生可由外部电子设备检测和处理的大电流信号。时间-数字转换器测量光子从激光器发射和最后被SPAD检测到之间的时间，然后使用时变单光子计数器形成光子到达时间的直方图\cite{becker2005advanced}。SPAD实现了高单光子灵敏度，其光子探测效率高达40\%，在可见光谱中暗计数率极低，为每秒1-10个光子。在检测到光子后，探测器在数十到数百纳秒的延迟期（死区时间）内无法继续检测光子，因此限制了可实现的最大计数率。
+单光子雪崩二极管（SPAD）是一种类似于光电二极管的半导体器件，但具有较大的偏置电压，这会导致载流子倍增：单光子的吸收会导致雪崩击穿，从而产生可由外部电子设备检测和处理的大电流信号。时间-数字转换器测量光子从激光器发射和最后被SPAD检测到之间的时间，然后使用时变单光子计数器形成光子到达时间的直方图\citep{becker2005advanced}。SPAD实现了高单光子灵敏度，其光子探测效率高达40\%，在可见光谱中暗计数率极低，为每秒1-10个光子。在检测到光子后，探测器在数十到数百纳秒的延迟期（死区时间）内无法继续检测光子，因此限制了可实现的最大计数率。
 只要测量是在光子稀疏的情况下进行的，也就是说，在死区时间（称为堆积）期间，一个以上光子撞击探测器的可能性基本上小于一个，光子到达时间的直方图给出了光脉冲时间剖面的精确测量。考虑到SPAD死区时间，SPAD在光子稀疏区域工作时，其可提供的最大计数率约为1-10 MHz，以避免光子堆积失真效应。
 
-SPAD传感器有单像素和阵列（即相机）两种形式，既有支持可见光波长的\cite{richardson200932,richardson2011scaleable,gersbach2012time,bronzi2014100,burri2016linospad}，也有支持红外波长的\cite{itzler2008geiger,itzler2008single,itzler2007single}。SPAD相机已用于瞬态成像，其单光子灵敏度使其能够捕捉在自由空间传播的光脉冲。相机上收集的光子来自空气中的瑞利散射，而不是表面散射或扩散介质中的增强散射\cite{gariepy2015single}。一个32$\times$32像素SPAD相机的时间分辨率约为50 ps，相当于每秒2亿帧。虽然没有上面讨论的一些技术的速度快（每秒超过1万亿帧），但这个帧速率仍然足以捕捉运动中的光，成像模糊度仅为1.5厘米。这种时间分辨率的微小损失有以下几个好处。首先，相机结构紧凑，使用简单（可以基于标准CMOS技术制造，可在市场上买到，体积小到可以集成到智能手机中）；其次，其数据采集速率高，根据现有实验证明，NLOS数据采集过程可以缩短到亚秒级时间尺度\cite{musarra2019non}；并且，使用特定激光照明波长的干涉滤光片，也可以在室外和日光条件下使用\cite{Otoole2018,chan2017non}。也有研究者使用SPAD实现了实时的NLOS数据采集\cite{lindell2018towards}。
+SPAD传感器有单像素和阵列（即相机）两种形式，既有支持可见光波长的\citep{richardson200932,richardson2011scaleable,gersbach2012time,bronzi2014100,burri2016linospad}，也有支持红外波长的\citep{itzler2008geiger,itzler2008single,itzler2007single}。SPAD相机已用于瞬态成像，其单光子灵敏度使其能够捕捉在自由空间传播的光脉冲。相机上收集的光子来自空气中的瑞利散射，而不是表面散射或扩散介质中的增强散射\citep{gariepy2015single}。一个32$\times$32像素SPAD相机的时间分辨率约为50 ps，相当于每秒2亿帧。虽然没有上面讨论的一些技术的速度快（每秒超过1万亿帧），但这个帧速率仍然足以捕捉运动中的光，成像模糊度仅为1.5厘米。这种时间分辨率的微小损失有以下几个好处。首先，相机结构紧凑，使用简单（可以基于标准CMOS技术制造，可在市场上买到，体积小到可以集成到智能手机中）；其次，其数据采集速率高，根据现有实验证明，NLOS数据采集过程可以缩短到亚秒级时间尺度\citep{musarra2019non}；并且，使用特定激光照明波长的干涉滤光片，也可以在室外和日光条件下使用\citep{Otoole2018,chan2017non}。也有研究者使用SPAD实现了实时的NLOS数据采集\citep{lindell2018towards}。
 
-在首次以SPAD阵列作为成像设备的非视域成像演示中，SPAD相机仅仅以一种简化的配置方式来使用，因此成像系统也只能恢复出隐藏物体的位置，而无法重构物体完整的3D形状\cite{chan2017non}。这种简化使得NLOS成像可以处理动态的隐藏场景。无论是在小规模的实验室设置中，还是在更大规模的角落（距离探测器超过50米）上检测人\cite{gariepy2016detection}，对移动目标的数据采集和处理时间都在1秒左右。单像素选通SPAD\cite{buttafava2015non}和带有扫描激光光斑的SPAD线阵列\cite{o2017reconstructing}也可以用于重构完整的3D场景，目前是NLOS成像的一些首选方法，过去几年中，大多数设置使用单像素或阵列格式的SPAD。
+在首次以SPAD阵列作为成像设备的非视域成像演示中，SPAD相机仅仅以一种简化的配置方式来使用，因此成像系统也只能恢复出隐藏物体的位置，而无法重构物体完整的3D形状\citep{chan2017non}。这种简化使得NLOS成像可以处理动态的隐藏场景。无论是在小规模的实验室设置中，还是在更大规模的角落（距离探测器超过50米）上检测人\citep{gariepy2016detection}，对移动目标的数据采集和处理时间都在1秒左右。单像素选通SPAD\citep{buttafava2015non}和带有扫描激光光斑的SPAD线阵列\citep{o2017reconstructing}也可以用于重构完整的3D场景，目前是NLOS成像的一些首选方法，过去几年中，大多数设置使用单像素或阵列格式的SPAD。
 
 目前，大多数SPAD阵列都是为激光雷达成像（LiDAR）而开发的。展望未来，NLOS成像系统需要改进时间分辨率、更好的填充因子、从中继表面阻挡直射光的能力，以及从看到光子的SPAD像素读取光子时间戳的更灵活的方法。因此，我们未来需要为NLOS成像设计专门的SPAD阵列。
 
@@ -294,36 +294,36 @@ NLOS成像模型是绝大多数NLOS成像算法的核心基础，指导着算法
 
 \subsubsection{启发式算法}
 
-用于估计隐藏物体的形状和反射率的启发式重构算法很流行。这些方法中最直观的一种是将第一次返回的间接光子的测量时间与隐藏对象或场景的凸包相关联\cite{Tsai2017}，或者，可以拟合简单的参数化平面模型来表示隐藏场景\cite{Pediredla2017}。另一个尚处于起步阶段的领域是使用主动探测方法，该方法根据场景的预期内容塑造照明和检测，以优化探测。第一个散射表面之后的空间重新聚焦可以使用空间光调制器进行控制，聚焦光斑可以在整个场景中进行扫描\cite{starshynov2019coherent}。时间聚焦使用在空间和时间上成形的照明脉冲，在隐藏场景的某个区域创建照明脉冲\cite{pediredla2019snlos}。这些技术可以提高重构算法的信噪比和分辨率。
+用于估计隐藏物体的形状和反射率的启发式重构算法很流行。这些方法中最直观的一种是将第一次返回的间接光子的测量时间与隐藏对象或场景的凸包相关联\citep{Tsai2017}，或者，可以拟合简单的参数化平面模型来表示隐藏场景\citep{Pediredla2017}。另一个尚处于起步阶段的领域是使用主动探测方法，该方法根据场景的预期内容塑造照明和检测，以优化探测。第一个散射表面之后的空间重新聚焦可以使用空间光调制器进行控制，聚焦光斑可以在整个场景中进行扫描\citep{starshynov2019coherent}。时间聚焦使用在空间和时间上成形的照明脉冲，在隐藏场景的某个区域创建照明脉冲\citep{pediredla2019snlos}。这些技术可以提高重构算法的信噪比和分辨率。
 
 \subsubsection{反投影算法}
 
-反投影算法是NLOS成像算法中最常用的一类算法。这一类算法将隐藏的场景$\rho$用$\mathbf{A}^T\mathbf{\tau}$来进行估计，并对这一估计的结果做一些如滤波等后处理来获得最终的重构结果。这类策略是解决大规模重构问题例如医学成像的标准解决方案。事实上，共焦NLOS扫描方法的反问题与球面Radon变换密切相关\cite{tasinkevych2014circular}，而一般的非共焦扫描方法与椭圆Radon变换类似\cite{moon2014determination}。这些和Radon变换相关的滤波反投影算法的计算时间和存储需求，即使对于那些大规模的重构问题，也是相对容易处理的。因此也有不少基于滤波反投影算法的NLOS成像算法也被研究出来\cite{Velten2012,gupta2012reconstruction,buttafava2014time,Laurenzis2014,Arellano2017}。不过这些成像算法的复杂度普遍较高，对于重构含有$N$个体素的场景，其复杂度为$O(N^5)$。
+反投影算法是NLOS成像算法中最常用的一类算法。这一类算法将隐藏的场景$\rho$用$\mathbf{A}^T\mathbf{\tau}$来进行估计，并对这一估计的结果做一些如滤波等后处理来获得最终的重构结果。这类策略是解决大规模重构问题例如医学成像的标准解决方案。事实上，共焦NLOS扫描方法的反问题与球面Radon变换密切相关\citep{tasinkevych2014circular}，而一般的非共焦扫描方法与椭圆Radon变换类似\citep{moon2014determination}。这些和Radon变换相关的滤波反投影算法的计算时间和存储需求，即使对于那些大规模的重构问题，也是相对容易处理的。因此也有不少基于滤波反投影算法的NLOS成像算法也被研究出来\citep{Velten2012,gupta2012reconstruction,buttafava2014time,Laurenzis2014,Arellano2017}。不过这些成像算法的复杂度普遍较高，对于重构含有$N$个体素的场景，其复杂度为$O(N^5)$。
 
 \subsubsection{线性逆向算法}
 
-线性逆向算法被用来解决由$\tau$估计$\rho$的凸优化问题。其中有几种方法旨在使用迭代优化方法来解决这个问题\cite{gupta2012reconstruction,wu2012frequency,heide2014diffuse}，但这些算法性能不好，实际运行太慢。光锥变换\cite{Otoole2018}是线性逆问题的一种闭式解，它通过在待重构物体上假设一个光滑的先验条件，有效地解决了计算复杂度为$O(N^3logN)$的精确线性逆问题。当使用图形处理单元（graphics processing unit, GPU）来实现光锥变换算法时，可以勉强实现实时NLOS重构（大约5 FPS）\cite{DBLP:journals/corr/abs-2010-12737}。
+线性逆向算法被用来解决由$\tau$估计$\rho$的凸优化问题。其中有几种方法旨在使用迭代优化方法来解决这个问题\citep{gupta2012reconstruction,wu2012frequency,heide2014diffuse}，但这些算法性能不好，实际运行太慢。光锥变换\citep{Otoole2018}是线性逆问题的一种闭式解，它通过在待重构物体上假设一个光滑的先验条件，有效地解决了计算复杂度为$O(N^3logN)$的精确线性逆问题。当使用图形处理单元（graphics processing unit, GPU）来实现光锥变换算法时，可以勉强实现实时NLOS重构（大约5 FPS）\citep{DBLP:journals/corr/abs-2010-12737}。
 
 \subsubsection{波动光学算法}
 
-与上述基于几何光学的成像算法相反，基于波动光学的算法最近已被用于使用时间分辨探测器和脉冲光源的瞬态成像配置的NLOS成像系统\cite{Liu2019,DavidB.Lindell2019,Teichman2019,Elten2019,Dove2019}。在这些方法中，隐藏场景中的光传输过程是使用随时间变化的波动方程或其他物理光学模型建模的。类似的概念也适用于振幅调制连续波光源在傅里叶域捕获的NLOS数据\cite{kadambi2013coded}。
+与上述基于几何光学的成像算法相反，基于波动光学的算法最近已被用于使用时间分辨探测器和脉冲光源的瞬态成像配置的NLOS成像系统\citep{Liu2019,DavidB.Lindell2019,Teichman2019,Elten2019,Dove2019}。在这些方法中，隐藏场景中的光传输过程是使用随时间变化的波动方程或其他物理光学模型建模的。类似的概念也适用于振幅调制连续波光源在傅里叶域捕获的NLOS数据\citep{kadambi2013coded}。
 
 与上面讨论的大多数方法不同，这类算法不一定试图直接解决隐藏几何体的重构问题。相反，瞬态图像被视为虚拟波场，并在时间上向后传播到特定的时间瞬间。然后，几何重构问题就变成了将隐藏几何体与时间演化波场的特定特性联系起来的问题。与视域成像相机中一样，该问题被分为估计隐藏场景（即图像）中的波的线性算子和估计图像的几何和双向反射分布函数等特性的非线性问题。
 
 对于NLOS成像问题，波动光学模型有几个好处。
 首先，实验证明，其中一些方法对隐藏表面的不同类型的反射特性更具鲁棒性。
 光泽、镜面反射、漫反射或回归反射材料都可以用相同的方法处理，而几何光学方法必须事先知道并建模反射特性，或者与隐藏的几何一起估计它们。
-其次，波动光学模型使NLOS成像与雷达、地震成像、超声波成像和其他既定领域的相关工作之间的联系变得更加容易。例如，距离偏移技术，包括频率-波数或f-k偏移，最初是在地震成像界开发的\cite{stolt1978migration}，后来被用于合成孔径声纳\cite{callow2003signal,sheriff1992synthetic}、超声成像\cite{sheriff1992synthetic}和合成孔径雷达\cite{sheriff1992synthetic}，产生了一些最快、最稳健的NLOS成像技术\cite{DavidB.Lindell2019}。这些实验中使用的光波的相位信息不需要测量。取而代之的是光载波上强度波的相位和波前。这种波的相位与信号光子的到达时间有关，而与它们的光学相位无关。时间分辨NLOS成像系统通常无法获取光波的相位。间接光传输的飞行时间信息必须用来估计物体的形状，这使得相关的重构问题有所不同。
+其次，波动光学模型使NLOS成像与雷达、地震成像、超声波成像和其他既定领域的相关工作之间的联系变得更加容易。例如，距离偏移技术，包括频率-波数或f-k偏移，最初是在地震成像界开发的\citep{stolt1978migration}，后来被用于合成孔径声纳\citep{callow2003signal,sheriff1992synthetic}、超声成像\citep{sheriff1992synthetic}和合成孔径雷达\citep{sheriff1992synthetic}，产生了一些最快、最稳健的NLOS成像技术\citep{DavidB.Lindell2019}。这些实验中使用的光波的相位信息不需要测量。取而代之的是光载波上强度波的相位和波前。这种波的相位与信号光子的到达时间有关，而与它们的光学相位无关。时间分辨NLOS成像系统通常无法获取光波的相位。间接光传输的飞行时间信息必须用来估计物体的形状，这使得相关的重构问题有所不同。
 
 \subsubsection{机器学习算法}
 
-数据驱动的机器学习方法正在逐渐成为NLOS重构算法的工具。神经网络可以从连续光源和传统相机捕获的稳态数据中重建隐藏场景\cite{tancik2018data,chen2019steady}。然而，NLOS成像的实际应用中使用机器学习方法会面临一个困难，即如何获得足够的训练数据。一种办法是生成仿真的数据作为训练集，这些数据通过一个已知的光传播模型，渲染一个模拟场景来获得。
+数据驱动的机器学习方法正在逐渐成为NLOS重构算法的工具。神经网络可以从连续光源和传统相机捕获的稳态数据中重建隐藏场景\citep{tancik2018data,chen2019steady}。然而，NLOS成像的实际应用中使用机器学习方法会面临一个困难，即如何获得足够的训练数据。一种办法是生成仿真的数据作为训练集，这些数据通过一个已知的光传播模型，渲染一个模拟场景来获得。
 
 \section{研究意义}
 
 回到本文在\ref{sec:backgd}节中提到的NLOS成像技术目前存在的三大挑战，本文\ref{sec:img_sys}节介绍的各类新兴的成像系统基本克服了第一个挑战，使得高精度NLOS成像系统可以在实验室部署。本文\ref{sec:img_algo}节介绍的各类更高效的成像算法则在第二个挑战上取得重大突破，尤其最近两年在快速NLOS成像算法上的突破使得实时NLOS成像成为可能。
 
-第三个挑战近年来也有不少研究工作探索出时间复杂度和空间复杂度上更优化的算法，然而由于NLOS成像问题其在本质上的复杂性，导致其成像算法在通用计算机上的性能仍然无法满足实时成像的速率。表\ref{tab:algo_perf_comp}对比了本文前述的几个快速的NLOS成像算法的重构所需时间以及运行速度。如前文所述，即使GPU加速目前最高效的NLOS成像算法之一的LCT算法，其所能达到的速率也仅仅5 FPS，距离肉眼无法分辨的视频帧率（约24 FPS\cite{read2000restoration}）还很远。因此，实现实时NLOS成像还需要进一步的研究。
+第三个挑战近年来也有不少研究工作探索出时间复杂度和空间复杂度上更优化的算法，然而由于NLOS成像问题其在本质上的复杂性，导致其成像算法在通用计算机上的性能仍然无法满足实时成像的速率。表\ref{tab:algo_perf_comp}对比了本文前述的几个快速的NLOS成像算法的重构所需时间以及运行速度。如前文所述，即使GPU加速目前最高效的NLOS成像算法之一的LCT算法，其所能达到的速率也仅仅5 FPS，距离肉眼无法分辨的视频帧率（约24 FPS\citep{read2000restoration}）还很远。因此，实现实时NLOS成像还需要进一步的研究。
 
 \begin{table*}[!tb]
     \centering
@@ -333,12 +333,12 @@ NLOS成像模型是绝大多数NLOS成像算法的核心基础，指导着算法
     \begin{tabular}{@{}cccccc@{}}
     \toprule
     算法     & 重构时间 (s) & 分辨率            & 速度 (voxel/s) & 硬件平台            & 数据采集方式            \\ \midrule
-    FBP \cite{Velten2012}           & 1873.34                 & $162\times 162\times 162$ & 2269.9           & i7 CPU              & 非共焦            \\
-    Fast FBP \cite{Arellano2017}      & 19.37                   & $162\times 162\times 162$ & $2.15\times 10^5$           & GTX 1060            & 非共焦             \\
-    LCT \cite{Otoole2018}           & 1                       & $64\times 64\times 512$   & $2.1\times 10^6$            & i7 CPU              & 共焦                 \\
-    LCT \cite{Otoole2018}           & 0.2                     & $64\times 64\times 512$   & $1.05\times 10^7$           & GPU                 & 共焦                 \\
-    FK Migration \cite{DavidB.Lindell2019}  & 80                      & $512\times 512\times 512$ & $1.6\times 10^6$            & Xeon E5-2690 v4 CPU & 共焦                 \\
-    原始的RSD \cite{Liu}  & 2.4   & $128\times 128\times 69$  & $4.7\times 10^5$            & R7 4800HS CPU   & 非共焦 \& 共焦 \\
+    FBP \citep{Velten2012}           & 1873.34                 & $162\times 162\times 162$ & 2269.9           & i7 CPU              & 非共焦            \\
+    Fast FBP \citep{Arellano2017}      & 19.37                   & $162\times 162\times 162$ & $2.15\times 10^5$           & GTX 1060            & 非共焦             \\
+    LCT \citep{Otoole2018}           & 1                       & $64\times 64\times 512$   & $2.1\times 10^6$            & i7 CPU              & 共焦                 \\
+    LCT \citep{Otoole2018}           & 0.2                     & $64\times 64\times 512$   & $1.05\times 10^7$           & GPU                 & 共焦                 \\
+    FK Migration \citep{DavidB.Lindell2019}  & 80                      & $512\times 512\times 512$ & $1.6\times 10^6$            & Xeon E5-2690 v4 CPU & 共焦                 \\
+    原始的RSD \citep{Liu}  & 2.4   & $128\times 128\times 69$  & $4.7\times 10^5$            & R7 4800HS CPU   & 非共焦 \& 共焦 \\
     优化的RSD & 0.8   & $128\times 128\times 69$  & $1.41\times 10^6$           & R7 4800HS CPU   & 非共焦 \& 共焦 \\
     优化的RSD & \textbf{0.04}  & $128\times 128\times 69$  & $\mathbf{2.83\times 10^7}$           & Stratix 10 FPGA     & 非共焦 \& 共焦 \\ \bottomrule
     \end{tabular}}
@@ -352,16 +352,16 @@ NLOS成像模型是绝大多数NLOS成像算法的核心基础，指导着算法
 
 \chapter{基于RSD的成像重构算法}
  
-基于RSD的NLOS重构算法使用RSD积分来近似光的传播，对共焦和非共焦的NLOS数据均适用\cite{Elten2019}。
+基于RSD的NLOS重构算法使用RSD积分来近似光的传播，对共焦和非共焦的NLOS数据均适用\citep{Elten2019}。
 
 \section{原始的RSD重构算法}
 
-原始的基于RSD的NLOS重构算法的基本思想，是将抵达探测器光圈的光反向传播回到隐藏场景，从而将NLOS成像问题转化为LOS成像问题，而后者则可以使用一个基于衍射的RSD求解器快速解决\cite{Liu}。
+原始的基于RSD的NLOS重构算法的基本思想，是将抵达探测器光圈的光反向传播回到隐藏场景，从而将NLOS成像问题转化为LOS成像问题，而后者则可以使用一个基于衍射的RSD求解器快速解决\citep{Liu}。
 
-RSD重构算法流程的简要概念如图\ref{fig:ori_algo_concept}所示。\textcolor{red}{相关的细节可以在\cite{Liu,Liu2019}。}
+RSD重构算法流程的简要概念如图\ref{fig:ori_algo_concept}所示。\textcolor{red}{相关的细节可以在\citep{Liu,Liu2019}。}
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=.9\textwidth]{figure/ori_algo_concept.pdf}
+  \includegraphics[width=\textwidth]{figure/ori_algo_concept.pdf}
   \bicaption{基于RSD的NLOS重构算法的基本概念。}{Basic concept of RSD-based NLOS reconstruction.}
   \label{fig:ori_algo_concept}
 \end{figure}
@@ -373,18 +373,18 @@ RSD重构算法流程的简要概念如图\ref{fig:ori_algo_concept}所示。\te
 
 RSD积分定义了一个名为RSD衍射核的四维张量
 \begin{equation}\label{eq:kernel}
-  G(x_c,y_c,\hat{z},\omega) = \frac{\exp\left[-i2\pi\cdot\hat{z}^2/(\eta^2)\cdot\sqrt{\hat{r}^2/\hat{z}^2+1}\right]}{\sqrt{\hat{r}^2/\hat{z}^2+1}}
+  G(x_c,y_c,\hat{z},\omega) = \frac{\exp\left[-i2\pi\cdot\hat{z}^2/(\eta^2)\cdot\sqrt{\hat{r}^2/\hat{z}^2+1}\right]}{\sqrt{\hat{r}^2/\hat{z}^2+1}},
 \end{equation}
 且
 \begin{align}
-  \hat{r} &= \sqrt{x_c^2+y_c^2}\label{eq:rxy}\\
-  \eta^2 &= \frac{\mathbf{c}\hat{z}}{\delta\omega}
+  \hat{r} &= \sqrt{x_c^2+y_c^2}\label{eq:rxy},\\
+  \eta^2 &= \frac{\mathbf{c}\hat{z}}{\delta\omega}.
 \end{align}
 其中，$\delta$属于离散深度集合$D$，$\mathbf{c}$为光速而$\delta$则表示空间采样间隔。
 
 典型的RSD积分的第一步是将$P_F(x_c,y_c,\omega)$和$G(x_c,y_c,\hat{z},\omega)$，在每个特定的$\omega$和$\hat{z}$上做对$(x_c,y_c)$二维空间卷积。这些二维卷积可以在傅里叶域上如下表示
 \begin{equation}\label{eq:conv}
-  P_F(x_v, y_v, \hat{z}, \omega) = \mathcal{F}^{-1}\left\{\mathcal{F}\left[P_F(x_c, y_c, \omega)\right]\cdot \mathcal{F}\left[G(x_c, y_c, \hat{z}, \omega)\right]\right\}
+  P_F(x_v, y_v, \hat{z}, \omega) = \mathcal{F}^{-1}\left\{\mathcal{F}\left[P_F(x_c, y_c, \omega)\right]\cdot \mathcal{F}\left[G(x_c, y_c, \hat{z}, \omega)\right]\right\}.
 \end{equation}
 其中，$\mathcal{F}$表示了二维傅里叶变换（FT），$\mathcal{F}^{-1}$表示二维反傅里叶变换（IFT）。为了得到最终重构的结果，需要对$P_F$在所有采样频率上做一次积分
 \begin{equation}
@@ -392,18 +392,18 @@ RSD积分定义了一个名为RSD衍射核的四维张量
 \end{equation}
 且
 \begin{align}
-    &T_l(\omega, \hat{z}) = \exp\left[i\frac{\omega}{c}(\hat{z}+B_l)\right]\label{eq:ts} \\
-    &B_l =\tilde{\mathbf{D}} + (l-1)\cdot \mathbf{c}\cdot \frac{\sigma}{0.15}
+    &T_l(\omega, \hat{z}) = \exp\left[i\frac{\omega}{c}(\hat{z}+B_l)\right],\label{eq:ts} \\
+    &B_l =\tilde{\mathbf{D}} + (l-1)\cdot \mathbf{c}\cdot \frac{\sigma}{0.15}.
 \end{align}
 这里，$T_l$为时移因子，用于补偿光的球形传播导致的相位差，且其中$B_l$表示第$l$个平面所对应的位移；$\tilde{\mathbf{D}}$为校准系数，对于理想系统$\tilde{\mathbf{D}}=0$；$\sigma$表示脉冲宽度。$I(x_v,y_v,\hat{z})$代表了带有场景深度$\hat{z}$的最终三维重构结果，表示隐藏的场景及物体。
 
 \section{优化的RSD重构算法}
 
-尽管相比于现有的NLOS成像算法，RSD重构算法是目前适用于非共焦NLOS数据的最快速的成像算法，其依然存在大量的计算和存储需求。令$N_\Omega$为采样频率集合$\Omega$的势，$N_D$为离散深度集合$D$的势，那么重构一个隐藏的三维场景需要做$N_\Omega\times N_D$次二维卷积。如式（\ref{eq:conv}），每次卷积需要做两次二维傅里叶变换以及一次二维傅里叶反变换，因此重构一次场景所需的傅里叶变换次数（包括反变换）为$3\times N_\Omega \times N_D$。令输入瞬态图像的分辨率为$K\times K$，那么存储所有的RSD核所需的容量为$N_\Omega\times N_D\times K\times K$。另外，为了执行二维卷积，处理器需要大量访问存储单元来获取一个$K\times K$的RSD核。众所周知，对于现代的数字电子系统而言，存储访问耗费大量时间和能量从而往往成为系统的性能瓶颈\cite{Bai2018}。
+尽管相比于现有的NLOS成像算法，RSD重构算法是目前适用于非共焦NLOS数据的最快速的成像算法，其依然存在大量的计算和存储需求。令$N_\Omega$为采样频率集合$\Omega$的势，$N_D$为离散深度集合$D$的势，那么重构一个隐藏的三维场景需要做$N_\Omega\times N_D$次二维卷积。如式（\ref{eq:conv}），每次卷积需要做两次二维傅里叶变换以及一次二维傅里叶反变换，因此重构一次场景所需的傅里叶变换次数（包括反变换）为$3\times N_\Omega \times N_D$。令输入瞬态图像的分辨率为$K\times K$，那么存储所有的RSD核所需的容量为$N_\Omega\times N_D\times K\times K$。另外，为了执行二维卷积，处理器需要大量访问存储单元来获取一个$K\times K$的RSD核。众所周知，对于现代的数字电子系统而言，存储访问耗费大量时间和能量从而往往成为系统的性能瓶颈\citep{Bai2018}。
 
 \begin{figure}[!tb]
     \centering
-    \subfloat[]{\includegraphics[width=.45\textwidth]{figure/kabs_gray.jpg}} \hspace{10mm} 
+    \subfloat[]{\includegraphics[width=.45\textwidth]{figure/kabs_gray.jpg}} \hspace{10mm} \\
     \subfloat[]{\includegraphics[width=.45\textwidth]{figure/kang_gray.jpg}}
     \bicaption{(a) RSD核幅度图 (b) RSD核相量图。}{(a) The magnitude of an RSD kernel. (b) The phase of an RSD kernel.}
     \label{fig:kernel}
@@ -413,8 +413,8 @@ RSD积分定义了一个名为RSD衍射核的四维张量
 
 \begin{figure}[!tb]
     \centering
-    \subfloat[]{\includegraphics[width=.9\textwidth]{figure/opt_algo.pdf}}\\ \vspace{6pt}
-    \subfloat[]{\includegraphics[width=.9\textwidth]{figure/addrmap1.pdf}}
+    \subfloat[]{\includegraphics[width=\textwidth]{figure/opt_algo.pdf}}\\ \vspace{6pt}
+    \subfloat[]{\includegraphics[width=\textwidth]{figure/addrmap1.pdf}}
     \bicaption{优化RSD重构算法的基本概念。 (a) 利用单位环形脉冲和对应的系数来重构RSD核。 (b) 利用地址重映射来重构单位环形脉冲。}{Basic concept of the optimized RSD algorithm. (a) Reconstruction of RSD kernels using unit ring impulses and corresponding coefficients. (b) Reconstruction of unit rings using address mapping.}
     \label{fig:opt_algo}
 \end{figure}
@@ -423,51 +423,51 @@ RSD积分定义了一个名为RSD衍射核的四维张量
 
 从图\ref{fig:kernel}中可以看出，RSD核是径向对称的，因此其可以如图\ref{fig:opt_algo}（a）被表达为一组有不同半径长度的单位环形脉冲函数的线性组合
 \begin{equation}
-    G(x, y, \hat{z}, \omega) = \sum_{i=1}^{N_R}\hat{G}(r_i, \hat{z}, \omega)\delta(x, y, r_i)
+    G(x, y, \hat{z}, \omega) = \sum_{i=1}^{N_R}\hat{G}(r_i, \hat{z}, \omega)\delta(x, y, r_i),
 \end{equation}
 其中，单位环形脉冲函数定义为
 \begin{equation}
     \delta(x, y, r_i) = \begin{cases}
       1, & \sqrt{x^2+y^2} = r_i\\
       0, & \sqrt{x^2+y^2} \neq r_i
-    \end{cases}\label{eq:ring_imp}
+    \end{cases}\label{eq:ring_imp},
 \end{equation}
 而对应于不同半径的单位环形脉冲函数的线性组合系数为
 \begin{equation} \label{eq:ori_coef}
-    \hat{G}(r_i, \hat{z}, \omega) = \frac{\exp{\left[-i2\pi\cdot\hat{z}^2/(\eta^2)\cdot\sqrt{r_i^2/\hat{z}^2+1}\right]}}{\sqrt{r_i^2/\hat{z}^2+1}}
+    \hat{G}(r_i, \hat{z}, \omega) = \frac{\exp{\left[-i2\pi\cdot\hat{z}^2/(\eta^2)\cdot\sqrt{r_i^2/\hat{z}^2+1}\right]}}{\sqrt{r_i^2/\hat{z}^2+1}},
 \end{equation}
 其中，$r_i$是半径长度集合$R$中的第$i$个单位环形脉冲函数的半径。利用傅里叶变换的线性性质，RSD核的傅里叶频域表示为
 \begin{equation}
-    \mathcal{F}\left[G(x, y, \hat{z}, \omega)\right] = \sum_{i=1}^{N_{ {R}}}\hat{G}(r_i, \hat{z}, \omega)\mathcal{F}\left[\delta(x, y, r_i)\right]
+    \mathcal{F}\left[G(x, y, \hat{z}, \omega)\right] = \sum_{i=1}^{N_{ {R}}}\hat{G}(r_i, \hat{z}, \omega)\mathcal{F}\left[\delta(x, y, r_i)\right],
 \end{equation}
 其中，$\mathcal{F}$表示针对$xy$平面的二维傅里叶变换。根据式（\ref{eq:ring_imp}）定义，单位环形脉冲函数可以由$\delta(x,y,r_i)$重新表示为$\delta(r,r_i)$。对于第$i$个单位环形脉冲函数，其傅里叶频域表达为
 \begin{equation}
     \begin{split}
         \delta_{\mathcal{F}}(\rho, r_i)&=\int_0^{+\infty}\left(\int_0^{2\pi}e^{-2\pi r\rho \cos (\theta)}d\theta\right)\delta(r, r_i)rdr\\
-        &=\int^{2\pi}_0e^{-2\pi r_i\rho \cos \theta}d\theta \cdot r_i = \mathcal{F}\left[ \delta(r,r_i) \right]
+        &=\int^{2\pi}_0e^{-2\pi r_i\rho \cos \theta}d\theta \cdot r_i = \mathcal{F}\left[ \delta(r,r_i) \right].
     \end{split}
 \end{equation}
 注意到，只要单位环形脉冲函数的半径$r_i$确定，其对应的频域$\delta_{\mathcal{F}}(\rho,r_i)$的值就是确定的。利用这一点，我们可以预计算好单位环形脉冲函数的频域的值，并存储起来以省略去这一部分的傅里叶变换的计算，从而大大减少算法运行时所需的计算量。由此，RSD核的频域表示可以通过将每个半径的单位环形脉冲函数的频域表示乘以对应半径的线性系数，并将乘积在半径上进行累加来重构。这样的优化可以使得计算RSD核所需的总存储量以及存储访问量大大减少。
 
 \subsection{径向采样技术}
 
-利用径向对称的函数其二维傅里叶变换后的函数同样也是径向对称的性质\cite{baddour2011two}，我们可以仅仅利用频域上的单位环形脉冲函数的径向上的值来重构整个函数。这样我们对于单位环形脉冲函数的存储从原来的二维矩阵缩减到了仅仅半径上的一个一维向量，如图\ref{fig:imp_rad}。
+利用径向对称的函数其二维傅里叶变换后的函数同样也是径向对称的性质\citep{baddour2011two}，我们可以仅仅利用频域上的单位环形脉冲函数的径向上的值来重构整个函数。这样我们对于单位环形脉冲函数的存储从原来的二维矩阵缩减到了仅仅半径上的一个一维向量，如图\ref{fig:imp_rad}。
 \begin{figure}[!tb]
     \centering
-    \includegraphics[width=.95\textwidth]{figure/imp30.pdf}
+    \includegraphics[width=\textwidth]{figure/imp30.pdf}
     \bicaption{单位环形脉冲函数在半径上的采样。}{Radius sampling of unit ring impulses.}
     \label{fig:imp_rad}
 \end{figure}
 
 如图\ref{fig:opt_algo}（b）所示，若要从一个沿半径采样获得的一维向量中重构出完整的二维单位环形脉冲函数的频域，需要一个二维地址映射从一维向量中找到二维单位环形脉冲函数矩阵中每个元素的值。这一地址映射将矩阵元素的笛卡尔坐标转换为相应的用于描述单位环形脉冲函数的极坐标。理论上，这个地址映射不会有任何影响，但由于这一操作在实际运行时是离散的，我们使用的地址映射函数$M(x,y)$定义如下
 \begin{align}
-    &s=\sqrt{(x-K/2)^2+(y-K/2)^2}  \\
-    &\rho = M(x, y) = round\left( s\cdot \frac{N_{\rho}-1}{\frac{\sqrt{2}}{2}K} \right)+1\label{eq:mapping_func}
+    &s=\sqrt{(x-K/2)^2+(y-K/2)^2},  \\
+    &\rho = M(x, y) = round\left( s\cdot \frac{N_{\rho}-1}{\frac{\sqrt{2}}{2}K} \right)+1,\label{eq:mapping_func}
 \end{align}
 其中，$s$是采样点到一个原始的$K\times K$的矩阵中心点的距离，$N_\rho$是半径上采样点的个数。注意到，由于映射函数$M(x,y)$及其操作的对象是离散的，因此利用它来重构RSD核会导致一定程度上的精度损失。图\ref{fig:smp_comp}展示了随着在半径上的采样点个数从10到200的变化，优化后的RSD重构算法所得结果与原始算法结果的相似度变化。这里所用的相似度的测量算法是结构相似度（Structural Similarity，SSIM）。两个图片之间的SSIM值越大表明两者越相似，最大为1时表示两张图片完全相同。从图\ref{fig:smp_comp}中我们可以看到在采样点个数达到了100个以上后，相似度基本持平在0.9左右，而若采样点从100下降到10时，相似度将迅速下降到0.5以下。
 \begin{figure}[!tb]
     \centering
-    \includegraphics[width=.9\textwidth]{figure/smp_Nrho_comp_ssim.pdf}
+    \includegraphics[width=\textwidth]{figure/smp_Nrho_comp_ssim.pdf}
     \bicaption{不同的半径采样点个数下，径向采样的重构结果与原始算法的重构结果的相似度对比。}{Similarity measurement between the radius-sampled results and original results, against different numbers of sampling points $N_{\rho}$.}
     \label{fig:smp_comp}
 \end{figure}
@@ -571,35 +571,35 @@ RSD积分定义了一个名为RSD衍射核的四维张量
 \end{enumerate}
 \begin{figure}[!tb]
     \centering
-    \includegraphics[width=.99\textwidth]{figure/taskflow.pdf}
+    \includegraphics[width=\textwidth]{figure/taskflow.pdf}
     \bicaption{运行时重构算法的流程图}{Flowchart of the runtime reconstruction algorithm.}
     \label{fig:tsk_flow}
 \end{figure}
 
 整个重构过程可以被分割成$N_D\times N_\Omega$个执行周期。其中每个执行周期用深度计数器和频率计数器的值以$(d,f)$形式标记，因此整个重构过程由执行周期$(0,0)$开始，一直迭代到最后一个执行周期$(N_D-1,N_\Omega-1)$。在以上四个任务中，任务1到任务3在每个执行周期均会被执行，而任务4则只在频率计数器$f$计数至$N_\Omega$时执行。我们可以看到任务1和任务2时相互独立的，因此它们可以被并行执行。而任务3——乘累加任务——则是对任务1和任务2的结果有所依赖。一旦频率计数器计满至$N_\Omega$，任务3乘累加的结果被输入给任务4，以重构相应于深度计数器值的深度的隐藏场景。输入的瞬态图像可以表示为一个多通道的图像，一个$K\times K\times N_\Omega$的张量，单位环形脉冲函数总体表示为一个$N_R\times N_\rho$的矩阵，其线性组合系数则可以表示为一个$N_D\times N_\Omega\times N_R$张量。
 
-对每一个执行周期，二维快速傅里叶变换（FFT）处理器需要读取$K\times K$个像素，并输出其傅里叶变换后的结果。假设瞬态图像的输入通道的传输速率为每个时钟周期传送一个像素，那么一共需要$K\times K\times N_D\times N_\Omega$个时钟周期来读取整个瞬态图像。对于一个典型的NLOS成像系统配置\cite{Liu2020}，其中各个参数配置为$K=128, N_D=51, N_\Omega=69$，读取瞬态图像一共需要耗费57655296个时钟周期。我们可以自然地想到一个解决这一问题的想法，即仅仅对所有采样频率点上的瞬态图像做一次二维傅里叶变换，并将其结果存储在本地，随后的执行周期复用这一结果即可。这样一来，好处是可以将读取时间降低至$K\times K\times N_\Omega$个时钟周期，而坏处则是需要更大的片上存储单元来缓存中间结果。
+对每一个执行周期，二维快速傅里叶变换（FFT）处理器需要读取$K\times K$个像素，并输出其傅里叶变换后的结果。假设瞬态图像的输入通道的传输速率为每个时钟周期传送一个像素，那么一共需要$K\times K\times N_D\times N_\Omega$个时钟周期来读取整个瞬态图像。对于一个典型的NLOS成像系统配置\citep{Liu2020}，其中各个参数配置为$K=128, N_D=51, N_\Omega=69$，读取瞬态图像一共需要耗费57655296个时钟周期。我们可以自然地想到一个解决这一问题的想法，即仅仅对所有采样频率点上的瞬态图像做一次二维傅里叶变换，并将其结果存储在本地，随后的执行周期复用这一结果即可。这样一来，好处是可以将读取时间降低至$K\times K\times N_\Omega$个时钟周期，而坏处则是需要更大的片上存储单元来缓存中间结果。
 
 \subsection{线性组合系数分解}
 
 在章节\ref{sec:opt_algo}分析优化后的基于RSD的NLOS重构算法时，我们将线性组合系数的计算放在运行前算法部分，作为与计算的结果存储在本地供运行时算法使用。好处是可以降低运行时的计算负载，但坏处则是引入很大的存储需求。这里，为了进一步降低片上存储单元的使用量，微调了两部分算法的切分，将一部分线性组合系数的计算转移至运行时。注意到，由于傅里叶变换的线性性质，时移因子$T_l$可以被合并至线性组合系数$\hat{G}$里。因此，对应于单位环形脉冲函数的线性组合系数（\ref{eq:ori_coef}）可以被重新定义为
 \begin{align} \label{eq:coef}
-    \hat{G}(r, \hat{z}, \omega) & = \frac{\exp{\left[-i2\pi\cdot\frac{\delta \omega\hat{z}}{\mathbf{c}}\cdot\sqrt{r^2/\hat{z}^2+1}\right]}}{\sqrt{r^2/\hat{z}^2+1}}\\
-    \tilde{G}(r, \hat{z}, \omega) & = \hat{G}(r, \hat{z}, \omega) \cdot T_l 
+    \hat{G}(r, \hat{z}, \omega) & = \frac{\exp{\left[-i2\pi\cdot\frac{\delta \omega\hat{z}}{\mathbf{c}}\cdot\sqrt{r^2/\hat{z}^2+1}\right]}}{\sqrt{r^2/\hat{z}^2+1}},\\
+    \tilde{G}(r, \hat{z}, \omega) & = \hat{G}(r, \hat{z}, \omega) \cdot T_l .
 \end{align}
 这里，我们引入三个独立的中间变量来进一步分解上述定义的线性组合系数，
 \begin{equation}
-    W(r, \hat{z}) = \sqrt{\frac{r^2}{\hat{z}^2}+1}
+    W(r, \hat{z}) = \sqrt{\frac{r^2}{\hat{z}^2}+1},
 \end{equation}
 \begin{equation}
-    D(\omega, \hat{z}) = \frac{\delta \omega \hat{z}}{\mathbf{c}}
+    D(\omega, \hat{z}) = \frac{\delta \omega \hat{z}}{\mathbf{c}},
 \end{equation}
 \begin{equation}
-    T(\omega, \hat{z}) = T_l= \exp \left[ i\frac{\omega}{\mathbf{c}}(\hat{z}+B_l) \right]
+    T(\omega, \hat{z}) = T_l= \exp \left[ i\frac{\omega}{\mathbf{c}}(\hat{z}+B_l) \right].
 \end{equation}
 这三个中间变量可以利用选取好的采样深度$\hat{z}$，采样频率$\omega$，以及不同的环形半径$r$来预先计算，并存储为三个可以被深度计数器$d$和频率计数器$f$索引的矩阵。在本文中，我们将这三个变量$W,D,T$分别命名为\textit{wave, distance}和\textit{timeshift}. 而上述重新定义的线性组合系数可以被这三个中间变量重新组合
 \begin{equation}
-    \tilde{G}(r, \omega, \hat{z}) = \frac{\exp(-i2\pi W(r, \hat{z}) \cdot D(\omega, \hat{z}))}{W(r, \hat{z})} \cdot T(\omega, \hat{z})
+    \tilde{G}(r, \omega, \hat{z}) = \frac{\exp(-i2\pi W(r, \hat{z}) \cdot D(\omega, \hat{z}))}{W(r, \hat{z})} \cdot T(\omega, \hat{z}).
 \end{equation}
 
 在运行时，加速器将会在每个执行周期读取$D$和$T$的一个元素，并在频率计数器$f=0$的执行周期，$(0,0),(1,0)$……$(N_D-1,0)$内读取$W$的一列元素。对系数的重新组合过程可以由一些基本的运算部件来承担，如两个乘法器、一个除法器以及一个处理特殊函数
@@ -618,11 +618,11 @@ RSD积分定义了一个名为RSD衍射核的四维张量
 
 在讨论设计参数之前，我们首先讨论算法按照流程图\ref{fig:tsk_flow}顺序执行时，所占用的运行时间，即任务的总延时。对于章节\ref{sec:opt_algo}所讨论的优化后RSD算法，算法\ref{algo:rt}的延时可以定量化的表达为
 \begin{equation} \label{eq:no_opt_lat}
-    T_{total} = N_D \{ N_{\Omega}[ \max (T_{FFT}, N_RN_{\rho}T_{ACG}+K^2T_M)+ K^2T_{mul}+T_{ACS} ] + T_{IFFT}\}
+    T_{total} = N_D \{ N_{\Omega}[ \max (T_{FFT}, N_RN_{\rho}T_{ACG}+K^2T_M)+ K^2T_{mul}+T_{ACS} ] + T_{IFFT}\}.
 \end{equation}
 这里，我们假设FFT模块和RSD核生成模块是相互独立运行的，因此它们可以并行执行。式（\ref{eq:no_opt_lat}）中，$T_{FFT}$和$T_{IFFT}$分别表示FFT操作和IFFT操作的延时。通常，FFT模块以每个时钟周期接收一个像素作为输入，因此$T_{FFT}$和$T_{IFFT}$至少需要$K^2$个时钟周期。$T_{ACG}$和$T_{ACS}$则是分别是每次累加$G$和$S_F$所耗费的延时，也就是一个正常的加法器的延时。$T_{mul}$则是乘法的延时和$T_M$则是地址映射操作所需的延时。不失一般性的，我们假设$T_{ACG},T_{ACS},T_{mul},T_M$均为一个时钟周期。
 
-我们考虑一个典型的基于RSD的NLOS重构算法的成像系统\cite{Liu2020}，其中各参数配置为$N_D=51, N_\Omega=69, N_R=68, N_\rho=101, K=128$。将这些参数代入式（\ref{eq:no_opt_lat}）中可以算出$T_{total}=140318187$时钟周期。这意味着对于一个运行在时钟频率为100MHz的加速器，也需要至少1.4秒才能重构一帧三维隐藏场景，而这样的成像速率无法满足实时NLOS成像的要求。
+我们考虑一个典型的基于RSD的NLOS重构算法的成像系统\citep{Liu2020}，其中各参数配置为$N_D=51, N_\Omega=69, N_R=68, N_\rho=101, K=128$。将这些参数代入式（\ref{eq:no_opt_lat}）中可以算出$T_{total}=140318187$时钟周期。这意味着对于一个运行在时钟频率为100MHz的加速器，也需要至少1.4秒才能重构一帧三维隐藏场景，而这样的成像速率无法满足实时NLOS成像的要求。
 
 \subsection{展开因子}
 
@@ -631,7 +631,7 @@ RSD积分定义了一个名为RSD衍射核的四维张量
 对算法\ref{algo:rt}中每个循环，我们都设立一个对应的展开因子，分别为$P_D$, $P_\Omega$, $P_R$, $P_\rho$, $P_x$, $P_y$。那么考虑上这些展开因子后，式（\ref{eq:no_opt_lat}）重新写为
 \begin{equation}
     \begin{split}
-        T_{tot} &= \frac{N_D}{P_D} \Biggl\{ \frac{N_{\Omega}}{P_{\Omega}} \Bigl[ \max (T_{FFT}, \frac{N_{ {R}}N_{\rho}}{P_{ {R}}P_{\rho}} T_{ACG}+\frac{K^2}{P_xP_y}T_M)\\ &+ \frac{K^2}{P_xP_y}T_{mul}+T_{ACS} \Bigr] + T_{IFFT}\Biggr\} \label{eq:opt_lat}
+        T_{tot} &= \frac{N_D}{P_D} \Biggl\{ \frac{N_{\Omega}}{P_{\Omega}} \Bigl[ \max (T_{FFT}, \frac{N_{ {R}}N_{\rho}}{P_{ {R}}P_{\rho}} T_{ACG}+\frac{K^2}{P_xP_y}T_M)\\ &+ \frac{K^2}{P_xP_y}T_{mul}+T_{ACS} \Bigr] + T_{IFFT}\Biggr\} \label{eq:opt_lat}.
     \end{split}
 \end{equation}
 
@@ -644,7 +644,7 @@ RSD积分定义了一个名为RSD衍射核的四维张量
 算法\ref{algo:rt}中，对输入瞬态图像的二维FFT在循环1和循环2中一共需要迭代$N_D\times N_\Omega$次。然而，可以看到输入的瞬态图像$P_F(x,y,\omega_j)$仅仅和循环2的下标$j$相关而与循环1的下标$i$无关，即其经过二维FFT后的结果对循环1的每次迭代均相同。如果我们缓存这部分结果在片上存储单元并在随后循环1的迭代中复用这部分数据即可大大减少冗余的计算量。因此，重构任务的总延时可以重新描述为
 \begin{equation}
     \begin{split}
-        &T_{tot} = \frac{N_D}{P_D} \Biggl\{ \frac{N_{\Omega}}{P_{\Omega}} \Bigl[ \frac{N_{ {R}}N_{\rho}}{P_{ {R}}P_{\rho}} T_{ACG}+\frac{K^2}{P_xP_y}T_M \\ &+ \frac{K^2}{P_xP_y}T_{mul}+T_{ACS} \Bigr] + T_{IFFT}\Biggr\} + \frac{N_{\Omega}}{P_{\Omega}} T_{FFT} \label{eq:tt}
+        &T_{tot} = \frac{N_D}{P_D} \Biggl\{ \frac{N_{\Omega}}{P_{\Omega}} \Bigl[ \frac{N_{ {R}}N_{\rho}}{P_{ {R}}P_{\rho}} T_{ACG}+\frac{K^2}{P_xP_y}T_M \\ &+ \frac{K^2}{P_xP_y}T_{mul}+T_{ACS} \Bigr] + T_{IFFT}\Biggr\} + \frac{N_{\Omega}}{P_{\Omega}} T_{FFT}. \label{eq:tt}
     \end{split}
 \end{equation}
 这里，我们略微修改了算法的执行过程，以存储中间结果并在之后的执行中进行数据的复用，从而避免了二维FFT的延时。由于循环1的每次迭代所用的FFT的结果都和第一次迭代所用的相同，因此这一复用不会影响算法最后的重构结果。在此基础上，再根据特定的应用场景下实时NLOS成像的要求以及所选择的硬件实现平台的资源限制，选择一个合适的展开因子组合。所选择的展开因子越大，重构任务所耗费的总延时就越小而所消耗的硬件资源就越多。
@@ -660,7 +660,7 @@ RSD积分定义了一个名为RSD衍射核的四维张量
 基于RSD算法的NLOS成像加速器微架构如图\ref{fig:arch}所示，架构整体用NLOSI Core标识。从图中可以看到，NLOSI Core主要包括了四个子模块（染以不同的颜色），分别是二维FFT处理模块（FFT2D Core），RSD核生成模块（RSD GenCore），乘累加阵列（MAC array）以及后处理模块（Post processing），以处理算法的不同部分。加速器接受来自外部的两种输入，一个是输入图像的通道，传送来自传感器的瞬态图像，另一路则是通过AXI总线接受预计算的单位环形脉冲函数以及三个中间变量（\textit{wave, distance, timeshift}）的数据。输入的瞬态图像在进入到加速器之前经过了必要的预处理环节，并被量化为16比特的定点复数，随后送入FFT2D Core处理。而单位环形脉冲函数以及三个中间变量则存储在数据加载单元（Load Unit，LU）内的片上存储器中。
 \begin{figure}[!htb]
     \centering
-    \includegraphics[width=.98\textwidth]{figure/arch.pdf}
+    \includegraphics[width=\textwidth]{figure/arch.pdf}
     \bicaption{NLOS成像加速器微架构图。}{Architecture of the NLOS reconstruction accelerator.}
     \label{fig:arch}
 \end{figure}
@@ -685,7 +685,7 @@ RSD GenCore负责利用数据加载单元中的数据来生成分辨率为$K\tim
 
 \begin{figure}[!tb]
     \centering
-    \includegraphics[width=.98\textwidth]{figure/rsdgen.pdf}
+    \includegraphics[width=\textwidth]{figure/rsdgen.pdf}
     \bicaption{RSD核生成模块。}{RSD kernel generator.}
     \label{fig:rkg}
 \end{figure}
@@ -697,7 +697,7 @@ RSD GenCore生成RSD核的部分主要结构如图\ref{fig:rkg}所示。四个�
 生成好的半径方向上的RSD核的值存储在本地的寄存器组里。恢复出完整的RSD核即可以通过将每个RSD核每个像素的横纵坐标经由地址映射模块\textit{AddrMap}转换为寄存器组地址，以此坐标索引寄存器组的内存储的值得到，如图\ref{fig:addrmap}所示。
 \begin{figure}[!tb]
     \centering
-    \includegraphics[width=.98\textwidth]{figure/addrmap.pdf}
+    \includegraphics[width=\textwidth]{figure/addrmap.pdf}
     \bicaption{地址映射操作，从径向上RSD核的采样恢复出RSD核的完整的一列。}{Address mapping: recover the RSD kernel from its radial samples.}
     \label{fig:addrmap}
 \end{figure}
@@ -709,7 +709,7 @@ FFT2D Core由一个二维FFT模块和用于存储结果的128块存储块构成�
 其中的二维FFT模块的大致结构如图\ref{fig:fft_arch}所示。输入的瞬态图像的像素经由移位寄存器完成串转并操作。输入通道以一个时钟周期一个像素的速率串行地输入每个像素，移位寄存器则以一个时钟周期一列像素的速率并行的输出至一个二选一MUX。MUX的另一端则是接收来自MAC array输出的累加结果。累加结果的输入速率同样是每个时钟周期并行地送入一列像素。图中所示的MUX选择信号\textit{mode}是一个单比特信号，不仅仅用于选择输入数据是瞬态图像还是累加结果，也用于设置二维FFT模块工作模式：FFT模式或者IFFT模式。在FFT模式下，输入瞬态图像的傅里叶域是并行输出的，而在IFFT模式下，乘累加结果由傅里叶域转换为空间域且输出形式是串行的，即一个时钟周期一个像素。共轭模块在IFFT模式下激活。此处二维FFT模块并未做循环展开，其中的一维FFT子模块通过切分多级流水线来增加吞吐率。
 \begin{figure}[!tb]
     \centering
-    \includegraphics[width=.9\textwidth]{figure/fft2d.pdf}
+    \includegraphics[width=\textwidth]{figure/fft2d.pdf}
     \bicaption{二维FFT模块电路结构。}{\small FFT2D module circuit structure.}
     \label{fig:fft_arch}
 \end{figure}
@@ -717,7 +717,7 @@ FFT2D Core由一个二维FFT模块和用于存储结果的128块存储块构成�
 另外一个重要的部分是内部的存储块阵列。阵列中包含$K$个片上存储器（这里$K=128$），每块存储器可以存储$K\times N_\Omega$个像素点。如此分块使得可以同时写入二维FFT的结果中的一列，而后面的执行周期复用这一结果时也可以一个时钟周期读取一列结果。存储块中的数据格式如图\ref{fig:ram_array}所示。
 \begin{figure}[!tb]
     \centering
-    \includegraphics[width=.95\textwidth]{figure/ramarray.pdf}
+    \includegraphics[width=\textwidth]{figure/ramarray.pdf}
     \bicaption{存储器阵列中的数据格式。}{Data format in the memory array.}
     \label{fig:ram_array}
 \end{figure}
@@ -727,67 +727,207 @@ FFT2D Core由一个二维FFT模块和用于存储结果的128块存储块构成�
 每个执行周期对应于一个特定的采样深度$d$和一个采样频率$f$。每个乘累加单元将对应特定$d$和$f$的RSD核与FFT结果相乘，在所有的采样频率上做累加。MAC array中所有的乘累加单元是并行工作的，使得一列上所有像素的乘法和加法操作可以同时执行。累加结果存在内部片上存储器中，并在累加结束后送至FFT2D Core做最后的二维IFFT。MAC array的电路结构如图\ref{fig:macarr}所示。
 \begin{figure}[!tb]
     \centering
-    \includegraphics[width=.98\textwidth]{figure/macarr.pdf}
+    \includegraphics[width=\textwidth]{figure/macarr.pdf}
     \bicaption{MAC array电路结构。}{Structure of the MAC array.}
     \label{fig:macarr}
 \end{figure}
 
 \section{后处理模块}
-% 需要设定的导师信息包括：导师中英文姓名（supervisor 和 supervisor*）和导师单位中文名称（supervisor-institution）。注意在中文封面中，导师姓名和单位分两行显示在“指导教师”条目下。根据《规范》，导师中文姓名（supervisor）应包含导师职称，如教授、副教授、助理教授、研究员、副研究员，以一个半角空格跟随在姓名之后；导师英文姓名（supervisor*）则统一以“Professor”开头，与英文姓名以一个半角空格隔开。导师单位中文名称（supervisor-institution）不可包含换行符。
-% \begin{latex}
-% \shtsetup{
-%   supervisor = {范睿~副教授},
-%   supervisor* = {Professor~Fan~Rui},
-%   supervisor-institution = {上海科技大学信息科学与技术学院},
-% }
-% \end{latex}
 
-\chapter{硬件实现结果}
-% 通过 date 和 date* 分别设置中英文成文日期，日期内容应按照申请学位的时间节点填写，具体请参考当年《规范》。研究生成文日期格式为：
-% \begin{latex}
-% \shtsetup{
-%   date = {2020~年~6~月},
-%   date* = {June,~2020},
-% }
-% \end{latex}
-% 本科生成文日期格式为：
-% \begin{latex}
-% \shtsetup{
-%   date = {2020~年~06~月},
-%   date* = {06~/~2020},
-% }
-% \end{latex}
+FFT2D Core最后输出的二维IFFT的结果实际上即是重构的结果，一个通道的图即是对应一个特定采样深度的三维场景的切面。这样的所有的采样深度的切面组成一个多通道的图，一个三维立体的场景图。这里为了便于在屏幕上展示最后重构的结果，三维多通道场景图需要被压缩为一个单通道的图。压缩过程即是选择出每个像素所包含的各个通道的最大强度值。重构的场景图的像素值实际上是一个复数，因此我们定义像素的强度值为复数的幅度值。因此，这一压缩过程可以表达为
+\begin{equation}
+    I^{\prime}(x, y) = \max_{\hat{z}} |(I(x, y, \hat{z}))|.
+\end{equation}
+除开这一二维化的压缩过程，强度值$I^\prime$需要被量化为8bit整数，以显示在传统的显示器上。
 
+上述的后处理算法的硬件实现，后处理模块的电路结构如图\ref{fig:pp}所示，
+\begin{figure}[!tb]
+    \centering
+    \includegraphics[width=\textwidth]{figure/postproc.pdf}
+    \bicaption{后处理模块的电路结构。}{Structure of the post-processing module.}
+    \label{fig:pp}
+\end{figure}
+输入的一个特定通道的某一个像素在后处理模块中，与之前已输入的同一坐标的不同通道的像素强度值进行比较。比较结果里较大的那个像素强度值被存储至内部存储。同时，整张图的最大强度值和最小强度值也被分别记录为$qmax$和$qmin$，用于随后的量化工作。\textit{AddrTrans}模块生成访问内部存储的读地址，并将待量化的像素送至量化模块\textit{Quantizer}。其中必要的反转操作和上采样操作也在\textit{AddrTrans}模块。
+
+\chapter{实现结果}
 \section{优化后算法的重构结果比较}
-% 《规范》规定论文前言部分应包含论文原创性声明和授权使用声明、中英文摘要、目录，研究生论文还需包含图形、表格列表。若有需要，可加入符号列表。\shtthesis{} 会自动生成目录和图表列表，在不设置 \verb|anonymous| 选项时会自动生成声明页。\shtthesis{} 提供了摘要和符号列表环境，以便于用户生成中英文摘要和符号列表。
+
+本文在章节\ref{sec:opt_algo}中提到，为了使得基于RSD的NLOS重构算法能够更好的在硬件上实现，我们采用了两种优化技巧——环形脉冲采样技术和径向采样技术。图\ref{fig:letter4}-\ref{fig:shelf}展示了从原始的RSD重构算法、优化后的RSD重构算法以及优化后的RSD重构算法的硬件实现分别重构出的结果的比较。这里所用的NLOS原始数据采集自真实的NLOS成像系统\citep{Liu}，该系统的具体配置包括一个功率1W的532nm孔径大小的具有35ps时间分辨率的脉冲激光器作为光源，一个带有时间相关的单光子计数器（Time Correlated Single Photon Counter, TCSPC）的SPAD作为探测器。
+
+从图\ref{fig:letter4}-\ref{fig:shelf}中我们可以看到，从不同的实现方式得到的重构结果在视觉上几乎都是相同的。这表明了，优化基于RSD的NLOS重构算法所采用的两种技术——环形脉冲采样技术和径向采样技术——对于NLOS重构结果的影响几乎没有，而这也在章节\ref{sec:opt_algo}中进行了数学上的证明。至于使用硬件实现的基于RSD的NLOS重构算法所得的重构结果，由于不得不将浮点数数据定点量化为定点数数据，重构结果出现了一些额外的量化噪声。
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figure/res_img/letter4.pdf}
+  \bicaption{Letter 4——原始RSD算法、优化后RSD算法、硬件实现的重构结果。}{Letter 4 - reconstruction result from original algorithm, optimized algorithm and hardware implementation.}
+  \label{fig:letter4}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figure/res_img/letter44i.pdf}
+  \bicaption{Letter 44i——原始RSD算法、优化后RSD算法、硬件实现的重构结果。}{Letter 44i - reconstruction result from original algorithm, optimized algorithm and hardware implementation.}
+  \label{fig:letter44i}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figure/res_img/nlos.pdf}
+  \bicaption{Letter NLOS——原始RSD算法、优化后RSD算法、硬件实现的重构结果。}{Letter NLOS - reconstruction result from original algorithm, optimized algorithm and hardware implementation.}
+  \label{fig:nlos}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figure/res_img/resolutionbar.pdf}
+  \bicaption{Resolution Bar——原始RSD算法、优化后RSD算法、硬件实现的重构结果。}{Resolution Bar - reconstruction result from original algorithm, optimized algorithm and hardware implementation.}
+  \label{fig:resolutionbar}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figure/res_img/shelf.pdf}
+  \bicaption{Shelf——原始RSD算法、优化后RSD算法、硬件实现的重构结果。}{Shelf - reconstruction result from original algorithm, optimized algorithm and hardware implementation.}
+  \label{fig:shelf}
+\end{figure}
+
+为了进一步更加精确地比较不同实现下的重构结果，本文这里展示了优化后的基于RSD的NLOS重构算法及其硬件实现所得的重构结果图相对于原始的基于RSD的NLOS重构算法的重构结果图的差异图\ref{fig:diff_l4}-\ref{fig:diff_shelf}。这里，差异图定义为两张图相减所得的差$D=M_{ori}-M_{opt}$。
+我们可以看到，对比原始的基于RSD的NLOS重构算法和优化后的算法的结果，尽管在差异图上可以清晰的看到物体的轮廓，两者仅仅是在被重构物体的部分有些像素强度上的差异。这表明优化后的算法重构结果的精度和原始算法的精度极其相似，而像素强度上的差异则可以通过一个灰度变换操作来补偿。而对比硬件实现重构算法和原始重构算法的结果，除了上述的差异之外还有一些额外的由于数据定点化造成的量化噪声。
+
+
+\begin{figure}[!tb]
+  \centering
+  \includegraphics[width=\textwidth]{figure/diffmap/diff_letter4.pdf}
+  \bicaption{Letter 4的差异图。}{Letter 4 differential map.}
+  \label{fig:diff_l4}
+\end{figure}
+
+\begin{figure}[!tb]
+  \centering
+  \includegraphics[width=\textwidth]{figure/diffmap/diff_letter44i.pdf}
+  \bicaption{Letter 44i的差异图。}{Letter 44i differential map.}
+  \label{fig:diff_l44i}
+\end{figure}
+
+\begin{figure}[!tb]
+  \centering
+  \includegraphics[width=\textwidth]{figure/diffmap/diff_nlos.pdf}
+  \bicaption{Letter NLOS的差异图。}{Letter NLOS differential map.}
+  \label{fig:diff_nlos}
+\end{figure}
+
+\begin{figure}[!tb]
+  \centering
+  \includegraphics[width=\textwidth]{figure/diffmap/diff_resolutionbar.pdf}
+  \bicaption{Resolution Bar的差异图。}{Resolution Bar differential map.}
+  \label{fig:diff_resolutionbar}
+\end{figure}
+
+\begin{figure}[!tb]
+  \centering
+  \includegraphics[width=\textwidth]{figure/diffmap/diff_shelf.pdf}
+  \bicaption{Shelf的差异图。}{Shelf differential map.}
+  \label{fig:diff_shelf}
+\end{figure}
+
+除了使用差异图来比较算法优化和硬件实现对重构结果的影响，这里还是用了SSIM来度量优化后的NLOS重构算法及其硬件实现的重构结果对原始算法重构结果的相似度。图\ref{fig:ssim}展示了对于不同的数据集，比较相似度得到的SSIM值（在图像处理领域中一种常用的比较两张图相似度的度量方法）。图\ref{fig:ssim_l4}-\ref{fig:ssim_shelf}展示了不同的NLOS数据对应的SSIM差异图。对应于优化后算法的重构结果，计算得到的SSIM平均值为0.90，而对于硬件实现，SSIM平均值则为0.88。如前所述，SSIM越接近1，表示两张图越相似。这一结果再次证明硬件实现NLOS重构算法所得结果非常接近于原始算法。
+\begin{figure}[!tb]
+    \centering
+    \includegraphics[width=\textwidth]{figure/hw_opt_ori_res_comp.pdf}
+    \bicaption{用优化后算法的重构结果、硬件实现的重构结果，比较原始算法的结果，所得的SSIM值。}{SSIM of the results generated by the optimized RSD algorithm and hardware implementation, comparing to the original results.}
+    \label{fig:ssim}
+\end{figure}
+
+\begin{figure}[!tb]
+  \centering
+  \includegraphics[width=\textwidth]{figure/diffmap/ssim_letter4.pdf}
+  \bicaption{Letter 4的SSIM差异图。}{Letter 4 differential map.}
+  \label{fig:ssim_l4}
+\end{figure}
+
+\begin{figure}[!tb]
+  \centering
+  \includegraphics[width=\textwidth]{figure/diffmap/ssim_letter44i.pdf}
+  \bicaption{Letter 44i的SSIM差异图。}{Letter 44i differential map.}
+  \label{fig:ssim_l44i}
+\end{figure}
+
+\begin{figure}[!tb]
+  \centering
+  \includegraphics[width=\textwidth]{figure/diffmap/ssim_nlos.pdf}
+  \bicaption{Letter NLOS的SSIM差异图。}{Letter NLOS differential map.}
+  \label{fig:ssim_nlos}
+\end{figure}
+
+\begin{figure}[!tb]
+  \centering
+  \includegraphics[width=\textwidth]{figure/diffmap/ssim_resolutionbar.pdf}
+  \bicaption{Resolution Bar的SSIM差异图。}{Resolution Bar differential map.}
+  \label{fig:ssim_resolutionbar}
+\end{figure}
+
+\begin{figure}[!tb]
+  \centering
+  \includegraphics[width=\textwidth]{figure/diffmap/ssim_shelf.pdf}
+  \bicaption{Shelf的SSIM差异图。}{Shelf differential map.}
+  \label{fig:ssim_shelf}
+\end{figure}
+
+值得一提的是，对于在真实实验环境下采集的NLOS成像数据，目前并没有定量的比较方法来衡量重构结果和真实的隐藏场景之间的相似程度，即重构的效果到底如何基本还是依靠人眼判断。并且，不同的NLOS成像算法之间也没有公认的基准，这是因为所有的NLOS成像算法所重构出的场景都远不如LOS成像的真实。因此，除非使用的NLOS数据来自计算机渲染的场景，其他的针对真实场景的NLOS成像算法都是依靠视觉的比较来衡量重构的效果。这也是衡量基于RSD的NLOS成像算法重构效果所用的方法\citep{Liu,Liu2019}。
 
 \section{FPGA实现结果}
-% 论文中英文摘要在正文部分 \verb|\frontmatter| 之后、\verb|\makeindices| 之前，分别在 abstract 和 abstract* 环境中输入。摘要环境对内容没有限制：
-% \begin{latex}
-% \begin{abstract}
-%   中文摘要内容...
-% \end{abstract}
 
-% \begin{abstract*}
-%   English abstract content...
-% \end{abstract*}
-% \end{latex}
+在CPU上运行的原始的基于RSD的NLOS重构算法使用的数据格式是未经量化的浮点数。然而，对于硬件加速器的设计而言，浮点数运算操作耗费的资源太多。因此合理地使用FPGA上的硬件资源，我们需要将算法所需的所有数据包括中间结果量化为定点数格式。表\ref{tab:quant}总结了本文所提出的加速器设计中使用的量化策略。
 
-% 需要注意，本科生论文要求在中英文摘要中包含论文标题。默认情况下，\shtthesis 的 abstract 和 abstract* 环境会按照 \verb|\shtsetup| 中指定的标题及其中的换行符进行排版。如果希望在摘要中显示的标题不换行，则可以向摘要环境传入 \verb|flattitle| 选项，排版时会将 title 和 title* 中的换行符替换为空格：
-% \begin{latex}
-% \begin{abstract}[flattitle]
-%   % 摘要标题排版时不换行
-%   中文摘要内容...
-% \end{abstract}
-% \end{latex}
+\begin{table}[!t]
+    \centering
+    \bicaption{加速器的量化策略}{Quantization Scheme of Accelerator}
+    \label{tab:quant}
+    \resizebox{.7\textwidth}{!}{
+    \begin{tabular}{@{}ccccc@{}}
+    \toprule
+                 & 整数位宽 & 小数位宽 & 总位宽 & 数据类型           \\ \midrule
+    Input signal & 14            & -6             & 8         & Complex   \\ \midrule
+    \textit{Wave}         & 8             & 8              & 16        & Real      \\ \midrule
+    \textit{Distance}     & 8             & 8              & 16        & Real      \\ \midrule
+    \textit{Timeshift}    & -4            & 20             & 16        & Complex   \\ \midrule
+    Coefficients & -5            & 21             & 16        & Complex   \\ \midrule
+    RSD kernel   & 0             & 16             & 16        & Complex   \\ \midrule
+    FFT out      & 10            & 2              & 12        & Complex   \\ \midrule
+    MAC result   & 10            & 8              & 18        & Complex   \\ \midrule
+    IFFT out     & 6             & 12             & 18        & Complex   \\ \bottomrule
+    \end{tabular}}
+\end{table}
 
-% 论文中英文关键词在 \verb|\shtsetup| 命令中分别以 keywords 和 keywords* 设定。注意 \shtthesis{} v\version{} 中尚未实现分词处理，此处输入的 value 将不经任何预处理，直接插入至正文中排版。因此，中文关键词（keywords）之间应该以中文逗号“，”隔开且不包含空格；英文关键词（keywords*）之间应该以半角逗号“,”隔开，并在每一半角逗号后跟随一个半角空格。
-% \begin{latex}
-% \shtsetup{
-%   keywords = {上海科技大学，学位论文，\LaTeX{}},
-%   keywords* = {ShanghaiTech~University, Thesis, \LaTeX{}},
-% }
-% \end{latex}
+图\ref{fig:nlossys}中所示的是本文演示的NLOS成像加速器的系统框图。整个系统由一个NLOSI Core，一个RSD核数据驱动模块（Kernel Driver），一个NLOS数据驱动模块（Image Driver），以及一个HDMI接口模块组成。RSD核驱动模块包括一些只读存储模块（ROM）存储了重构RSD核所需的单位环形脉冲函数以及对应的线性组合系数，并驱动一个AXI总线。NLOSI Core挂载在AXI总线上，以接收相应的数据。NLOS数据驱动模块则存储了待输入的瞬态图像数据并通过Stream数据通道（一种遵守valid-ready握手协议的数据通道）将数据送入NLOSI Core。这里使用的NLOS数据均采集自真实环境的瞬态图像，也被\citet{Liu,Liu2019}用于演示其NLOS成像算法，且这些数据均以开源。HDMI接口模块将重构结果包装为符合HDMI协议的视频流格式，并将该视频信号通过一个FMC接口传送至HDMI子卡上。以上所述的包含在加速器系统里的四个模块均实现在Intel Stratix 10 SoC FPGA上，如图\ref{fig:testsys}所示。
+\begin{table}[!t]
+    \centering
+    \bicaption{性能比较}{Performance Comparison}
+    \label{tab:perf_comp}
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{@{}cccc@{}}
+    \toprule
+               & 原始RSD算法\citep{Liu} & 优化后RSD算法 & 硬件加速器 \\ \midrule
+    Platform   & AMD R7 4800HS               & AMD R7 4800HS                  & Stratix 10 \\ \midrule
+    Clock (MHz) & N/A                         & N/A                            & 50         \\ \midrule
+    Time (one frame)      & 2.34s                       & 0.83s                          & 39.5ms     \\ \midrule
+    Speed (FPS) & 0.42                        & 1.2                            & 25.31      \\  \bottomrule
+    % Power (W)   & N/A                         & N/A                            & 10         \\ \bottomrule
+    \end{tabular}}
+\end{table}
+
+\begin{figure}[!tb]
+  \centering
+  \includegraphics[width=\textwidth]{figure/system.pdf}
+  \bicaption{演示的NLOS系统框图。}{Block diagram of the demonstration system.}
+  \label{fig:nlossys}
+\end{figure}
+
+\begin{figure}[!tb]
+  \centering
+  \includegraphics[width=\textwidth]{figure/testsys_demo.pdf}
+  \bicaption{实现在FPGA上的系统的照片。}{Photo of the NLOS imaging accelerator implemented on FPGA.}
+  \label{fig:testsys}
+\end{figure}
 
 \chapter{总结与展望}
 % \shtthesis{} 重载了 \verb|\makeindices| 命令，可一次生成目录、图形列表和表格列表。默认目录中正文标题列出至第 3 级（即 subsection），若包含附录则目录中只列出“附录”一项（附录各级标题仍会生成 PDF 书签），图形、表格列表中列出图表标题的全部内容。对于特别长的图形、表格标题，可以在 \verb|\caption| 命令中指定短标题，从而使列表条目更为简明：
@@ -885,7 +1025,7 @@ FFT2D Core由一个二维FFT模块和用于存储结果的128块存储块构成�
 % \shtthesis{} 通过 \textsf{biblatex} 宏包及 \textsf{biblatex-gb7714-2015} 格式支持符合 GB/T 7714-2015 标准的文献引用。本科生论文使用顺序编码制，研究生论文使用“著者-出版年”制。
 
 % \paragraph{顺序编码制}
-% 使用一般引用 \verb|\cite| 的编码显示为上标，例如~\cite{stamerjohanns2009mathml, yuan2012lana}。也可以使用行内引用 \verb|\inlinecite| 将引用编码排版至正文，例如 \inlinecite{Bohan1928}。参考文献列表按照各条目在正文中被引用顺序排列。
+% 使用一般引用 \verb|\cite| 的编码显示为上标，例如~\citep{stamerjohanns2009mathml, yuan2012lana}。也可以使用行内引用 \verb|\inlinecite| 将引用编码排版至正文，例如 \inlinecitep{Bohan1928}。参考文献列表按照各条目在正文中被引用顺序排列。
 
 % \paragraph{“著者-出版年”制}
 % 使用 \verb|\citet| 进行文本形式的引用 \citet{Bohan1928}，使用 \verb|\citep| 进行括号形式的引用 \citep{yuan2012lana}，使用 \verb|\citeauthor| 进行作者引用 \citeauthor{niu2013zonghe}，以及使用 \verb|\citeyear| 进行年份引用 \citeyear{walls2013drought}。参考文献列表各条目按照语言分组后，按照字母序排列。
