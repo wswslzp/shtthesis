@@ -354,6 +354,82 @@ NLOS成像模型是绝大多数NLOS成像算法的核心基础，指导着算法
  
 基于RSD的NLOS重构算法使用RSD积分来近似光的传播，对共焦和非共焦的NLOS数据均适用\citep{Elten2019}。
 
+\section{基于RSD的重构算法原理}
+
+\subsection{相量场衍射方法}
+
+我们首先回顾前面所提到的NLOS成像系统采集信号的过程。对于非共焦的情况，如图\ref{fig:rsd_nlos_scene}所示，激光器点亮反射墙上点$P$，并收集从场景反射回反射墙上点$C$的光。采集的数据$H(\mathbf{x_p}\rightarrow \mathbf{x_c},t)$实际上代表了隐藏场景对应的脉冲响应。作为输入信号的$\mathcal{P}(\mathbf{x_p},t)$代表了激光脉冲在反射墙上对应的相量场的波前（phasor field wavefront），我们利用脉冲响应$H(\mathbf{x_p}\rightarrow \mathbf{x_c},t)$可以如下计算经由场景反射到反射墙上的相量场波前
+\begin{equation}\label{eq:convt}
+  \mathcal{P}(\mathbf{x_c},t) = \int_P \left[ \mathcal{P}(\mathbf{x_p},t) *_t H(\mathbf{x_p}\rightarrow \mathbf{x_c},t) \right] d\mathbf{x_p}.
+\end{equation}
+其中，符号$*_t$代表在时域上的卷积，积分则是对整个反射墙所有可能的$\mathbf{x_p}$上进行。
+
+\begin{figure}[!tb]
+  \centering
+  \includegraphics[width=\textwidth]{figure/relaywall.pdf}
+  \bicaption{基于RSD的相量场方法重构隐藏物体。}{Reconstruct hidden objects using RSD based phasor field method.}
+  \label{fig:rsd_nlos_scene}
+\end{figure}
+
+如何从$\mathcal{P}(\mathbf{x_c},t)$中重构出一个场景，实际上是LOS成像形成的基本问题。这种重构过程可以表达为
+\begin{equation}\label{eq:recons}
+  I(\mathbf{x_v}, t)=\varPhi (\mathcal{P}(\mathbf{x_c},t)).
+\end{equation}
+重构算子$\varPhi$相当于将墙上点$C$处的波前反向传播至场景中的点$\mathbf{x_v}$，这些点之中就包括了场景中物体的形状信息。根据相关理论\citep{Teichman2019}，频域下的重构算子$\varPhi$作用在相量场波前上可以用RSD积分算符$\mathcal{R}_{\mathbf{x_v}}$来表示
+\begin{equation}\label{eq:recons_freq}
+  \varPhi \left( \mathcal{P}_F(\mathbf{x_c},\omega) \right) = \Big| \mathcal{R}_{\mathbf{x_v}} \left( \mathcal{P}_F(\mathbf{x_c},\omega) \right) \Big|^2.
+\end{equation}
+其中，$\mathcal{P}_F(\mathbf{x_c},\omega)$是波前的频域形式。
+RSD积分算符的数学形式为
+\begin{equation}\label{eq:rsdint}
+  \mathcal{R}_{\mathbf{x_v}} \left( \mathcal{P}_F(\mathbf{x_c},\omega) \right) = \alpha(\mathbf{x_v}) \int_C \mathcal{P}_F(\mathbf{x_c},\omega) \frac{e^{-ik|\mathbf{x_c}-\mathbf{x_v}|}}{|\mathbf{x_c}-\mathbf{x_v}|}d \mathbf{x_c} .
+\end{equation}
+其中，$k=\omega/c$为波数，单独的小写字母$c$为光速。式子中的$\frac{e^{-ik\mathbf{x_c}-\mathbf{x_v}|}}{|\mathbf{x_c}-\mathbf{x_v}|}$称为RSD核。与传统的RSD积分所不同的是，相量场中的RSD积分引入了一个幅度校正因子$\alpha(\mathbf{x_v})$。它只和场景中的点$\mathbf{x_v}$有关，只要隐藏区域中的物体的反射表面形状已知，它的值就是确定的。由于该因子的仅仅影响重构图像的亮度，而不会改变物体在重构结果中的形状，因此这一项因子往往可以忽略。至此可以形象地说，RSD积分相当于将抵达到反射面C的光波（相量场波前）反向传播回隐藏的场景去，从而重构这个场景。也可以等价的把这一过程认为，存在一个位于反射墙背后的虚拟相机，反射面C则相当于它的相机孔，它根据射到相机孔上的光来重构隐藏场景。
+
+激光脉冲在反射墙的相量场波前的数学模型是已知的，其数学形式为
+\begin{equation}
+ \mathcal{P}(\mathbf{x_p},t) = e^{i\omega_0 t}\delta(\mathbf{x_p}-\mathbf{x_{ls}})e^{-\frac{(t-t_0)^2}{2\sigma^2}},
+\end{equation}
+表示在一个虚拟光源（即激光所照亮的点）$x_{ls}$处的波前，其中$\omega_0$表示脉冲的中心频率，决定了激光的波长。中心频率的选择取决于场景中反射墙上的空间采样率。根据采样定理，激光的波长必须大于相邻的$P$、$C$两点之间最大距离的两倍。同时，波长还要大于成像设备的时间分辨率\citep{Liu2019}。比如，给定一个最小的空间采样间隔是1cm，那么波长必须大于2cm。为了方便，表示衰减项的$e^{-\frac{(t-t_0)^2}{2\sigma^2}}$中的$t_0$我们设定为0。
+我们进一步将激光脉冲时域模型转换到其对应的频域形式
+\begin{equation}
+ \mathcal{P}_F(\mathbf{x_p},\omega) = \delta(\mathbf{x_p}-\mathbf{x_{ls}})\cdot \left[ 2\pi\delta(\omega-\omega_0)*_\omega\sigma\sqrt{2\pi}e^{-\frac{\sigma^2\omega^2}{2}} \right].
+\end{equation}
+其中，符号$*_\omega$同样地表示在$\omega$上做卷积。脉冲模型的频域形式是一个以中心频率$\omega_0$为均值的高斯函数。
+
+对方程（\ref{eq:convt}）两边做时域上的的傅里叶变换，得到
+\begin{equation}
+  \mathcal{P}_F(\mathbf{x_c},\omega) = \int_P \mathcal{P}_F(\mathbf{x_p},\omega) H(\mathbf{x_p}\rightarrow \mathbf{x_c},\omega) d\mathbf{x_p}.
+\end{equation}
+由于实际上激光器只会在墙上照亮一个点，因此这里的积分实际上可以省去，得到
+\begin{equation}
+  \mathcal{P}_F(\mathbf{x_c},\omega) = \mathcal{P}_F(\mathbf{x_p},\omega) H(\mathbf{x_p}\rightarrow \mathbf{x_c},\omega).
+\end{equation}
+这实际上就是SPAD接收到的输入瞬态图像的频域。进一步，
+我们将方程（\ref{eq:recons_freq}）代入式（\ref{eq:recons}）并作傅里叶逆变换得到
+\begin{equation}
+  I(\mathbf{x_v},t)=\frac{1}{2\pi}\int_{-\infty}^{+\infty}e^{i\omega t}\Big| \mathcal{R}_{\mathbf{x_v}} \left( \mathcal{P}_F(\mathbf{x_c},\omega) \right) \Big|^2 d\omega.
+\end{equation}
+如此，我们便推导出了基于RSD的NLOS重构算法的基本原理。接下来，本文将讨论如何离散化RSD积分$\mathcal{R}_{\mathbf{x_v}}$，并给出快速计算RSD积分的算法。
+
+\subsection{快速相量场衍射算法}
+
+如前所述，RSD将光从反射面反向传播回被重构场景的任一点$x_v$。为便于计算，我们约束光在两个平行的平面上传播，即反射面的点$\mathbf{x_c}=(x_c,y_c,0)$，以及物体上的点$\mathbf{x_v}=(x_v,y_v,z_v)$。将引入的坐标$\mathbf{x_c}$和$\mathbf{x_v}$代入RSD的定义（\ref{eq:rsdint}）并省略$\alpha(\mathbf{x_v})$
+\begin{equation}
+  \begin{split}
+    &\mathcal{P}_F(\mathbf{x_v},\omega) = \mathcal{R}_{\mathbf{x_v}}\left( \mathcal{P}_F(\mathbf{x_c},\omega) \right) \\
+    &\mathcal{P}_F(x_v,y_v,z_v,\omega) = \mathcal{R}_{z_v}\left( \mathcal{P}_F(x_c,y_c,0,\omega) \right)\\
+    &= \iint_{\mathbb{R}^2}\mathcal{P}_F(x_c,y_c,0,\omega)\frac{e^{-i\frac{\omega}{c}\sqrt{(x_c-x_v)^2+(y_c-y_v)^2+z_v^2}}}{\sqrt{(x_c-x_v)^2+(y_c-y_v)^2+z_v^2}} dx_cdy_c \\
+    &= \iint_{\mathbb{R}^2}\mathcal{P}_F(x_c,y_c,0,\omega) G(x_v-x_c,y_v-y_c,z_v,\omega) dx_cdy_c \\
+    &= \mathcal{P}_F(x_c,y_c,0,\omega) \circledast G(x_v,y_v,z_v,\omega),
+  \end{split}
+\end{equation}
+其中，我们定义RSD卷积核
+\begin{equation}
+  G(x,y,z,\omega) = \frac{e^{-i\frac{\omega}{c}\sqrt{x^2+y^2+z^2}}}{\sqrt{x^2+y^2+z^2}}
+\end{equation}
+而符号$\circledast$表示平面上的二维卷积操作。RSD算符由$\mathcal{R}_{\mathbf{x_v}}$转变下标为$\mathcal{R}_{z_v}$表示这一传播不在仅仅针对一个点$\mathbf{x_v}$而是对平面$z=z_v$上的所有点。对于一个特定的频率$\omega$，反射面C上的相量场波前$\mathcal{P}_F(x_c,y_c,0,\omega)$与相同频率的，深度在$z_v$的RSD卷积核做二维卷积，即可得到传播后的平面$z=z_v$上的相量场波前$\mathcal{P}_F(x_v,y_v,z_v,\omega)$。
+
 \section{原始的RSD重构算法}
 
 原始的基于RSD的NLOS重构算法的基本思想，是将抵达探测器光圈的光反向传播回到隐藏场景，从而将NLOS成像问题转化为LOS成像问题，而后者则可以使用一个基于衍射的RSD求解器快速解决\citep{Liu}。
@@ -794,7 +870,7 @@ FFT2D Core最后输出的二维IFFT的结果实际上即是重构的结果，一
 我们可以看到，对比原始的基于RSD的NLOS重构算法和优化后的算法的结果，尽管在差异图上可以清晰的看到物体的轮廓，两者仅仅是在被重构物体的部分有些像素强度上的差异。这表明优化后的算法重构结果的精度和原始算法的精度极其相似，而像素强度上的差异则可以通过一个灰度变换操作来补偿。而对比硬件实现重构算法和原始重构算法的结果，除了上述的差异之外还有一些额外的由于数据定点化造成的量化噪声。
 
 
-\begin{figure}[!tb]
+\begin{figure}[!b]
   \centering
   \includegraphics[width=\textwidth]{figure/diffmap/diff_letter4.pdf}
   \bicaption{Letter 4的差异图。}{Letter 4 differential map.}
@@ -898,7 +974,7 @@ FFT2D Core最后输出的二维IFFT的结果实际上即是重构的结果，一
     \end{tabular}}
 \end{table}
 
-图\ref{fig:nlossys}中所示的是本文演示的NLOS成像加速器的系统框图。整个系统由一个NLOSI Core，一个RSD核数据驱动模块（Kernel Driver），一个NLOS数据驱动模块（Image Driver），以及一个HDMI接口模块组成。RSD核驱动模块包括一些只读存储模块（ROM）存储了重构RSD核所需的单位环形脉冲函数以及对应的线性组合系数，并驱动一个AXI总线。NLOSI Core挂载在AXI总线上，以接收相应的数据。NLOS数据驱动模块则存储了待输入的瞬态图像数据并通过Stream数据通道（一种遵守valid-ready握手协议的数据通道）将数据送入NLOSI Core。这里使用的NLOS数据均采集自真实环境的瞬态图像，也被\citet{Liu,Liu2019}用于演示其NLOS成像算法，且这些数据均以开源。HDMI接口模块将重构结果包装为符合HDMI协议的视频流格式，并将该视频信号通过一个FMC接口传送至HDMI子卡上。以上所述的包含在加速器系统里的四个模块均实现在Intel Stratix 10 SoC FPGA上，如图\ref{fig:testsys}所示。
+图\ref{fig:nlossys}中所示的是本文演示的NLOS成像加速器的系统框图。整个系统由一个NLOSI Core，一个RSD核数据驱动模块（Kernel Driver），一个NLOS数据驱动模块（Image Driver），以及一个HDMI接口模块组成。RSD核驱动模块包括一些只读存储模块（ROM）存储了重构RSD核所需的单位环形脉冲函数以及对应的线性组合系数，并驱动一个AXI总线。NLOSI Core挂载在AXI总线上，以接收相应的数据。NLOS数据驱动模块则存储了待输入的瞬态图像数据并通过Stream数据通道（一种遵守valid-ready握手协议的数据通道）将数据送入NLOSI Core。这里使用的NLOS数据均采集自真实环境的瞬态图像，也被\citet{Liu,Liu2019}用于演示其NLOS成像算法，且这些数据均以开源。HDMI接口模块将重构结果包装为符合HDMI协议的视频流格式，并将该视频信号通过一个FMC接口传送至HDMI子卡上。以上所述的包含在加速器系统里的四个模块均实现在Intel Stratix 10 SoC FPGA上，如图\ref{fig:testsys}所示。HDMI子卡插在FPGA板卡的FMC接口上，并通过HDMI线连接至外部的一台显示器上，将经过处理转换的重构结果显示在显示器上。图\ref{fig:testsys}展示了整个NLOS成像加速器系统在显示器上显示的重构结果。
 \begin{table}[!t]
     \centering
     \bicaption{性能比较}{Performance Comparison}
@@ -929,223 +1005,34 @@ FFT2D Core最后输出的二维IFFT的结果实际上即是重构的结果，一
   \label{fig:testsys}
 \end{figure}
 
+截至目前，本文作者尚未发现其他公开发表的基于RSD算法的NLOS成像硬件加速器设计相关的文献，包括以FPGA或者ASIC方式实现。因此在成像性能上，我们只能与原始的基于RSD的NLOS重构算法和优化后的算法的软件实现进行比较。这里NLOS成像系统参数的设置和\citet{Liu}一致，其中$N_D=51, N_\Omega=69, N_R=68, K=128$。两个算法都运行在MATLAB R2020a上，电脑配置为AMD R7 4800HS CPU以及16GB内存。表\ref{tab:perf_comp}总结了性能比较的结果。很明显，以CPU为平台运行基于RSD的NLOS成像算法，无论是原始的版本还是优化后的版本，都无法满足实时NLOS成像的要求。而在FPGA上实现的NLOS成像加速平台，可以在一个相对较低的运行频率——50 MHz的时钟频率——下也能满足25FPS的要求。当然，我们可以通过提高时钟频率或者增加加速器的资源预算，来获得一个更高的成像帧率。
+\begin{table}[!t]
+    \centering
+    \bicaption{资源利用率}{Resource Utilization}
+    \label{tab:util}
+    \setlength{\tabcolsep}{5mm}{
+    \begin{tabular}{@{}ccccc@{}}
+    \toprule
+    资源    & ALM    & FF      & BRAM  & DSP  \\ \midrule
+    已用的        & 618672 & 269462  & 4777  & 1413 \\ \midrule
+    可用的   & 933120 & 1866240 & 11721 & 5760 \\ \midrule
+    利用率 & 66\%   & 14\%    & 41\%  & 25\% \\ \bottomrule
+    \end{tabular}}
+\end{table}
+\begin{figure}[!tb]
+    \centering
+    \includegraphics[width=.75\textwidth]{figure/util_break.pdf}
+    \bicaption{资源利用率饼图。}{Breakdown of the resource utilizations.}
+    \label{fig:util_break}
+\end{figure}
+
+演示的NLOS成像系统的硬件资源利用率如表\ref{tab:util}所示，对应的饼图则展示在\ref{fig:util_break}。从中可以看到，模块RSD GenCore和FFT2D Core占据了硬件资源的主要部分（约90\%）。
+
 \chapter{总结与展望}
-% \shtthesis{} 重载了 \verb|\makeindices| 命令，可一次生成目录、图形列表和表格列表。默认目录中正文标题列出至第 3 级（即 subsection），若包含附录则目录中只列出“附录”一项（附录各级标题仍会生成 PDF 书签），图形、表格列表中列出图表标题的全部内容。对于特别长的图形、表格标题，可以在 \verb|\caption| 命令中指定短标题，从而使列表条目更为简明：
-% \begin{latex}
-% \begin{figure}
-%   \caption[出现在图形列表内的短标题]{出现在正文中的长标题}
-%   % ...
-% \end{figure}
-% \end{latex}
 
-% \shtthesis{} 提供了 nomenclatures 环境用于在研究生论文中生成符号列表，其使用方法为：
-% \begin{latex}
-% \begin{nomenclatures}[<标题>]
-%   \head[<单位表头>]{<符号表头>}{<描述表头>}
-%   \item[<单位>]{<符号>}{<描述>}
-%   % ...
-% \end{nomenclatures}
-% \end{latex}
-% 每次 nomenclatures 调用会分别生成一组符号列表，每一 \verb|\item| 会生成一行符号描述。若 \verb|<标题>| 不为空则会为当前组生成一个不编号的 section 级的标题。\verb|\head| 为可选指令，会为当前组生成一个“表头”，但必须在 \verb|\item| 之前列出。\verb|\item| 接受一个可选参数 \verb|<单位>| 作为符号的单位，若其不为空则在当前行右对齐出现。nomenclatures 的使用样例可以参考 \jobname.tex 中“符号列表”部分。注意在 \shtthesis{} v\version{} 中各 \verb|\item| 的 \verb|<描述>| 在折行后会出现排版错误，故暂时不支持较长的符号描述。
+在这篇文章里，我们
 
-% \chapter{致谢}
-% \shtthesis{} 正文部分的书写与一般 \LaTeX 项目无异。\shtthesis{} 为研究生论文修改公式编号格式以符合《规范》要求，并提供编号定理、证明等常用数学环境。文献引用遵循 GB/T 7714-2015 《信息与文献　参考文献著录规则》标准，其中本科论文使用顺序编码制，研究生论文使用“著者-出版年”制。
-
-% \subsection{编号公式}
-% 在排版研究生论文时，\shtthesis{} 通过 \textsf{mathtools} 宏包在公式编号前添加 $\ldots$ 以符合《规范》对公式编号的格式要求，如：
-% \begin{align}
-% P(A|B) &= \frac{P(A)P(B|A)}{P(B)} \label{eq::bayesian}
-% \end{align}
-% 同时重载了 \verb|\eqref|，使得公式编号格式修改后，其引用格式仍与 \textsf{amsmath} 无异：贝叶斯定理~\eqref{eq::bayesian}。排版本科生论文时不修改公式编号格式。
-
-% \shtthesis{} 使用 \textsf{unicode-math} 宏包进行公式排版，因此在数学环境内既可以用标准 \LaTeX{} 宏，也可以直接输入 Unicode 符号。例如 $\oiint$ 符号可以通过 \verb|\oiint| 宏录入，也可以通过 Unicode 符号 $∯$ （对应 \verb|U+0222F| 码点） 录入。以下测试公式来自 \citet{clerkma2013unicode}，其中所有字符均直接使用对应 Unicode 符号录入。
-% \begin{align}
-% & ⊢ ∀x[(Fx ∨ Gx) → \mathord{∼}Hx] \\
-% & ⊨ ¬∃y∀x[x∈y ↔ x∉x]  \\
-% & ⊭ x ∩ (y ∪ z) ≠ (x ∩ y) ∪ (x ∩ z) \\
-% & ⊢ ⟦α⟧ = ℵ₀ → α ≇ ℘(α) \\
-% & ⌜ψ[(℩x)φx]⌝ ≝ ⌜(∃x)[φx ∧ (∀z)(φz ⊃ x=z) ∧ ψx]⌝ \\
-% & ⊢ (P ⥽ Q) ⥽ (□P ⥽ ◇Q)
-% \end{align}
-
-% \subsection{数学环境}
-% \shtthesis 通过 \textsf{amsthm} 宏包定义了常用的数学环境和证明环境，如表~\ref{tab::math_envs} 所列。其中，英文表示 tex 文档内调用的环境名称，中文表示排版后论文中显示的环境名称。
-
-% \begin{table}[htb]
-% \centering
-% \caption{\shtthesis 提供的数学环境}
-% \label{tab::math_envs}
-% \begin{tabular}{*{5}{c}}
-%   \toprule
-%   theorem & lemma & corollary & proposition & conjecture \\
-%   定理    & 引理  & 推论       & 命题        & 猜想       \\
-%   \midrule
-%   definition & axiom & example & problem & exercise \\
-%   定义       & 公理  & 例       & 问题    & 练习     \\
-%   \midrule
-%   remark & & & & \\
-%   注 & & & & \\
-%   \bottomrule
-% \end{tabular}
-% \end{table}
-
-% \begin{theorem}[Unicode-CJK 覆盖定理] \label{thm::CJK}
-%   Unicode 能够编码绝大多数东亚文字和符号。
-% \end{theorem}
-
-% \begin{corollary}
-%   Unicode 能够编码我国《汉字内码扩展规范》中的所有字符。
-% \end{corollary}
-
-% \begin{corollary}
-%   Unicode 也能够编码韩文和日文字符。
-% \end{corollary}
-
-% \begin{example}
-%   “你好”在 Unicode 中的编码 (codepoints) 为 \verb|U+4F60| 和 \verb|U+597D|。
-% \end{example}
-
-% \begin{example}
-%   「こんにちは」在 Unicode 中的编码 (codepoints) 为 \verb|U+3053|、 \verb|U+3093|、 \verb|U+306B|、 \verb|U+3061| 和 \verb|U+306F|。
-% \end{example}
-
-% \begin{proof}
-%   留作练习。使用前请留意注~\ref{rmk::qed} 的提示。
-% \end{proof}
-
-% \begin{remark}
-%   对定理~\ref{thm::CJK} 感兴趣的读者可以查阅 Unicode 规范（\url{https://unicode.org/}）。
-% \end{remark}
-
-% \begin{remark} \label{rmk::qed}
-%   使用 \hologo{LuaLaTeX} 引擎编译时，证明环境的 QED 符号 $\QED$ 可能会排版出错。
-% \end{remark}
-
-% \subsection{文献引用} \label{sec::citation}
-% \shtthesis{} 通过 \textsf{biblatex} 宏包及 \textsf{biblatex-gb7714-2015} 格式支持符合 GB/T 7714-2015 标准的文献引用。本科生论文使用顺序编码制，研究生论文使用“著者-出版年”制。
-
-% \paragraph{顺序编码制}
-% 使用一般引用 \verb|\cite| 的编码显示为上标，例如~\citep{stamerjohanns2009mathml, yuan2012lana}。也可以使用行内引用 \verb|\inlinecite| 将引用编码排版至正文，例如 \inlinecitep{Bohan1928}。参考文献列表按照各条目在正文中被引用顺序排列。
-
-% \paragraph{“著者-出版年”制}
-% 使用 \verb|\citet| 进行文本形式的引用 \citet{Bohan1928}，使用 \verb|\citep| 进行括号形式的引用 \citep{yuan2012lana}，使用 \verb|\citeauthor| 进行作者引用 \citeauthor{niu2013zonghe}，以及使用 \verb|\citeyear| 进行年份引用 \citeyear{walls2013drought}。参考文献列表各条目按照语言分组后，按照字母序排列。
-
-% \shtthesis{} 通过 \verb|\shtsetup| 的 bib-resource 选项指定参考文献数据库，例如载入 reference.bib 文件：
-% \begin{latex}
-% \shtsetup{
-%   bib-resource = {reference.bib},
-% }
-% % ...
-% \begin{document}
-%   % ...
-%   \makebiblio
-% \end{latex}
-
-% 需要注意若文献条目的作者姓名非英文，则需额外增加 key 字段指定作者英文姓名，并在姓氏拼英后加注音调，以确保文献条目在文末的参考文献中正确排列。例如 \citet{bravo1990comparative} 无需额外处理，而 \citet{chen1980zhongguo} 对应的 bib 条目需修改为
-% \begin{latex}
-% @incollection{chen1980zhongguo,
-%   author    = {陈晋镳 and 张惠民 and 朱士兴 and 赵震 and 王振刚},
-%   key       = {Chen2 Jing Ao Zhang1 Hui Ming Zhu1 Shi Xing Zhao4 Zhen Wang2 Zhen Gang},
-%   title     = {蓟县震旦亚界研究},
-%   editor    = {中国地质科学院天津地质矿产研究所},
-%   booktitle = {中国震旦亚界},
-%   address   = {天津},
-%   publisher = {天津科学技术出版社},
-%   year      = {1980},
-%   pages     = {56--114},
-% }
-% \end{latex}
-
-% \subsection{列表环境}
-% \shtthesis{} 微调了编号列表（enumerate）和非编号列表（itemize）环境，以适应中文排版惯例。编号列表默认使用数字编号：
-% \begin{enumerate}
-%   \item 起来，饥寒交迫的奴隶！
-%   \item 起来，全世界受苦的人！
-%   \item 满腔的热血已经沸腾，
-%   \item 要为真理而斗争！
-% \end{enumerate}
-% 也可以在 \verb|\begin{enumerate}| 之后，以短标签（short label）形式指定编号格式。例如，使用小写字母+半角括号作为编号：
-% \begin{enumerate}[a)]
-%   \item 旧世界打个落花流水，
-%   \item 奴隶们起来，起来！
-%   \item 不要说我们一无所有，
-%   \item 我们要做天下的主人！
-% \end{enumerate}
-% 还可以通过 \verb|resume*| 参数，“继续”被中断的列表编号：
-% \begin{enumerate}[a), resume*]
-%   \item 这是最后的斗争，
-%   \item 团结起来到明天，
-%   \item 英特纳雄耐尔
-%   \item 就一定要实现！
-% \end{enumerate}
-
-% 关键字（description）环境在每一条目关键字后增加了加粗全角冒号“\textbf{：}”以适应中文排版惯例。例如：《中华人民共和国劳动法》
-% \begin{description}
-%   \item[第一章第三条] 劳动者享有平等就业和选择职业的权利、取得劳动报酬的权利、休息休假的权利、获得劳动安全卫生保护的权利、接受职业技能培训的权利、享受社会保险和福利的权利、提请劳动争议处理的权利以及法律规定的其他劳动权利。
-%   \item[第四章第三十六条] 国家实行劳动者每日工作时间不超过八小时、平均每周工作时间不超过四十四小时的工时制度。
-%   \item[第四章第四十一条] 用人单位由于生产经营需要，经与工会和劳动者协商后可以延长工作时间，一般每日不得超过一小时；因特殊原因需要延长工作时间的，在保障劳动者身体健康的条件下延长工作时间每日不得超过三小时，但是每月不得超过三十六小时。
-%   \item[第四章第四十三条] 用人单位不得违反本法规定延长劳动者的工作时间。   
-% \end{description}
-
-% \subsection{双语图表标题}
-% 《规范》要求正文中所有图形、表格标题使用中英双语。此需求可以通过 \textsf{bicaption} 宏包实现，如图~\ref{img::sht_logo} 所示。
-% \begin{figure}[htb]
-%   \centering
-%   \IfFileExists{shanghaitech-emblem.pdf}{%
-%     \includegraphics[width=0.5\columnwidth]{shanghaitech-emblem.pdf}%
-%   }{%
-%     \fbox{%
-%       \begin{minipage}[b][2.5cm][c]{0.75\columnwidth}%
-%         \centering\zihao{-5}\bfseries\sffamily\color{ShtRed}%
-%         校徽文件 \texttt{shanghaitech-emblem.pdf} 缺失%
-%       \end{minipage}%
-%     }%
-%   }%
-%   \bicaption{上海科技大学校徽}{The emblem of ShanghaiTech University}
-%   \label{img::sht_logo}
-% \end{figure}
-
-% 由于在排版较长的、自包含的图表标题时，使用双语图表标题会导致可读性下降，\shtthesis{} 默认不载入 \textsf{bicaption} 宏包。（ \shtthesis{} 作者在 2020 年学位申请时并未使用双语标题。）若确实需要双语标题，可在导言区内手动载入 \textsf{bicaption}。注意需要设定 \verb|list=off| 以确保英文标题不出现在图表列表中：
-% \begin{latex}
-% \usepackage[list=off]{bicaption}
-% \captionsetup[figure][bi-second]{name=Figure}
-% \captionsetup[table][bi-second]{name=Table}
-% \end{latex}
-
-% \section{附录及其他内容} \label{sec::backmatter}
-% 正文完成后，使用 \verb|\makebiblio| 命令可生成参考文献，若需读取自定义 bib 文件请参考第~\ref{sec::citation} 节。使用 \verb|\appendix| 命令后，即可像书写正文一样书写附录。默认目录中只显示“附录”一项，不显示附录各级标题。
-% \begin{latex}
-% \appendix
-% \chapter{...}
-% % ...
-% \end{latex}
-
-% 《规范》要求在文末依此列出致谢、作者简历、攻读学位期间发表的论文与研究成果。用户可使用 \shtthesis{} 提供的相应环境 acknowledgement、resume、publications、patterns 和 projects 进行排版。同时为了生成符合盲审要求的论文，\shtthesis{} 也提供了对应的\emph{匿名环境} publications*、patterns* 和 projects*。在打开 \verb|anonymous| 选项（第~\ref{sec::option_anonymous} 节）后，论文中不出现“致谢”一节，作者简历内容替换为匿名字符串，其他小节使用匿名环境内容排版。注意在第一次使用任一上述环境前，需要使用 \verb|\backmatter| 切换至后记模式。
-
-% \subsection{致谢}
-% 在 acknowledgement 环境内书写致谢，致谢内容在匿名模式下不显示。
-% \begin{latex}
-% \begin{acknowledgement}
-%   致谢信息……
-% \end{acknowledgement}
-% \end{latex}
-
-% \subsection{简历及科研成果}
-% 此部分需要依此书写个人简历（resume 环境）、已发表（或正式接受）的学术论文（publications 和 publications* 环境）、申请或已获得的专利（patterns 和 patterns* 环境）、参加的研究项目及获奖情况（projects 和 projects*）。根据是否匿名分别显示非匿名环境内容和匿名环境内容。
-% \begin{latex}
-% \begin{resume}
-%   个人简历…… （仅非匿名环境显示）
-% \end{resume}
-
-% \begin{publications}
-%   论文发表记录…… （非匿名时显示）
-% \end{publications}
-
-% \begin{publications*}
-%   论文发表记录…… （匿名时显示）
-% \end{publications*}
-% % ...
-% \end{latex}
+\textcolor{red}{TODO.}
 
 \makebiblio
 
