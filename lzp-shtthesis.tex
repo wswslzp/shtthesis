@@ -259,12 +259,33 @@
 
 除了第一次基于条纹相机的三维NLOS成像，改进的成像系统集中在克服成像过程中遇到的一些限制。首先是提高数据采集速度。上述的成像系统往往需要数个小时的数据采集时间，因此不适合用于实时非视域成像的应用，尤其要获得常见视频的采集帧率，如24 FPS以上\citep{read2000restoration}。其次，增强相机的光灵敏度，使得成像区域可以扩大到整个房间，并观察人类大小的物体。然后是可移植性，即整个成像系统可以缩小其体积，使之可以部署在便携式设备内。最后是其成本，即最好是在克服了上述三个限制后的相机，其价格可以和ToF相机相似。一个最有可能突破上述限制的技术，是最近被广泛研究的单光子雪崩二极管。
 
-单光子雪崩二极管（SPAD）是一种类似于光电二极管的半导体器件，但具有较大的偏置电压，这会导致载流子倍增：单光子的吸收会导致雪崩击穿，从而产生可由外部电子设备检测和处理的大电流信号。时间-数字转换器测量光子从激光器发射和最后被SPAD检测到之间的时间，然后使用时变单光子计数器形成光子到达时间的直方图\citep{becker2005advanced}。SPAD实现了高单光子灵敏度，其光子探测效率高达40\%，在可见光谱中暗计数率极低，为每秒1-10个光子。在检测到光子后，探测器在数十到数百纳秒的延迟期（死区时间）内无法继续检测光子，因此限制了可实现的最大计数率。
+\begin{figure}[!tb]
+  \centering
+  \includegraphics[width=\textwidth]{figure/spad_pixel_struct.jpg}
+  \bicaption{Device structure of SPAD.}{SPAD的器件结构。}
+  \label{fig:spad_pixel}
+\end{figure}
+
+单光子雪崩二极管（SPAD）是一种类似于光电二极管的半导体器件，但具有较大的偏置电压，这会导致载流子倍增：单光子的吸收会导致雪崩击穿，从而产生可由外部电子设备检测和处理的大电流信号，其器件结构如图\ref{fig:spad_pixel}所示\citep{zappa2007principles}。时间-数字转换器测量光子从激光器发射和最后被SPAD检测到之间的时间，然后使用时变单光子计数器形成光子到达时间的直方图\citep{becker2005advanced}。SPAD实现了高单光子灵敏度，其光子探测效率高达40\%，在可见光谱中暗计数率极低，为每秒1-10个光子。在检测到光子后，探测器在数十到数百纳秒的延迟期（死区时间）内无法继续检测光子，因此限制了可实现的最大计数率。
 只要测量是在光子稀疏的情况下进行的，也就是说，在死区时间（称为堆积）期间，一个以上光子撞击探测器的可能性基本上小于一个，光子到达时间的直方图给出了光脉冲时间剖面的精确测量。考虑到SPAD死区时间，SPAD在光子稀疏区域工作时，其可提供的最大计数率约为1-10 MHz，以避免光子堆积失真效应。
+
+\begin{figure}[!tb]
+  \centering
+  \includegraphics[width=\textwidth]{figure/spad_array.jpg}
+  \bicaption{SPAD array的显微照片。左边为18mm$\times$18nm的SPAD array，右边是阵列中的一个4$\times$4的SPAD像素单元。图片来自\citet{zappa2007principles}。}{Microphotograph of an example of the SPAD array. In the left is a 18 $\times$18 SPAD array while in the right is a 4$\times$4 SPAD pixels unit in the array. Picture from \citet{zappa2007principles}.}
+  \label{fig:spad_array}
+\end{figure}
 
 SPAD传感器有单像素和阵列（即相机）两种形式，既有支持可见光波长的\citep{richardson200932,richardson2011scaleable,gersbach2012time,bronzi2014100,burri2016linospad}，也有支持红外波长的\citep{itzler2008geiger,itzler2008single,itzler2007single}。SPAD相机已用于瞬态成像，其单光子灵敏度使其能够捕捉在自由空间传播的光脉冲。相机上收集的光子来自空气中的瑞利散射，而不是表面散射或扩散介质中的增强散射\citep{gariepy2015single}。一个32$\times$32像素SPAD相机的时间分辨率约为50 ps，相当于每秒2亿帧。虽然没有上面讨论的一些技术的速度快（每秒超过1万亿帧），但这个帧速率仍然足以捕捉运动中的光，成像模糊度仅为1.5厘米。这种时间分辨率的微小损失有以下几个好处。首先，相机结构紧凑，使用简单（可以基于标准CMOS技术制造，可在市场上买到，体积小到可以集成到智能手机中）；其次，其数据采集速率高，根据现有实验证明，NLOS数据采集过程可以缩短到亚秒级时间尺度\citep{musarra2019non}；并且，使用特定激光照明波长的干涉滤光片，也可以在室外和日光条件下使用\citep{Otoole2018,chan2017non}。也有研究者使用SPAD实现了实时的NLOS数据采集\citep{lindell2018towards}。
 
-在首次以SPAD阵列作为成像设备的非视域成像演示中，SPAD相机仅仅以一种简化的配置方式来使用，因此成像系统也只能恢复出隐藏物体的位置，而无法重构物体完整的3D形状\citep{chan2017non}。这种简化使得NLOS成像可以处理动态的隐藏场景。无论是在小规模的实验室设置中，还是在更大规模的角落（距离探测器超过50米）上检测人\citep{gariepy2016detection}，对移动目标的数据采集和处理时间都在1秒左右。单像素选通SPAD\citep{buttafava2015non}和带有扫描激光光斑的SPAD线阵列\citep{o2017reconstructing}也可以用于重构完整的3D场景，目前是NLOS成像的一些首选方法，过去几年中，大多数设置使用单像素或阵列格式的SPAD。
+在首次以SPAD阵列作为成像设备的非视域成像演示中，SPAD相机仅仅以一种简化的配置方式来使用，因此成像系统也只能恢复出隐藏物体的位置，而无法重构物体完整的3D形状\citep{chan2017non}。这种简化使得NLOS成像可以处理动态的隐藏场景。无论是在小规模的实验室设置中，还是在更大规模的角落（距离探测器超过50米）上检测人\citep{gariepy2016detection}，对移动目标的数据采集和处理时间都在1秒左右。单像素选通SPAD\citep{buttafava2015non}和带有扫描激光光斑的SPAD线阵列\citep{o2017reconstructing}也可以用于重构完整的3D场景，目前是NLOS成像的一些首选方法，过去几年中，大多数设置使用单像素或阵列格式的SPAD。本文将要着重讨论的基于RSD的NLOS成像系统，其所使用的传感器也是SPAD阵列，如图\ref{fig:spad_nlos_sys_img}所示。
+
+\begin{figure}[!tb]
+  \centering
+  \includegraphics[width=\textwidth]{figure/spad_nlos_sys.pdf}
+  \bicaption{\citet{Liu2019}所演示的基于RSD重构算法的NLOS成像硬件系统的照片。}{Photo of the RSD based NLOS imaging hardware system, demonstrated by \citet{Liu2019}.}
+  \label{fig:spad_nlos_sys_img}
+\end{figure}
 
 目前，大多数SPAD阵列都是为激光雷达成像（LiDAR）而开发的。展望未来，NLOS成像系统需要改进时间分辨率、更好的填充因子、从中继表面阻挡直射光的能力，以及从看到光子的SPAD像素读取光子时间戳的更灵活的方法。因此，我们未来需要为NLOS成像设计专门的SPAD阵列。
 
@@ -354,7 +375,7 @@ NLOS成像模型是绝大多数NLOS成像算法的核心基础，指导着算法
  
 基于RSD的NLOS重构算法使用RSD积分来近似光的传播，对共焦和非共焦的NLOS数据均适用\citep{Elten2019}。
 
-\section{基于RSD的重构算法原理}
+\section{基于RSD的重构算法原理}\label{sec:rsd_recons_pp}
 
 \subsection{相量场衍射方法}
 
@@ -402,7 +423,7 @@ RSD积分算符的数学形式为
   \mathcal{P}_F(\mathbf{x_c},\omega) = \int_P \mathcal{P}_F(\mathbf{x_p},\omega) H(\mathbf{x_p}\rightarrow \mathbf{x_c},\omega) \text{d}\mathbf{x_p}.
 \end{equation}
 由于实际上激光器只会在墙上照亮一个点，因此这里的积分实际上可以省去，得到
-\begin{equation}
+\begin{equation}\label{eq:input_trans}
   \mathcal{P}_F(\mathbf{x_c},\omega) = \mathcal{P}_F(\mathbf{x_p},\omega) H(\mathbf{x_p}\rightarrow \mathbf{x_c},\omega).
 \end{equation}
 这实际上就是SPAD接收到的输入瞬态图像的频域。进一步，
@@ -428,7 +449,9 @@ RSD积分算符的数学形式为
 \begin{equation}
   G(x,y,z,\omega) = \frac{e^{-i\frac{\omega}{c}\sqrt{x^2+y^2+z^2}}}{\sqrt{x^2+y^2+z^2}}
 \end{equation}
-而符号$\circledast$表示平面上的二维卷积操作。RSD算符由$\mathcal{R}_{\mathbf{x_v}}$转变下标为$\mathcal{R}_{z_v}$表示这一传播不在仅仅针对一个点$\mathbf{x_v}$而是对平面$z=z_v$上的所有点。对于一个特定的频率$\omega$，反射面C上的相量场波前$\mathcal{P}_F(x_c,y_c,0,\omega)$与相同频率的，深度在$z_v$的RSD卷积核做二维卷积，即可得到传播后的平面$z=z_v$上的相量场波前$\mathcal{P}_F(x_v,y_v,z_v,\omega)$。
+而符号$\circledast$表示平面上的二维卷积操作。RSD算符由$\mathcal{R}_{\mathbf{x_v}}$转变下标为$\mathcal{R}_{z_v}$表示这一传播不在仅仅针对一个点$\mathbf{x_v}$而是对平面$z=z_v$上的所有点。对于一个特定的频率$\omega$，反射面C上的相量场波前$\mathcal{P}_F(x_c,y_c,0,\omega)$与相同频率的，深度在$z_v$的RSD卷积核做二维卷积，即可得到传播后的平面$z=z_v$上的相量场波前$\mathcal{P}_F(x_v,y_v,z_v,\omega)$。值得注意的是，这里所提到二维空间卷积和图像处理领域中常见的二维卷积计算方式完全不同，这里所用的“卷积核”概念也和近年流行的卷积神经网络中的卷积核不同，因此利用快速傅里叶变换（FFT）来做快速卷积以优化二维空间卷积的性能是可能的。
+
+%TODO 补图，解释一下二维空间卷积的做法，和卷积神经网络的卷积的不同。
 
 RSD的二维空间卷积需要对所有特定的频率$\omega$进行。考虑到激光脉冲的频率形式（\ref{eq:impul}），波前$\mathcal{P}_F(x_c,y_c,0,\omega)$是一个宽带信号，其频谱是一个以$\omega_0$为中心频率的高斯函数（\ref{eq:impul_freq}）。因此，我们考虑一个特定的频率区间$[\omega_0-\Delta \omega, \omega_0+\Delta \omega]$内的几个特定的采样频率即可。所选择的频率范围$2\Delta\omega$主要取决于激光脉冲的带宽，也就是式（\ref{eq:impul}）中的脉宽系数$\sigma$。对式（\ref{eq:rsdconv}）做在频域上傅里叶逆变换，并只考虑上述频率区间内的积分，得到
 \begin{equation}\label{eq:recons4d}
@@ -492,23 +515,57 @@ $M_l(x_v,y_v,z_v)$用以判断点$(x_v,y_v,z_v)$是否属于第$l$层球壳，�
 利用上述定义的区域条件函数$M_l$和距离函数$B_l$，理论上重构场景内任意一点$\mathbf{x_v}$的时移因子，即需补偿的相位为
 \begin{equation}
   \begin{split}\label{eq:timeshift}
-    T(x_v,y_v,z_v) &= \lim_{L\rightarrow \infty} \sum_{l=1}^L T_l(x_v,y_v,z_v) \\
+    T(x_v,y_v,z_v,\omega) &= \lim_{L\rightarrow \infty} \sum_{l=1}^L T_l(x_v,y_v,z_v,\omega) \\
     &= \lim_{L\rightarrow \infty} \sum_{l=1}^LM_l(x_v,y_v,z_v)\cdot \exp \left( i\frac{\omega}{c} (z_v+B_l) \right).
   \end{split}
 \end{equation}
 实际情况下，$D$的量级通常在20\textasciitilde30cm之间，因此大多数的小型简单场景下只需有一层球壳（$L=1$）即可。对于较大型的室内场景的应用，球壳层数取到$L=2$即可。更大型的场景需要更多的球壳层数，如果划分的层数较少，那么重构结果会产生渐晕效应（vignetting effect）。这一效应会降低成像质量，如同使用了一个过度简化的透镜设计的成像系统一样。
 
 最后，利用式（\ref{eq:timeshift}）定义的时移因子，我们给出最后真正的3D重构结果
-\begin{equation}
-  I(\mathbf{x_v}) =\left\lvert \int_{\omega_0-\Delta\omega}^{\omega_0+\Delta\omega} \sum_{l=1}^L T_l(x_v,y_v,z_v) \cdot \left(\mathcal{P}_F(x_c,y_c,0,\omega)\circledast G(x_c,y_c,z_v,\omega)\right) \frac{\text{d}\omega}{2\pi} \right\rvert^2.
+\begin{equation}\label{eq:algo_pp}
+  I(\mathbf{x_v}) =\left\lvert \int_{\omega_0-\Delta\omega}^{\omega_0+\Delta\omega} \sum_{l=1}^L T_l(x_v,y_v,z_v,\omega) \cdot \left(\mathcal{P}_F(x_c,y_c,0,\omega)\circledast G(x_c,y_c,z_v,\omega)\right) \frac{\text{d}\omega}{2\pi} \right\rvert^2.
 \end{equation} 
+上式（\ref{eq:algo_pp}）即基于RSD的NLOS重构算法的数学原理。从中我们可以看到，相比于最近所提出的几种快速NLOS成像算法，如LCT、FK，基于RSD的NLOS重构算法除了拥有更低的运行时间和更少的存储需求外，更重要的优势即在于其并行性。对于不同采样深度$z_v$的重构平面，重构过程互相独立，可以同时执行。若运行平台的存储资源有限，那么即使顺序执行不同采样深度的重构，其所需的中间缓存数据也更少，其存储效率更高。而LCT、FK两种算法则需要执行三维傅里叶变换，因此其无论计算量还是存储需求都要更大。
+
+\subsection{输入瞬态图像的处理}
+
+这里简要介绍如何从SPAD传感器获得所需的输入瞬态图像，以及如何进行预处理环节。式（\ref{eq:input_trans}）描述了瞬态图像的生成，其中$\mathcal{P}_F(\mathbf{x_p},\omega)$是激光脉冲的频域模型，以方程（\ref{eq:impul_freq}）描述，而$H(\mathbf{x_p}\rightarrow \mathbf{x_c},\omega)$则由SPAD传感器首先采集时域上的信号$H(\mathbf{x_p}\rightarrow \mathbf{x_c},t)$，再做时域上的傅里叶变换得到。
+
+\begin{figure}[!tb]
+  \centering
+  \includegraphics[width=\textwidth]{figure/FDH.pdf}
+  \bicaption{时域的直方图TDH做傅里叶变换得到傅里叶域直方图FDH。}{Obtain FDH by doing Fourier transformation on the TDH.}
+  \label{fig:fdh}
+\end{figure}
+
+SPAD使用一个时间相关的单光子计数器（Time Correlated Single Photon Counter, TCSPC）来记录激光脉冲发射后到相关的光子返回的时间。计数器只记录在一个测量时段内的所有返回的光子的抵达时间。时段内，每个光子自己对应一个时间戳，$t_0, t_1\dots t_N$。对一个发光点$\mathbf{x_p}$和采样点$\mathbf{x_c}$，都有
+\begin{equation}
+  H(\mathbf{x_p}\rightarrow \mathbf{x_c},t) = \sum_{n=1}^N \delta(t-t_n).
+\end{equation}
+上式称为TCSPC的时域直方图（TDH）。时间戳$t_n$是离散的；时间分辨率由NLOS成像采集系统决定，通常在几个到数十个皮秒级。对该直方图在某个特定的频率$\omega$上做傅里叶变换，
+\begin{equation}
+  \begin{split}
+    H_F(\mathbf{x_p}\rightarrow \mathbf{x_c},\omega) &= \int_{-\infty}^{+\infty} \left( \sum_{n=1}^N \delta(t-t_n) \right) e^{-i\omega t} \text{d}t \\
+    &= \sum_{n=1}^N e^{-i\omega t_n}
+  \end{split}
+\end{equation}
+得到傅里叶域的直方图（FDH）。整个计算过程如图\ref{fig:fdh}所示，通过将一个测量时段内的所有光子的时间戳$t_n, n=1,\dots,N$，乘以某个特定的采样频率$\omega_n$构成一个相移$e^{-i\omega_n t_n}$，并全部累加，便得到FDH中对应$\omega_n$的bin。实际预处理的时候，可能存在的上千个时间戳并不需要全部存储，每接收到一个时间戳便计算相应的相移，并将之和先前计算的累加结果相加并保存以和下一个时间戳的相移累加。同理，对于其他所有的$\omega$一样，可以并行的计算。
+
+计算好的FDH还需要和激光脉冲的频域形式（\ref{eq:impul_freq}），在每个采样频率$\omega_n$上相乘。如前所述，$\omega_n$是在区间$[\omega_0-\Delta\omega,\omega_0+\Delta\omega]$内选择。区间的确定取决于脉冲频响幅度大小。我们定义$\gamma$为幅度占最大幅度的比例，对于幅度比例$\gamma$小于某个阈值的$\omega$可以认为对重构过程没有贡献可以忽略。本文中选择的阈值为0.01，即对幅度小于峰值的1\%的频率可以直接忽略。由于脉冲的频域响应是一个高斯函数，因此这一被选择的区间是一个关于中心频率对称的区间。至于采样频率的间隔$\omega_{res}$，则由TDH的采样频率$f_{sampling}$（即时间分辨率的倒数）和TDH的bin的总数$N_{bins}$决定
+\begin{equation}
+  \omega_{res} = 2\pi \frac{f_{sampling}}{N_{bins}}.
+\end{equation}
+
+$\Delta\omega$和$\omega_{res}$共同决定了采样频率的总数$N_\Omega$。这几个设计参数主要和NLOS成像具体的应用场景有关。在较大的场景中，不仅仅采样深度的总数$N_D$（即重构平面的个数）会增加，$N_\Omega$也会增加，因此重构算法所需的计算量和存储需求也会增加。
+
+%TODO 补图：把输入的瞬态图像和FDH的联系，这种数据结构给画出来。
 
 \section{原始的RSD重构算法}
 
-原始的基于RSD的NLOS重构算法的基本思想，是将抵达探测器光圈的光反向传播回到隐藏场景，从而将NLOS成像问题转化为LOS成像问题，而后者则可以使用一个基于衍射的RSD求解器快速解决\citep{Liu}。
+原始的基于RSD的NLOS重构算法的基本思想，是将抵达探测器光圈的光反向传播回到隐藏场景，从而将NLOS成像问题转化为LOS成像问题，而后者则可以使用一个基于相量场衍射的RSD空间卷积快速解决\citep{Liu}。关于这些基本思想的各个环节的数学推导在上一节\ref{sec:rsd_recons_pp}中已经详细叙述。
 
-RSD重构算法流程的简要概念如图\ref{fig:ori_algo_concept}所示。\textcolor{red}{相关的细节可以在\citep{Liu,Liu2019}。}
-\begin{figure}[htbp]
+RSD重构算法流程的简要概念如图\ref{fig:ori_algo_concept}所示。
+\begin{figure}[!tb]
   \centering
   \includegraphics[width=\textwidth]{figure/ori_algo_concept.pdf}
   \bicaption{基于RSD的NLOS重构算法的基本概念。}{Basic concept of RSD-based NLOS reconstruction.}
@@ -529,7 +586,7 @@ RSD积分定义了一个名为RSD衍射核的四维张量
   \hat{r} &= \sqrt{x_c^2+y_c^2}\label{eq:rxy},\\
   \eta^2 &= \frac{\mathbf{c}\hat{z}}{\delta\omega}.
 \end{align}
-其中，$\delta$属于离散深度集合$D$，$\mathbf{c}$为光速而$\delta$则表示空间采样间隔。
+其中，$\hat{z}$属于离散深度集合$D$，$\mathbf{c}$为光速而$\delta$则表示空间采样间隔。
 
 典型的RSD积分的第一步是将$P_F(x_c,y_c,\omega)$和$G(x_c,y_c,\hat{z},\omega)$，在每个特定的$\omega$和$\hat{z}$上做对$(x_c,y_c)$二维空间卷积。这些二维卷积可以在傅里叶域上如下表示
 \begin{equation}\label{eq:conv}
@@ -548,7 +605,7 @@ RSD积分定义了一个名为RSD衍射核的四维张量
 
 \section{优化的RSD重构算法}
 
-尽管相比于现有的NLOS成像算法，RSD重构算法是目前适用于非共焦NLOS数据的最快速的成像算法，其依然存在大量的计算和存储需求。令$N_\Omega$为采样频率集合$\Omega$的势，$N_D$为离散深度集合$D$的势，那么重构一个隐藏的三维场景需要做$N_\Omega\times N_D$次二维卷积。如式（\ref{eq:conv}），每次卷积需要做两次二维傅里叶变换以及一次二维傅里叶反变换，因此重构一次场景所需的傅里叶变换次数（包括反变换）为$3\times N_\Omega \times N_D$。令输入瞬态图像的分辨率为$K\times K$，那么存储所有的RSD核所需的容量为$N_\Omega\times N_D\times K\times K$。另外，为了执行二维卷积，处理器需要大量访问存储单元来获取一个$K\times K$的RSD核。众所周知，对于现代的数字电子系统而言，存储访问耗费大量时间和能量从而往往成为系统的性能瓶颈\citep{Bai2018}。
+尽管相比于现有的NLOS成像算法，RSD重构算法是目前适用于非共焦NLOS数据的最快速的成像算法，其依然存在大量的计算和存储需求。令$N_\Omega$为采样频率集合$\Omega$的势，$N_D$为离散深度集合$D$的势，那么重构一个隐藏的三维场景需要做$N_\Omega\times N_D$次二维卷积。如式（\ref{eq:conv}），每次卷积需要做两次二维傅里叶变换以及一次二维傅里叶反变换，因此重构一次场景所需的傅里叶变换次数（包括反变换）为$3\times N_\Omega \times N_D$。令输入瞬态图像的分辨率为$K\times K$，那么存储所有的RSD核所需的容量为$N_\Omega\times N_D\times K\times K$。另外，为了执行二维卷积，处理器需要大量访问存储单元来获取一个$K\times K$的RSD核。众所周知，对于现代的数字电子系统而言，存储访问耗费大量时间和能量从而往往成为系统的性能瓶颈\citep{hennessy2011computer}。
 
 \begin{figure}[!tb]
     \centering
@@ -656,7 +713,7 @@ RSD积分定义了一个名为RSD衍射核的四维张量
         \State 计算单位环形脉冲函数的傅里叶表示：
         \For{$j \gets 1, N_{R}$}
             \For{$k \gets 1, N_{ {\rho}}$}
-                \State $$ \delta_{\mathcal{F}}(\rho_k, r_j) \gets \int_0^{2\pi}r_je^{-2\pi r_j \rho_k \cos \theta} d\theta $$
+                \State $$ \delta_{\mathcal{F}}(\rho_k, r_j) \gets \int_0^{2\pi}r_je^{-2\pi r_j \rho_k \cos \theta} \text{d}\theta $$
             \EndFor
         \EndFor
         \State 计算线性组合系数：
@@ -684,7 +741,7 @@ RSD积分定义了一个名为RSD衍射核的四维张量
         \Procedure{Reconstruction}{$P_F, \delta_{\mathcal{F}}, \hat{G}$}
         \For{$i \gets 1, N_{ {D}}$}\Comment{循环1:采样深度上迭代}
             \For{$j \gets 1, N_{ {\Omega}}$}\Comment{循环2: 采样频率上迭代}
-                \State $\mathcal{P}_F(x, y, \omega_j) \gets FFT2(P_F(x, y, \omega_j))$
+                \State $\mathcal{P}_F(x, y, \omega_j) \gets \text{FFT2}(P_F(x, y, \omega_j))$
                 \For{$k \gets 1, N_{ {R}}$}\Comment{不同半径上迭代}
                     \For{$l \gets 1, N_{\rho}$}\Comment{所有径向采样点上迭代}
                         \State $G(\rho_l, \hat{z}_i, \omega_j) \gets G(\rho_l, \hat{z}_i, \omega_j) + \hat{G}(r_k, \hat{z}_i, \omega_j)\cdot \delta_{\mathcal{F}}(r, r_k) $
@@ -698,7 +755,7 @@ RSD积分定义了一个名为RSD衍射核的四维张量
                 \EndFor
                 \State $I_F(x, y, \hat{z}_i) \gets I_F(x, y, \hat{z}_i) + S_F(x, y, \hat{z}_i, \omega_j)$ \Comment{对所有采样频率累加}
             \EndFor
-            \State $I(x, y, \hat{z}_i) \gets IFFT2 \left[ I_F(x, y, \hat{z}_i) \right]$ \EndFor 
+            \State $I(x, y, \hat{z}_i) \gets \text{IFFT2} \left[ I_F(x, y, \hat{z}_i) \right]$ \EndFor 
         % Do 2D inverse Fourier transformation
         \EndProcedure
     \end{algorithmic}
