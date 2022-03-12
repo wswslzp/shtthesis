@@ -1279,7 +1279,7 @@ FFT2D Core最后输出的结果是一个三维复数张量$I(x,y,\hat{z})$。其
 
 从架构方面，本文所提出的NLOS成像FPGA加速器所加速处理的仅仅包含RSD重构算法的部分，且部分参数如重构图像的分辨率、采样频率、采样深度的个数等等均无法重新配置。因此未来可能的改进工作包括两个部分：一方面可以将NLOS数据预处理的环节如时域上的傅里叶变换这一过程纳入NLOS成像加速器的处理，是指可以进一步的整合到一个完整的NLOS成像系统；另一方面，考虑一个更加灵活的，可以配置的NLOS成像加速器架构，使得同一套基于RSD的NLOS成像算法架构可以更灵活的应对不同的成像系统的配置条件，以及不同的应用场景。
 
-就整个系统而言，NLOS成像处理器不仅仅在FPGA上实现，未来也可以在ASIC上实现，并和基于CMOS工艺的SPAD传感器阵列集成起来，成为一个单独的芯片，搭配激光器可以形成完整的、便携式NLOS成像系统。这样的一个比较成熟完整的系统才能使得NLOS成像技术能够在实际生产生活中真正地落地使用。
+就整个系统而言，NLOS成像处理器不仅仅在FPGA上实现，未来也可以在ASIC上实现，并和基于CMOS工艺的SPAD传感器阵列集成起来，成为一个单独的芯片，搭配激光器可以形成完整的、便携式NLOS成像系统。这样的一个比较成熟完整的系统才能使得NLOS成像技术能够在实际生产生活中真正地落地使用。%\citep{liao2021fpga}
 
 \makebiblio
 
@@ -1292,16 +1292,14 @@ FFT2D Core最后输出的结果是一个三维复数张量$I(x,y,\hat{z})$。其
 
 \ifgraduate
 \begin{resume}
-  \hangafter 1
-  \hangindent 2em
   廖正鹏，广西壮族自治区柳州市人，上海科技大学信息学院硕士研究生。2019年获得武汉大学微电子科学与工程专业学士学位。
 \end{resume}
 
 \begin{publications}
   \hangafter 1
-  \hangindent 2em
+  \hangindent 1em
   \noindent
-  LIAO Z, JIANG D, LIU X, et al. FPGA Accelerator for Real-Time Non-Line-of-Sight Imaging[J]. IEEE Trans. Circuit Syst. I: Regul. Pap., 2021.
+  LIAO Z, JIANG D, LIU X, et al. FPGA Accelerator for Real-Time Non-Line-of-Sight Imaging[J]. IEEE Trans. Circuit Syst. I: Regul. Pap., 2022, 69(2): 721-734. DOI: 10.1109/TCSI.2021.3122309.
 
   % shitamge
 \end{publications}
