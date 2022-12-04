@@ -50,7 +50,7 @@ jobs:
           name: ubuntu-build
           path: ${{ env.BUILD_DIR }}
   debug-tmate:
-	name: Debug on failure
+    name: Debug on failure
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
