@@ -49,12 +49,6 @@ jobs:
         with:
           name: ubuntu-build
           path: ${{ env.BUILD_DIR }}
-  debug-tmate:
-    name: Debug on failure
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup tmate session
-      if: ${{ failure() }}
-      uses: mxschmitt/action-tmate@v3
-
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
