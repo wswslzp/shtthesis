@@ -49,89 +49,12 @@ jobs:
         with:
           name: ubuntu-build
           path: ${{ env.BUILD_DIR }}
-  build-macos:
-    name: Build on macOS
-    runs-on: macos-latest
-    if: ${{ contains(github.event.head_commit.message, '[ci macos]') || !contains(github.event.head_commit.message, '[ci skip]') }}
+  debug-tmate:
+	name: Debug on failure
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Install utilities
-        run: |
-          brew install gnu-sed
-      - name: Install Noto and FangZheng fonts
-        run: |
-          for i in NotoSerifCJK NotoSansCJK; do curl -O ${{ env.NOTO_URL }}/$i.ttc.zip; done
-          for i in FZKTK FZFSK; do curl -O https://bwh-jp-01.rundong.me/fonts/$i.TTF; done
-          unzip -o "*.zip"
-          cp -vf *.ttc *.TTF /Library/Fonts/
-      - name: Install TeX Live
-        run: |
-          export PATH=/tmp/texlive/bin/universal-darwin:$PATH
-          curl -OL ${{ env.CTAN_URL }}/systems/texlive/tlnet/install-tl-unx.tar.gz
-          tar -zxf install-tl-unx.tar.gz
-          pushd install-tl-20* && chmod +x install-tl
-          ./install-tl --profile ../.github/workflows/texlive.profile --repository ${{ env.CTAN_URL }}/systems/texlive/tlnet/
-          popd
-          echo "$(cat DEPENDS.txt | tr '\n' ' ') ${{ env.DOC_DEPENDENCE }}" | xargs tlmgr install 
-          echo "/tmp/texlive/bin/universal-darwin" >> $GITHUB_PATH
-      - name: Build user document (LuaLaTeX)
-        run: |
-          gsed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' lzp-shtthesis.tex
-          latexmk -pdflua -outdir=${{ env.BUILD_DIR }}/lualatex
-      - name: Build user document (XeLaTeX)
-        if: success() || failure()
-        run: |
-          latexmk -pdfxe -outdir=${{ env.BUILD_DIR }}/xelatex
-      - name: Archive build outputs
-        if: success() || failure()
-        uses: actions/upload-artifact@v2
-        with:
-          name: macos-build
-          path: ${{ env.BUILD_DIR }}
-  # Line wrap problem is difficult to resolve on windows.
-  build-windows:
-    runs-on: windows-latest
-    name: Build on Windows
-    if: ${{ contains(github.event.head_commit.message, '[ci windows]') || !contains(github.event.head_commit.message, '[ci skip]') }}
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Windows (Simplified Chinese) fonts
-        run: |
-          "simhei.ttf", "simkai.ttf", "simfang.ttf" | ForEach-Object -Process {Invoke-WebRequest -Uri "https://bwh-jp-01.rundong.me/fonts/$_" -OutFile "C:\Windows\Fonts\$_"}
-      - name: Install TeX Live
-        run: |
-          ${env:PATH} = "${{ github.workspace }}\tmp\texlive\bin\win32;" + ${env:PATH}
-          Invoke-WebRequest -Uri ${{ env.CTAN_URL }}/systems/texlive/tlnet/install-tl.zip -OutFile install-tl.zip
-          Expand-Archive install-tl.zip -DestinationPath .
-          Push-Location install-tl-*
-          .\install-tl-windows --no-gui --profile ..\.github\workflows\texlive-win.profile --repository ${{ env.CTAN_URL }}/systems/texlive/tlnet/
-          Pop-Location
-          &tlmgr install @((Get-Content ./DEPENDS.txt) + "${{ env.DOC_DEPENDENCE }}".split())
-          echo "${{ github.workspace }}\tmp\texlive\bin\win32" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-      - name: Build user document (LuaLaTeX)
-        run: |
-          New-Item -Path "${{ env.BUILD_DIR }}\lualatex" -ItemType Directory
-          Push-Location "${{ env.BUILD_DIR }}\lualatex"
-          Copy-Item "..\..\lzp-shtthesis.tex", "..\..\shtthesis.cls", "..\..\shanghaitech-emblem.pdf" -Destination .
-          lualatex lzp-shtthesis.tex
-          biber lzp-shtthesis.bcf
-          lualatex lzp-shtthesis.tex
-          lualatex lzp-shtthesis.tex
-          Pop-Location
-      - name: Build user document (XeLaTeX)
-        if: success() || failure()
-        run: |
-          New-Item -Path "${{ env.BUILD_DIR }}\xelatex" -ItemType Directory
-          Push-Location "${{ env.BUILD_DIR }}\xelatex"
-          Copy-Item "..\..\lzp-shtthesis.tex", "..\..\shtthesis.cls", "..\..\shanghaitech-emblem.pdf" -Destination .
-          xelatex lzp-shtthesis.tex
-          biber lzp-shtthesis.bcf
-          xelatex lzp-shtthesis.tex
-          xelatex lzp-shtthesis.tex
-          Pop-Location
-      - name: Archive build outputs
-        if: success() || failure()
-        uses: actions/upload-artifact@v2
-        with:
-          name: windows-build
-          path: ${{ env.BUILD_DIR }}
+    - uses: actions/checkout@v2
+    - name: Setup tmate session
+      if: ${{ failure() }}
+      uses: mxschmitt/action-tmate@v3
+
