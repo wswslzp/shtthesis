@@ -17,27 +17,18 @@ _minted*/
 *.out
 *.toc
 *.xdv
+*.xml
 *-converted-to.pdf
 *.thm
 *.lof
-*.bdf
-*.bcf
-*.glo
-*.gls
-*.idx
-*.ilg
-*.ind
-*.run.xml
+reference.bib
 build*/
 release*/
 
 # ignore compiled docuemnt within root
 *.pdf
 !shanghaitech-emblem.pdf
-
-# ignore generated files from dtx and ins
-shtthesis.cls
-shtthesis-doc.sty
+!shtthesis-user-guide.pdf
 
 # ignore office temp files
 ~$*.doc*
