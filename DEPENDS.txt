@@ -1,7 +1,5 @@
 alphalph
-algorithm
 algorithmicx
-algpseudocode
 biber
 biblatex
 biblatex-gb7714-2015
