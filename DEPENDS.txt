@@ -1,4 +1,7 @@
 alphalph
+algorithm
+algorithmicx
+algpseudocode
 biber
 biblatex
 biblatex-gb7714-2015
@@ -10,6 +13,7 @@ datetime
 enumitem
 fancyhdr
 fmtcount
+hologo
 lastpage
 latexmk
 listings
