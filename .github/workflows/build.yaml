@@ -37,7 +37,7 @@ jobs:
           echo "/tmp/texlive/bin/x86_64-linux" >> $GITHUB_PATH
       - name: Build user document (LuaLaTeX)
         run: |
-          sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
+          sed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' lzp_shtthesis.tex
           latexmk -pdflua -outdir=${{ env.BUILD_DIR }}/lualatex
       - name: Build user document (XeLaTeX)
         if: success() || failure()
@@ -76,7 +76,7 @@ jobs:
           echo "/tmp/texlive/bin/universal-darwin" >> $GITHUB_PATH
       - name: Build user document (LuaLaTeX)
         run: |
-          gsed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' shtthesis-user-guide.tex
+          gsed -i '${{ env.SED_REP_WITH_CLS_ARGS }}' lzp_shtthesis.tex
           latexmk -pdflua -outdir=${{ env.BUILD_DIR }}/lualatex
       - name: Build user document (XeLaTeX)
         if: success() || failure()
@@ -112,22 +112,22 @@ jobs:
         run: |
           New-Item -Path "${{ env.BUILD_DIR }}\lualatex" -ItemType Directory
           Push-Location "${{ env.BUILD_DIR }}\lualatex"
-          Copy-Item "..\..\shtthesis-user-guide.tex", "..\..\shtthesis.cls", "..\..\shanghaitech-emblem.pdf" -Destination .
-          lualatex shtthesis-user-guide.tex
-          biber shtthesis-user-guide.bcf
-          lualatex shtthesis-user-guide.tex
-          lualatex shtthesis-user-guide.tex
+          Copy-Item "..\..\lzp_shtthesis.tex", "..\..\shtthesis.cls", "..\..\shanghaitech-emblem.pdf" -Destination .
+          lualatex lzp_shtthesis.tex
+          biber lzp_shtthesis.bcf
+          lualatex lzp_shtthesis.tex
+          lualatex lzp_shtthesis.tex
           Pop-Location
       - name: Build user document (XeLaTeX)
         if: success() || failure()
         run: |
           New-Item -Path "${{ env.BUILD_DIR }}\xelatex" -ItemType Directory
           Push-Location "${{ env.BUILD_DIR }}\xelatex"
-          Copy-Item "..\..\shtthesis-user-guide.tex", "..\..\shtthesis.cls", "..\..\shanghaitech-emblem.pdf" -Destination .
-          xelatex shtthesis-user-guide.tex
-          biber shtthesis-user-guide.bcf
-          xelatex shtthesis-user-guide.tex
-          xelatex shtthesis-user-guide.tex
+          Copy-Item "..\..\lzp_shtthesis.tex", "..\..\shtthesis.cls", "..\..\shanghaitech-emblem.pdf" -Destination .
+          xelatex lzp_shtthesis.tex
+          biber lzp_shtthesis.bcf
+          xelatex lzp_shtthesis.tex
+          xelatex lzp_shtthesis.tex
           Pop-Location
       - name: Archive build outputs
         if: success() || failure()
